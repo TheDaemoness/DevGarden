@@ -12,9 +12,12 @@ TARGET = DevGarden
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        dgwindow.cpp
+SOURCES += \
+    src/dgwindow.cpp \
+    src/main.cpp
 
-HEADERS  += dgwindow.h
+HEADERS  += \
+    src/dgwindow.h
 
-FORMS    += dgwindow.ui
+FORMS    += \
+    src/ui/dgwindow.ui
