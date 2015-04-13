@@ -3,11 +3,13 @@
 
 #include <QMainWindow>
 
+#include "../dgcontroller.h"
+
 class DGWindow : public QMainWindow {
 	Q_OBJECT
 
 public:
-	explicit DGWindow(QWidget *parent = 0);
+	explicit DGWindow(DGController* dgc, QWidget *parent = 0);
 	~DGWindow();
 
 private:
@@ -23,6 +25,8 @@ private slots:
 	void nullSlot();
 
 private:
+	DGController* ctrl;
+
 	QMenuBar* bar;
 	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuWindow, *menuHelp;
 	QMenu *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll;

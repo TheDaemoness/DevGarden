@@ -23,9 +23,11 @@ TEMPLATE = app
 
 SOURCES += \
     src/main.cpp \
-    src/ui/dgwindow.cpp
+    src/ui/dgwindow.cpp \
+    src/dgcontroller.cpp
 
 HEADERS  += \
-    src/ui/dgwindow.h
+    src/ui/dgwindow.h \
+    src/dgcontroller.h
 
 FORMS    +=

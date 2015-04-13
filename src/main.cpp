@@ -3,7 +3,8 @@
 
 int main(int argc, char **argv) {
 	QApplication a(argc, argv);
-	DGWindow w;
+	DGController ctrl;
+	DGWindow w(&ctrl);
 	w.show();
 
 	return a.exec();

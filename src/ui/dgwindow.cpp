@@ -4,12 +4,13 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-DGWindow::DGWindow(QWidget *parent) :
+DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMainWindow(parent)
 {
 	this->setWindowTitle("DevGarden");
 	this->resize(1080,640);
 	this->setMinimumSize(640,360);
+	ctrl = dgc;
 
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
@@ -21,7 +22,8 @@ void DGWindow::createMenuActions() {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
 	menuFile->addAction("New File/Project...", this, SLOT(nullSlot()), QKeySequence::New);
-	menuFile->addAction("Open File/Folder...", this, SLOT(nullSlot()), QKeySequence::Open);
+	menuFile->addAction("Open Folder/Project...", ctrl, SLOT(openFolder()), QKeySequence::Open);
+	menuFile->addAction("Open Files...", ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
 	menuFile->addSeparator();
 	menuFile->addAction("Save", this, SLOT(nullSlot()), QKeySequence::Save);
 	menuFile->addAction("Save As...", this, SLOT(nullSlot()), QKeySequence::SaveAs);
