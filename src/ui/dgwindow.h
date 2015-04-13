@@ -17,8 +17,10 @@ private slots:
 	void openProjectPage();
 	void openBugReportPage();
 	void quit();
+	void toggleFullscreen();
 	void zoomIn();
 	void zoomOut();
+	void nullSlot();
 
 private:
 	QMenuBar* bar;

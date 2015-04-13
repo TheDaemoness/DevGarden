@@ -20,14 +20,14 @@ DGWindow::DGWindow(QWidget *parent) :
 void DGWindow::createMenuActions() {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
-	menuFile->addAction("New File/Project...", this, "", QKeySequence::New);
-	menuFile->addAction("Open File/Folder...", this, "", QKeySequence::Open);
+	menuFile->addAction("New File/Project...", this, SLOT(nullSlot()), QKeySequence::New);
+	menuFile->addAction("Open File/Folder...", this, SLOT(nullSlot()), QKeySequence::Open);
 	menuFile->addSeparator();
-	menuFile->addAction("Save", this, "", QKeySequence::Save);
-	menuFile->addAction("Save As...", this, "", QKeySequence::SaveAs);
+	menuFile->addAction("Save", this, SLOT(nullSlot()), QKeySequence::Save);
+	menuFile->addAction("Save As...", this, SLOT(nullSlot()), QKeySequence::SaveAs);
 	menuFile->addAction("Save All");
 	menuFile->addSeparator();
-	menuFile->addAction("Close", this, "", QKeySequence::Close);
+	menuFile->addAction("Close", this, SLOT(nullSlot()), QKeySequence::Close);
 	menuFile->addAction("Close Project");
 	menuFile->addSeparator();
 	menuFile->addAction("Import...");
@@ -36,16 +36,16 @@ void DGWindow::createMenuActions() {
 	menuFile->addAction("Quit", this, SLOT(quit()), QKeySequence::Quit);
 
 	menuEdit = menuBar()->addMenu(tr("&Edit"));
-	menuEdit->addAction("Undo", this, "", QKeySequence::Undo);
-	menuEdit->addAction("Redo", this, "", QKeySequence::Redo);
+	menuEdit->addAction("Undo", this, SLOT(nullSlot()), QKeySequence::Undo);
+	menuEdit->addAction("Redo", this, SLOT(nullSlot()), QKeySequence::Redo);
 	menuEdit->addSeparator();
-	menuEdit->addAction("Cut", this, "", QKeySequence::Cut);
-	menuEdit->addAction("Copy", this, "", QKeySequence::Copy);
-	menuEdit->addAction("Paste", this, "", QKeySequence::Paste);
+	menuEdit->addAction("Cut", this, SLOT(nullSlot()), QKeySequence::Cut);
+	menuEdit->addAction("Copy", this, SLOT(nullSlot()), QKeySequence::Copy);
+	menuEdit->addAction("Paste", this, SLOT(nullSlot()), QKeySequence::Paste);
 	menuEdit->addAction("Paste from Clipboard History");
 	menuEdit->addSeparator();
-	menuEdit->addAction("Select All", this, "", QKeySequence::SelectAll);
-	menuEdit->addAction("Find/Replace", this, "", QKeySequence::Find);
+	menuEdit->addAction("Select All", this, SLOT(nullSlot()), QKeySequence::SelectAll);
+	menuEdit->addAction("Find/Replace", this, SLOT(nullSlot()), QKeySequence::Find);
 	menuEdit->addAction("Advanced Find/Replace");
 	menuEdit->addSeparator();
 	menuEdit->addAction("Format Selection");
@@ -103,9 +103,9 @@ void DGWindow::createMenuActions() {
 	menuDebug->addAction("Test Settings...");
 
 	menuWindow = menuBar()->addMenu(tr("&Window"));
-	menuWindow->addAction("Minimize");
-	menuWindow->addAction("Expand");
-	menuWindow->addAction("Toggle Full Screen");
+	menuWindow->addAction("Minimize", this, SLOT(showMinimized()));
+	menuWindow->addAction("Expand", this, SLOT(showMaximized()));
+	menuWindow->addAction("Toggle Full Screen", this, SLOT(toggleFullscreen()), QKeySequence::FullScreen);
 	menuWindow->addSeparator();
 	menuWindow->addAction("Toggle Lower Bar");
 	menuWindow->addAction("Toggle Split View Bar");
@@ -117,10 +117,10 @@ void DGWindow::createMenuActions() {
 	menuWindow->addSeparator();
 	menuWindow->addAction("Toggle Light/Dark Theme");
 	menuWindow->addAction("Run Command Prompt...");
-	menuWindow->addAction("Settings...");
+	menuWindow->addAction("Settings...", this, SLOT(nullSlot()), QKeySequence::Preferences);
 
 	menuHelp = menuBar()->addMenu(tr("&Help"));
-	menuHelp->addAction("Manual");
+	menuHelp->addAction("Manual", this, SLOT(nullSlot()), QKeySequence::HelpContents);
 	menuHelp->addAction("Command Reference");
 	menuHelp->addAction("Hacking DevGarden");
 	menuHelp->addSeparator();
@@ -140,8 +140,14 @@ void DGWindow::quit() {
 	this->close();
 }
 
+void DGWindow::toggleFullscreen() {
+	this->isFullScreen()?this->showNormal():this->showFullScreen();
+}
+
 void DGWindow::zoomOut() {}
 void DGWindow::zoomIn() {}
+
+void DGWindow::nullSlot() {}
 
 DGWindow::~DGWindow() {
 }
