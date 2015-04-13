@@ -1,0 +1,147 @@
+#include "dgwindow.h"
+#include "ui_dgwindow.h"
+
+#include <QDesktopServices>
+#include <QUrl>
+
+DGWindow::DGWindow(QWidget *parent) :
+	QMainWindow(parent)
+{
+	this->setWindowTitle("DevGarden");
+	this->resize(1080,640);
+	this->setMinimumSize(640,360);
+
+	QMenuBar* bar = new QMenuBar(nullptr);
+	this->setMenuBar(bar);
+
+	createMenuActions();
+}
+
+void DGWindow::createMenuActions() {
+	//TODO: Locale system. This is rather critical, actually.
+	menuFile = menuBar()->addMenu(tr("&File"));
+	menuFile->addAction("New File/Project...", this, "", QKeySequence::New);
+	menuFile->addAction("Open File/Folder...", this, "", QKeySequence::Open);
+	menuFile->addSeparator();
+	menuFile->addAction("Save", this, "", QKeySequence::Save);
+	menuFile->addAction("Save As...", this, "", QKeySequence::SaveAs);
+	menuFile->addAction("Save All");
+	menuFile->addSeparator();
+	menuFile->addAction("Close", this, "", QKeySequence::Close);
+	menuFile->addAction("Close Project");
+	menuFile->addSeparator();
+	menuFile->addAction("Import...");
+	menuFile->addAction("Export...");
+	menuFile->addSeparator();
+	menuFile->addAction("Quit", this, SLOT(quit()), QKeySequence::Quit);
+
+	menuEdit = menuBar()->addMenu(tr("&Edit"));
+	menuEdit->addAction("Undo", this, "", QKeySequence::Undo);
+	menuEdit->addAction("Redo", this, "", QKeySequence::Redo);
+	menuEdit->addSeparator();
+	menuEdit->addAction("Cut", this, "", QKeySequence::Cut);
+	menuEdit->addAction("Copy", this, "", QKeySequence::Copy);
+	menuEdit->addAction("Paste", this, "", QKeySequence::Paste);
+	menuEdit->addAction("Paste from Clipboard History");
+	menuEdit->addSeparator();
+	menuEdit->addAction("Select All", this, "", QKeySequence::SelectAll);
+	menuEdit->addAction("Find/Replace", this, "", QKeySequence::Find);
+	menuEdit->addAction("Advanced Find/Replace");
+	menuEdit->addSeparator();
+	menuEdit->addAction("Format Selection");
+	menuEdit->addAction("Comment Selection");
+
+	menuBuild = menuBar()->addMenu(tr("&Build"));
+	menuBuild->addAction("Cancel Build");
+	menuBuild->addAction("Regen Build Scripts");
+	menuBuild->addAction("Build Settings...");
+	menuBuild->addSeparator();
+	menuBuildBuild = menuBuild->addMenu("Build");
+	menuBuildBuild->addAction("Last Target");
+	menuBuildBuild->addAction("Debug");
+	menuBuildBuild->addAction("Release");
+	menuBuildBuild->addAction("Custom...");
+	menuBuild->addAction("Rebuild");
+	menuBuild->addAction("Clean");
+	menuBuild->addAction("Deploy");
+	menuBuild->addSeparator();
+	menuBuildBuildAll = menuBuild->addMenu("Build All");
+	menuBuildBuildAll->addAction("Last Target");
+	menuBuildBuildAll->addAction("Debug");
+	menuBuildBuildAll->addAction("Release");
+	menuBuildBuildAll->addAction("Custom...");
+	menuBuild->addAction("Rebuild All");
+	menuBuild->addAction("Clean All");
+	menuBuild->addAction("Deploy All");
+
+	menuDebug = menuBar()->addMenu(tr("&Run/Debug"));
+	menuDebug->addAction("Run");
+	menuDebug->addAction("Run Settings...");
+	menuDebug->addSeparator();
+	menuDebug->addAction("Debug");
+	menuDebug->addAction("Debug External Application...");
+	menuDebug->addAction("Load Core File...");
+	menuDebug->addAction("Show Debug Window");
+	menuDebug->addAction("Debugger Settings...");
+	menuDebug->addSeparator();
+	menuDebug->addAction("Interrupt");
+	menuDebug->addAction("Continue");
+	menuDebug->addAction("Toggle Breakpoint");
+	menuDebug->addAction("Step Over");
+	menuDebug->addAction("Step Into");
+	menuDebug->addSeparator();
+	menuDebugAnalyze = menuDebug->addMenu("Analyze");
+	menuDebugAnalyze->addAction("Memory Checker");
+	menuDebugAnalyze->addAction("Thread Checker");
+	menuDebugAnalyze->addAction("Call Graph");
+	menuDebugAnalyze->addAction("Cache Profiler");
+	menuDebugAnalyze->addAction("Heap Profiler");
+	menuDebug->addAction("Analyze External Application...");
+	menuDebug->addAction("Analysis Settings...");
+	menuDebug->addSeparator();
+	menuDebug->addAction("Test");
+	menuDebug->addAction("Test Settings...");
+
+	menuWindow = menuBar()->addMenu(tr("&Window"));
+	menuWindow->addAction("Minimize");
+	menuWindow->addAction("Expand");
+	menuWindow->addAction("Toggle Full Screen");
+	menuWindow->addSeparator();
+	menuWindow->addAction("Toggle Lower Bar");
+	menuWindow->addAction("Toggle Split View Bar");
+	menuWindow->addAction("Toggle Sidebar");
+	menuWindow->addSeparator();
+	menuWindow->addAction("Increase Font Size", this, SLOT(zoomIn()), QKeySequence::ZoomIn);
+	menuWindow->addAction("Decrease Font Size", this, SLOT(zoomOut()), QKeySequence::ZoomOut);
+	menuWindow->addAction("Reset Font Size");
+	menuWindow->addSeparator();
+	menuWindow->addAction("Toggle Light/Dark Theme");
+	menuWindow->addAction("Run Command Prompt...");
+	menuWindow->addAction("Settings...");
+
+	menuHelp = menuBar()->addMenu(tr("&Help"));
+	menuHelp->addAction("Manual");
+	menuHelp->addAction("Command Reference");
+	menuHelp->addAction("Hacking DevGarden");
+	menuHelp->addSeparator();
+	menuHelp->addAction("Project Page", this, SLOT(openProjectPage()));
+	menuHelp->addAction("Report Bug...", this, SLOT(openBugReportPage()));
+}
+
+void DGWindow::openProjectPage() {
+	QDesktopServices::openUrl(QUrl("https://github.com/TheRabbitologist/DevGarden"));
+}
+
+void DGWindow::openBugReportPage() {
+	QDesktopServices::openUrl(QUrl("https://github.com/TheRabbitologist/DevGarden/issues?q=is%3Aopen+is%3Aissue"));
+}
+
+void DGWindow::quit() {
+	this->close();
+}
+
+void DGWindow::zoomOut() {}
+void DGWindow::zoomIn() {}
+
+DGWindow::~DGWindow() {
+}

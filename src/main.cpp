@@ -1,4 +1,4 @@
-#include "dgwindow.h"
+#include "ui/dgwindow.h"
 #include <QApplication>
 
 int main(int argc, char **argv) {
