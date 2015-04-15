@@ -10,6 +10,7 @@ QMAKE_CXXFLAGS += -pedantic -std=c++11
 
 macx {
 	QMAKE_CXXFLAGS += -stdlib=libc++
+	QMAKE_LFLAGS += -lc++
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
 }
 
