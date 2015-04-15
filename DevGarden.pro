@@ -24,10 +24,13 @@ TEMPLATE = app
 SOURCES += \
     src/main.cpp \
     src/ui/dgwindow.cpp \
-    src/dgcontroller.cpp
+    src/dgcontroller.cpp \
+    configloader.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
-    src/dgcontroller.h
+    src/dgcontroller.h \
+    envmacros.h \
+    configloader.h
 
 FORMS    +=

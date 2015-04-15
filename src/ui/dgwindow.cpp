@@ -28,6 +28,7 @@ void DGWindow::createMenuActions() {
 	menuFile->addAction("Save", this, SLOT(nullSlot()), QKeySequence::Save);
 	menuFile->addAction("Save As...", this, SLOT(nullSlot()), QKeySequence::SaveAs);
 	menuFile->addAction("Save All");
+	menuFile->addAction("Reload", this, SLOT(nullSlot()), QKeySequence::Refresh);
 	menuFile->addSeparator();
 	menuFile->addAction("Close", this, SLOT(nullSlot()), QKeySequence::Close);
 	menuFile->addAction("Close Project");
@@ -48,7 +49,7 @@ void DGWindow::createMenuActions() {
 	menuEdit->addSeparator();
 	menuEdit->addAction("Select All", this, SLOT(nullSlot()), QKeySequence::SelectAll);
 	menuEdit->addAction("Find/Replace", this, SLOT(nullSlot()), QKeySequence::Find);
-	menuEdit->addAction("Advanced Find/Replace");
+	menuEdit->addAction("Advanced Find/Replace", this, SLOT(nullSlot()), QKeySequence(tr("Ctrl+Shift+F")));
 	menuEdit->addSeparator();
 	menuEdit->addAction("Format Selection");
 	menuEdit->addAction("Comment Selection");
@@ -118,7 +119,7 @@ void DGWindow::createMenuActions() {
 	menuWindow->addAction("Reset Font Size");
 	menuWindow->addSeparator();
 	menuWindow->addAction("Toggle Light/Dark Theme");
-	menuWindow->addAction("Run Command Prompt...");
+	menuWindow->addAction("Run Command Prompt...", this, SLOT(nullSlot()), QKeySequence(tr("Alt+Space")));
 	menuWindow->addAction("Settings...", this, SLOT(nullSlot()), QKeySequence::Preferences);
 
 	menuHelp = menuBar()->addMenu(tr("&Help"));

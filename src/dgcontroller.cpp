@@ -12,12 +12,17 @@ void DGController::openFolder() {
 	dg.setFileMode(QFileDialog::Directory);
 	dg.setViewMode(QFileDialog::List);
 	dg.setOption(QFileDialog::ShowDirsOnly, true);
-	dg.exec();
+	if(dg.exec())
+		QStringList names = dg.selectedFiles();
 }
 void DGController::openFiles() {
 	QFileDialog dg;
 	dg.setWindowTitle("Open Files");
 	dg.setFileMode(QFileDialog::ExistingFiles);
 	dg.setViewMode(QFileDialog::Detail);
-	dg.exec();
+	if(dg.exec())
+		QStringList names = dg.selectedFiles();
+}
+void DGController::saveFileAs() {
+	QString name = QFileDialog::getSaveFileName(0,"Save As...","~","",0,0);
 }

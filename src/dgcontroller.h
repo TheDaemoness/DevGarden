@@ -13,6 +13,7 @@ signals:
 public slots:
 	void openFolder();
 	void openFiles();
+	void saveFileAs();
 };
 
 #endif // DGCONTROLLER_H
