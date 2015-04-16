@@ -36,3 +36,5 @@ HEADERS  += \
     src/util/stringtree.h
 
 FORMS    +=
+
+TRANSLATIONS = DevGarden_fr.ts
