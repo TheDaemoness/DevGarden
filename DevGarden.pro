@@ -35,3 +35,5 @@ HEADERS  += \
     configloader.h
 
 FORMS    +=
+
+TRANSLATIONS = DevGarden_fr.ts
