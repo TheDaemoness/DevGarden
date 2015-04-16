@@ -8,7 +8,7 @@ DGController::DGController(QObject *parent) :
 
 void DGController::openFolder() {
 	QFileDialog dg;
-	dg.setWindowTitle("Open Folder");
+	dg.setWindowTitle(tr("Open Folder"));
 	dg.setFileMode(QFileDialog::Directory);
 	dg.setViewMode(QFileDialog::List);
 	dg.setOption(QFileDialog::ShowDirsOnly, true);
@@ -17,12 +17,12 @@ void DGController::openFolder() {
 }
 void DGController::openFiles() {
 	QFileDialog dg;
-	dg.setWindowTitle("Open Files");
+	dg.setWindowTitle(tr("Open Files"));
 	dg.setFileMode(QFileDialog::ExistingFiles);
 	dg.setViewMode(QFileDialog::Detail);
 	if(dg.exec())
 		QStringList names = dg.selectedFiles();
 }
 void DGController::saveFileAs() {
-	QString name = QFileDialog::getSaveFileName(0,"Save As...","~","",0,0);
+	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
 }
