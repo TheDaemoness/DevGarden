@@ -25,9 +25,20 @@ public:
 	StringTree(size_t prealloc = 8) {
 		branches.reserve(prealloc);
 	}
-	void insert(char* key, const Value& val, char delim = '.') {
+	bool insert(const char* key, const Value& val, char delim = '.') {
 		const char* index = std::strchr(key, delim);
-		if(index)
+		return false;
+	}
+	bool remove(const char* key, Value* buffer = nullptr) {
+		return true;
+	}
+	void clear() {
+		for(auto v : branches)
+			delete v;
+		branches.clear();
+	}
+	Value* get(const char* key) {
+		return nullptr;
 	}
 };
 

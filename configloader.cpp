@@ -10,10 +10,3 @@ std::ifstream* getConfigFile(const std::string& name) {
 	delete retval;
 	return nullptr;
 }
-
-std::pair<std::string,std::string> getEntryPair(const std::ifstream& stream) {
-	std::pair<std::string,std::string> retval;
-	stream >> retval.first;
-	std::getline(stream,retval.second);
-	return retval;
-}
