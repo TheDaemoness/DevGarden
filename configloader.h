@@ -16,7 +16,9 @@
 
 #include <fstream>
 #include <string>
+#include <utility>
 
-std::ifstream* getConfigFile(const std::string& name);
+std::ifstream* getConfigFile(const std::string& name); //TODO: Qt-Specific file stuff.
+std::pair<std::string,std::string> getEntryPair(const std::ifstream& stream);
 
 #endif // CONFIGLOADER_H

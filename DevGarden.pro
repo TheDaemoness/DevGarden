@@ -32,6 +32,7 @@ HEADERS  += \
     src/ui/dgwindow.h \
     src/dgcontroller.h \
     envmacros.h \
-    configloader.h
+    configloader.h \
+    src/util/stringtree.h
 
 FORMS    +=
