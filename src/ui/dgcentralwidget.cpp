@@ -11,6 +11,9 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include <QHeaderView>
+#include <QScrollBar>
+
 DGCentralWidget::DGCentralWidget(QWidget *parent) :
 	QWidget(parent)
 {
@@ -27,16 +30,24 @@ void DGCentralWidget::createWidgets()
 
 	projectDirView = new QTreeView;
 	projectDirView->setModel(projectDirModel);
+	projectDirView->setWordWrap(false);
+	projectDirView->setTextElideMode(Qt::ElideNone);
+	projectDirView->setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
+	projectDirView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+	projectDirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	projectDirView->header()->hide();
 	projectDirView->setColumnHidden(1, true);
 	projectDirView->setColumnHidden(2, true);
 	projectDirView->setColumnHidden(3, true);
+	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
+	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
 
 	// Auxiliary ComboBox
 	auxComboBox = new QComboBox;
 	auxComboBox->addItem("Aux ComboBox");
 
 	// Auxiliary Pane
-	auxPane = new QPlainTextEdit;
+	auxPane = new QT;
 	auxPane->setPlainText("Auxiliary\nPane\nPlaceholder");
 
 	// Text Editor
@@ -89,4 +100,8 @@ void DGCentralWidget::createLayout()
 	mainLayout->addLayout(rightSideLayout, 1);
 
 	setLayout(mainLayout);
+}
+
+void DGCentralWidget::resizeDirView() {
+	projectDirView->resizeColumnToContents(0);
 }

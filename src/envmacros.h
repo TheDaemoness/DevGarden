@@ -25,6 +25,7 @@
 	#endif
 #elif defined(__CYGWIN__)
 	#define DG_ENV_WINDOZE
+	#define DG_ENV_CYGWIN
 	#define DG_ENV_POSIX
 #elif defined(_WIN32)
 	#define DG_ENV_WINDOZE

@@ -21,6 +21,9 @@ class DGCentralWidget : public QWidget
 		void createWidgets();
 		void createLayout();
 
+	private slots:
+		void resizeDirView();
+
 	private:
 		// Views
 		QTreeView* projectDirView;
