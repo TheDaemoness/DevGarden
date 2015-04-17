@@ -8,6 +8,7 @@ class QFileSystemModel;
 class QComboBox;
 class QPlainTextEdit;
 class QLineEdit;
+class QPushButton;
 
 class DGCentralWidget : public QWidget
 {
@@ -33,6 +34,7 @@ class DGCentralWidget : public QWidget
 		QPlainTextEdit* textEditor;
 		QLineEdit* bottomBar; // Placeholder
 		QPlainTextEdit* splitViewPane; // Placeholder
+		QPushButton* bottomButton;
 };
 
 #endif // DGCENTRALWIDGET_HPP

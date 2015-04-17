@@ -6,6 +6,7 @@
 #include <QComboBox>
 #include <QPlainTextEdit>
 #include <QLineEdit>
+#include <QPushButton>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -54,7 +55,10 @@ void DGCentralWidget::createWidgets()
 
 	// Split View Options Pane
 	splitViewPane = new QPlainTextEdit;
-	splitViewPane->setPlaceholderText("Split\nView\nOptions\nPane");
+	splitViewPane->setPlainText("Split\nView\nOptions\nPane");
+
+	// Bottom Push Button
+	bottomButton = new QPushButton("O"); // Placeholder until an QIcon can be created
 }
 
 void DGCentralWidget::createLayout()
@@ -76,6 +80,7 @@ void DGCentralWidget::createLayout()
 	// SplitViewPane, BottomButton
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
 	rightSideLayout->addWidget(splitViewPane, 5);
+	rightSideLayout->addWidget(bottomButton, 1);
 
 	// Main Layout (Combination of all child layouts)
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
