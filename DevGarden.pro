@@ -26,15 +26,20 @@ SOURCES += \
     src/main.cpp \
     src/ui/dgwindow.cpp \
     src/dgcontroller.cpp \
-    configloader.cpp
+    configloader.cpp \
+    src/ui/dgcentralwidget.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
     src/dgcontroller.h \
     envmacros.h \
     configloader.h \
-    src/util/stringtree.h
+    src/util/stringtree.h \
+    src/ui/dgcentralwidget.hpp
 
 FORMS    +=
 
 TRANSLATIONS = DevGarden_fr.ts
+
+DISTFILES += \
+    DGCentralDesignThought.txt

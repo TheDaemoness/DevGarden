@@ -1,0 +1,15 @@
+//####################
+//Directory List Model
+//####################
+
+1. Probably should derive our own custom type of file browsing model which can provide it's own functionality.
+
+//####################
+//Directory List View
+//####################
+
+1. Using the built in QTreeView should be more then enough to give us the features we need, unless we require some pretty advanced stuff.
+
+//####################
+//Aux Combo Box
+//####################

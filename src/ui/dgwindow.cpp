@@ -1,4 +1,5 @@
 #include "dgwindow.h"
+#include "dgcentralwidget.hpp"
 
 #include <QDesktopServices>
 #include <QUrl>
@@ -16,6 +17,9 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	this->setMenuBar(bar);
 
 	createMenuActions();
+
+	centralWidget = new DGCentralWidget(this);
+	setCentralWidget(centralWidget);
 }
 
 void DGWindow::createMenuActions() {
