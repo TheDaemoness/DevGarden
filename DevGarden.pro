@@ -26,16 +26,16 @@ SOURCES += \
     src/main.cpp \
     src/ui/dgwindow.cpp \
     src/dgcontroller.cpp \
-    configloader.cpp \
-    src/ui/dgcentralwidget.cpp
+    src/ui/dgcentralwidget.cpp \
+    src/configloader.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
     src/dgcontroller.h \
-    envmacros.h \
-    configloader.h \
     src/util/stringtree.h \
-    src/ui/dgcentralwidget.hpp
+    src/ui/dgcentralwidget.hpp \
+    src/configloader.h \
+    src/envmacros.h
 
 FORMS    +=
 
