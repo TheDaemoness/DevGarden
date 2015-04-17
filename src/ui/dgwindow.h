@@ -5,6 +5,8 @@
 
 #include "../dgcontroller.h"
 
+class DGCentralWidget;
+
 class DGWindow : public QMainWindow {
 	Q_OBJECT
 
@@ -30,6 +32,8 @@ private:
 	QMenuBar* bar;
 	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuWindow, *menuHelp;
 	QMenu *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll;
+
+	DGCentralWidget* centralWidget;
 };
 
 #endif // DGWINDOW_H
