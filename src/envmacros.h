@@ -24,10 +24,10 @@
 		#define DG_ENV_BSD
 	#endif
 #elif defined(__CYGWIN__)
-	#define DG_ENV_WNDOS
+	#define DG_ENV_WINDOZE
 	#define DG_ENV_POSIX
 #elif defined(_WIN32)
-	#define DG_ENV_WNDOS
+	#define DG_ENV_WINDOZE
 #elif defined(_POSIX_VERSION)
 	#define DG_ENV_POSIX
 #endif
@@ -38,7 +38,7 @@
 	#define DG_ENV "Mac OS"
 #elif defined(DG_ENV_CYGWIN)
 	#define DG_ENV "Windows (Cygwin)"
-#elif defined(DG_ENV_WNDOS)
+#elif defined(DG_ENV_WINDOZE)
 	#define DG_ENV "Windows"
 #elif defined(DG_ENV_BSD)
 	#define DG_ENV "BSD"
