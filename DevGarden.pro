@@ -10,6 +10,7 @@ QMAKE_CXXFLAGS += -pedantic -std=c++11
 
 macx {
 	QMAKE_CXXFLAGS += -stdlib=libc++
+	QMAKE_LFLAGS += -lc++
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
 }
 
@@ -22,11 +23,18 @@ TEMPLATE = app
 
 
 SOURCES += \
-    src/dgwindow.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/ui/dgwindow.cpp \
+    src/dgcontroller.cpp \
+    configloader.cpp
 
 HEADERS  += \
-    src/dgwindow.h
+    src/ui/dgwindow.h \
+    src/dgcontroller.h \
+    envmacros.h \
+    configloader.h \
+    src/util/stringtree.h
 
-FORMS    += \
-    src/ui/dgwindow.ui
+FORMS    +=
+
+TRANSLATIONS = DevGarden_fr.ts
