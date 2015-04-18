@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QTreeView;
+class QListWidget;
 class QFileSystemModel;
 class QComboBox;
 class QPlainTextEdit;
@@ -20,6 +21,7 @@ class DGCentralWidget : public QWidget
 	private:
 		void createWidgets();
 		void createLayout();
+		void setupConnections();
 
 	private slots:
 		void resizeDirView();
@@ -33,7 +35,7 @@ class DGCentralWidget : public QWidget
 
 		// Widgets
 		QComboBox* auxComboBox;
-		QPlainTextEdit* auxPane; // Just a placeholder till custom widget is created.
+		QListWidget* auxPane; // Just a placeholder till custom widget is created.
 		QPlainTextEdit* textEditor;
 		QLineEdit* bottomBar; // Placeholder
 		QPlainTextEdit* splitViewPane; // Placeholder

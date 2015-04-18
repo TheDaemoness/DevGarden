@@ -3,6 +3,7 @@
 #include <QFileSystemModel>
 #include <QCoreApplication>
 #include <QTreeView>
+#include <QListWidget>
 #include <QComboBox>
 #include <QPlainTextEdit>
 #include <QLineEdit>
@@ -19,6 +20,7 @@ DGCentralWidget::DGCentralWidget(QWidget *parent) :
 {
 	createWidgets();
 	createLayout();
+	setupConnections();
 }
 
 void DGCentralWidget::createWidgets()
@@ -39,23 +41,21 @@ void DGCentralWidget::createWidgets()
 	projectDirView->setColumnHidden(1, true);
 	projectDirView->setColumnHidden(2, true);
 	projectDirView->setColumnHidden(3, true);
-	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
-	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
 
 	// Auxiliary ComboBox
 	auxComboBox = new QComboBox;
 	auxComboBox->addItem("Aux ComboBox");
 
 	// Auxiliary Pane
-	auxPane = new QT;
-	auxPane->setPlainText("Auxiliary\nPane\nPlaceholder");
+	auxPane = new QListWidget();
+	auxPane->addItem("Auxiliary Pane!");
 
 	// Text Editor
 	textEditor = new QPlainTextEdit;
 	textEditor->setPlainText("#include <iostream>\n\n"
 							 "int main()\n"
 							 "{\n"
-							 "    std::cout << \"dtscode is a nim noob\";\n"
+							 "    std::cout << \"dtscode is a nim consort\";\n"
 							 "    return 0;\n"
 							 "}");
 
@@ -100,6 +100,11 @@ void DGCentralWidget::createLayout()
 	mainLayout->addLayout(rightSideLayout, 1);
 
 	setLayout(mainLayout);
+}
+
+void DGCentralWidget::setupConnections() {
+	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
+	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
 }
 
 void DGCentralWidget::resizeDirView() {
