@@ -27,7 +27,9 @@ SOURCES += \
     src/ui/dgwindow.cpp \
     src/dgcontroller.cpp \
     src/ui/dgcentralwidget.cpp \
-    src/configloader.cpp
+    src/configloader.cpp \
+    src/filesys/dgprojectloader.cpp \
+    src/filesys/dgprojectinfo.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -35,7 +37,9 @@ HEADERS  += \
     src/util/stringtree.h \
     src/ui/dgcentralwidget.hpp \
     src/configloader.h \
-    src/envmacros.h
+    src/envmacros.h \
+    src/filesys/dgprojectloader.h \
+    src/filesys/dgprojectinfo.h
 
 FORMS    +=
 
