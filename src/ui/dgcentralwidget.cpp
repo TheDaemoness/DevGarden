@@ -1,4 +1,5 @@
 #include "dgcentralwidget.hpp"
+#include "editor/codeeditorwidget.h"
 
 #include <QFileSystemModel>
 #include <QCoreApplication>
@@ -59,7 +60,7 @@ void DGCentralWidget::createWidgets()
 	auxPane->addItem("Auxiliary Pane!");
 
 	// Text Editor
-	textEditor = new QPlainTextEdit;
+	textEditor = new CodeEditorWidget;
 	textEditor->setPlainText("#include <iostream>\n\n"
 							 "int main()\n"
 							 "{\n"
