@@ -39,4 +39,3 @@ class DGCentralWidget : public QWidget
 };
 
 #endif // DGCENTRALWIDGET_HPP
-

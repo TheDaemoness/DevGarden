@@ -26,14 +26,29 @@ class SyntaxHighlighter : public QSyntaxHighlighter
 		QRegExp commentEndExp;
 
 		QTextCharFormat keywordFormat;
+		QColor keywordColor;
+
 		QTextCharFormat integerFormat;
+		QColor integerColor;
+
 		QTextCharFormat includeHeaderFormat;
+		QColor headerColor;
+
 		QTextCharFormat extraKeywordFormat;
+		QColor extraKeywordColor;
+
 		QTextCharFormat classFormat;
+		QColor classColor;
+
 		QTextCharFormat singleLineCommentFormat;
 		QTextCharFormat multiLineCommentFormat;
+		QColor commentColor;
+
 		QTextCharFormat quotationFormat;
+		QColor quotationColor;
+
 		QTextCharFormat functionFormat;
+		QColor functionColor;
 };
 
 #endif // SYNTAX_HIGHLIGHTER_H

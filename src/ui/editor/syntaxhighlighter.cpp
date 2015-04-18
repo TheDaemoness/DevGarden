@@ -5,7 +5,17 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent)
 {
 	HighlightingRule rule;
 
-	keywordFormat.setForeground(QColor(102,217,239));
+	// Highlight colors
+	keywordColor = QColor(102,217,239);
+	headerColor = QColor(220,213,131);
+	extraKeywordColor = QColor(185,38,76);
+	integerColor = QColor(192,151,210);
+	classColor = Qt::white;
+	quotationColor = QColor(230,219,103);
+	functionColor = QColor(166,226,44);
+	commentColor = QColor(104,102,83).lighter(240);
+
+	keywordFormat.setForeground(keywordColor);
 	QStringList keywordPatterns;
 	keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
 					<< "\\bdouble\\b" << "\\benum\\b"
@@ -25,12 +35,12 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent)
 		highlightingRules.append(rule);
 	}
 
-	includeHeaderFormat.setForeground(QColor(220,213,131));
+	includeHeaderFormat.setForeground(headerColor);
 	rule.pattern = QRegExp("include ((<[^>]+>)|(\"[^\"]+\"))");
 	rule.format = includeHeaderFormat;
 	highlightingRules.append(rule);
 
-	extraKeywordFormat.setForeground(QColor(185,38,76));
+	extraKeywordFormat.setForeground(extraKeywordColor);
 	QStringList extraKeywordPatterns;
 	extraKeywordPatterns << "\\bprivate\\b" << "\\bpublic\\b" << "\\bprotected\\b"
 						 << "\\bifndef\\b" << "\\bendif\\b" << "\\binclude\\b"
@@ -44,33 +54,33 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent)
 		highlightingRules.append(rule);
 	}
 
-	integerFormat.setForeground(QColor(192,151,210));
+	integerFormat.setForeground(integerColor);
 	rule.pattern = QRegExp("[0-9]+");
 	rule.format = integerFormat;
 	highlightingRules.append(rule);
 
-	classFormat.setForeground(Qt::white);
+	classFormat.setForeground(classColor);
 	rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
 	rule.format = classFormat;
 	highlightingRules.append(rule);
 
-	quotationFormat.setForeground(QColor(230,219,103));
+	quotationFormat.setForeground(quotationColor);
 	rule.pattern = QRegExp("\".*\"");
 	rule.format = quotationFormat;
 	highlightingRules.append(rule);
 
 	functionFormat.setFontItalic(true);
-	functionFormat.setForeground(QColor(166,226,44));
+	functionFormat.setForeground(functionColor);
 	rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
 	rule.format = functionFormat;
 	highlightingRules.append(rule);
 
-	singleLineCommentFormat.setForeground(QColor(104,102,83));
+	singleLineCommentFormat.setForeground(commentColor);
 	rule.pattern = QRegExp("//[^\n]*");
 	rule.format = singleLineCommentFormat;
 	highlightingRules.append(rule);
 
-	multiLineCommentFormat.setForeground(QColor(104,102,83).lighter(240));
+	multiLineCommentFormat.setForeground(commentColor);
 
 	commentStartExp = QRegExp("/\\*");
 	commentEndExp = QRegExp("\\*/");

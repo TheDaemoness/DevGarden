@@ -19,8 +19,11 @@ class CodeEditorWidget : public QPlainTextEdit
 	protected:
 		void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
+	private:
+		void createConnections();
+
 	private slots:
-		void updateLineNumberAreaWidth(int newBlockCount);
+		void updateLineNumberAreaWidth();
 		void highlightCurrentLine();
 		void updateLineNumberArea(const QRect& rect, int dy);
 
