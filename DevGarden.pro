@@ -27,7 +27,9 @@ SOURCES += \
     src/ui/dgwindow.cpp \
     src/dgcontroller.cpp \
     src/ui/dgcentralwidget.cpp \
-    src/configloader.cpp
+    src/configloader.cpp \
+    src/ui/editor/codeeditorwidget.cpp \
+    src/ui/editor/syntaxhighlighter.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -35,11 +37,11 @@ HEADERS  += \
     src/util/stringtree.h \
     src/ui/dgcentralwidget.hpp \
     src/configloader.h \
-    src/envmacros.h
+    src/envmacros.h \
+    src/ui/editor/codeeditorwidget.h \
+    src/ui/editor/linenumberarea.h \
+    src/ui/editor/syntaxhighlighter.h
 
 FORMS    +=
 
 TRANSLATIONS = DevGarden_fr.ts
-
-DISTFILES += \
-    DGCentralDesignThought.txt
