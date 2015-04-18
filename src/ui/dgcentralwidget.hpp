@@ -11,12 +11,14 @@ class QPlainTextEdit;
 class QLineEdit;
 class QPushButton;
 
+class DGController;
+
 class DGCentralWidget : public QWidget
 {
 	Q_OBJECT
 
 	public:
-		explicit DGCentralWidget(QWidget* parent = 0);
+		explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
 	private:
 		void createWidgets();
@@ -25,6 +27,7 @@ class DGCentralWidget : public QWidget
 
 	private slots:
 		void resizeDirView();
+		void changeProject(const QString& str);
 
 	private:
 		// Views
@@ -35,11 +38,15 @@ class DGCentralWidget : public QWidget
 
 		// Widgets
 		QComboBox* auxComboBox;
+		QComboBox* projectComboBox;
 		QListWidget* auxPane; // Just a placeholder till custom widget is created.
 		QPlainTextEdit* textEditor;
 		QLineEdit* bottomBar; // Placeholder
 		QPlainTextEdit* splitViewPane; // Placeholder
 		QPushButton* bottomButton;
+
+		//Controller ptr (NO OWNERSHIP)
+		DGController* ctrl;
 };
 
 #endif // DGCENTRALWIDGET_HPP

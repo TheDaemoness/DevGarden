@@ -18,7 +18,7 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 
 	createMenuActions();
 
-	centralWidget = new DGCentralWidget(this);
+	centralWidget = new DGCentralWidget(dgc, this);
 	setCentralWidget(centralWidget);
 }
 

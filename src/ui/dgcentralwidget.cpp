@@ -15,8 +15,10 @@
 #include <QHeaderView>
 #include <QScrollBar>
 
-DGCentralWidget::DGCentralWidget(QWidget *parent) :
-	QWidget(parent)
+#include "../dgcontroller.h"
+
+DGCentralWidget::DGCentralWidget(DGController* ctrl, QWidget *parent) :
+	QWidget(parent), ctrl(ctrl)
 {
 	createWidgets();
 	createLayout();
@@ -41,10 +43,16 @@ void DGCentralWidget::createWidgets()
 	projectDirView->setColumnHidden(1, true);
 	projectDirView->setColumnHidden(2, true);
 	projectDirView->setColumnHidden(3, true);
+	projectDirView->setHidden(true);
 
 	// Auxiliary ComboBox
 	auxComboBox = new QComboBox;
 	auxComboBox->addItem("Aux ComboBox");
+
+	// Project
+	projectComboBox = new QComboBox;
+	projectComboBox->addItem("Projects");
+	this->connect(this->projectComboBox,SIGNAL(currentIndexChanged(QString)),SLOT(changeProject(QString)));
 
 	// Auxiliary Pane
 	auxPane = new QListWidget();
@@ -79,18 +87,19 @@ void DGCentralWidget::createLayout()
 
 	// ProjectDir, AuxCombo, AuxPane
 	QVBoxLayout* leftSideLayout = new QVBoxLayout;
+	leftSideLayout->addWidget(projectComboBox, 1);
 	leftSideLayout->addWidget(projectDirView, 3);
 	leftSideLayout->addWidget(auxComboBox, 1);
 	leftSideLayout->addWidget(auxPane, 3);
 
 	// TextEditor, BottomBar
 	QVBoxLayout* centralLayout = new QVBoxLayout;
-	centralLayout->addWidget(textEditor, 5);
-	centralLayout->addWidget(bottomBar, 1);
+	centralLayout->addWidget(textEditor, 6);
+	centralLayout->addWidget(bottomBar, 2);
 
 	// SplitViewPane, BottomButton
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
-	rightSideLayout->addWidget(splitViewPane, 5);
+	rightSideLayout->addWidget(splitViewPane, 7);
 	rightSideLayout->addWidget(bottomButton, 1);
 
 	// Main Layout (Combination of all child layouts)
@@ -105,8 +114,17 @@ void DGCentralWidget::createLayout()
 void DGCentralWidget::setupConnections() {
 	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
 	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
+	this->connect(projectComboBox,SIGNAL(currentIndexChanged(QString)),SLOT(changeProject(QString)));
 }
 
 void DGCentralWidget::resizeDirView() {
 	projectDirView->resizeColumnToContents(0);
+}
+
+void DGCentralWidget::changeProject(const QString &str) {
+	ctrl->changeProject(str);
+	QFileSystemModel* m = ctrl->getActiveProjectModel();
+	if(m)
+		projectDirView->setModel(m);
+	projectDirView->setHidden(!m);
 }

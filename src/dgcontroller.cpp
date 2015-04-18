@@ -1,6 +1,8 @@
 #include "dgcontroller.h"
+
 #include <QFileDialog>
 #include <QWindow>
+#include <QFileSystemModel>
 
 DGController::DGController(QObject *parent) :
 	QObject(parent) {
@@ -25,4 +27,10 @@ void DGController::openFiles() {
 }
 void DGController::saveFileAs() {
 	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
+}
+
+void DGController::changeProject(const QString &str) {}
+
+QFileSystemModel* DGController::getActiveProjectModel() {
+	return nullptr;
 }
