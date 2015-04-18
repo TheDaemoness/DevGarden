@@ -10,6 +10,7 @@ class QComboBox;
 class QPlainTextEdit;
 class QLineEdit;
 class QPushButton;
+class CodeEditorWidget;
 
 class DGController;
 
@@ -38,9 +39,9 @@ class DGCentralWidget : public QWidget
 
 		// Widgets
 		QComboBox* auxComboBox;
+		CodeEditorWidget* textEditor;
 		QComboBox* projectComboBox;
 		QListWidget* auxPane; // Just a placeholder till custom widget is created.
-		QPlainTextEdit* textEditor;
 		QLineEdit* bottomBar; // Placeholder
 		QPlainTextEdit* splitViewPane; // Placeholder
 		QPushButton* bottomButton;
@@ -50,4 +51,3 @@ class DGCentralWidget : public QWidget
 };
 
 #endif // DGCENTRALWIDGET_HPP
-
