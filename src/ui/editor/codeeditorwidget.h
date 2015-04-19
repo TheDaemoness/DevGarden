@@ -16,6 +16,11 @@ class CodeEditorWidget : public QPlainTextEdit
 		void lineNumberPaintEvent(QPaintEvent* event);
 		int lineNumberAreaWidth();
 
+	public slots:
+		void fontSizeInc();
+		void fontSizeDec();
+		void fontSizeRes();
+
 	protected:
 		void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 

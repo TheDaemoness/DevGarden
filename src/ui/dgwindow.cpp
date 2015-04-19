@@ -1,9 +1,11 @@
 #include "dgwindow.h"
 #include "dgcentralwidget.hpp"
+#include "editor/codeeditorwidget.h"
 
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMenuBar>
+
 
 DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMainWindow(parent)
@@ -29,18 +31,18 @@ void DGWindow::createMenuActions() {
     menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
     menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
 	menuFile->addSeparator();
-    menuFile->addAction(tr("Save"), this, SLOT(nullSlot()), QKeySequence::Save);
-    menuFile->addAction(tr("Save As..."), this, SLOT(nullSlot()), QKeySequence::SaveAs);
-    menuFile->addAction(tr("Save All"));
-    menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);
+	menuFile->addAction(tr("Save"), this, SLOT(nullSlot()), QKeySequence::Save);
+	menuFile->addAction(tr("Save As..."), this, SLOT(nullSlot()), QKeySequence::SaveAs);
+	menuFile->addAction(tr("Save All"));
+	menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);
 	menuFile->addSeparator();
-    menuFile->addAction(tr("Close"), this, SLOT(nullSlot()), QKeySequence::Close);
+	menuFile->addAction(tr("Close"), this, SLOT(nullSlot()), QKeySequence::Close);
     menuFile->addAction(tr("Close Project"));
 	menuFile->addSeparator();
     menuFile->addAction(tr("Import..."));
     menuFile->addAction(tr("Export..."));
 	menuFile->addSeparator();
-    menuFile->addAction(tr("Quit"), this, SLOT(quit()), QKeySequence::Quit);
+	menuFile->addAction(tr("Quit"), this, SLOT(quit()), QKeySequence::Quit);
 
 	menuEdit = menuBar()->addMenu(tr("&Edit"));
     menuEdit->addAction(tr("Undo"), this, SLOT(nullSlot()), QKeySequence::Undo);
@@ -120,7 +122,7 @@ void DGWindow::createMenuActions() {
 	menuWindow->addSeparator();
     menuWindow->addAction(tr("Increase Font Size"), this, SLOT(zoomIn()), QKeySequence::ZoomIn);
     menuWindow->addAction(tr("Decrease Font Size"), this, SLOT(zoomOut()), QKeySequence::ZoomOut);
-    menuWindow->addAction(tr("Reset Font Size"));
+	menuWindow->addAction(tr("Reset Font Size"), this, SLOT(zoomReset()));
 	menuWindow->addSeparator();
     menuWindow->addAction(tr("Toggle Light/Dark Theme"));
     menuWindow->addAction(tr("Run Command Prompt..."), this, SLOT(nullSlot()), QKeySequence(tr("Alt+Space")));
@@ -151,8 +153,16 @@ void DGWindow::toggleFullscreen() {
 	this->isFullScreen()?this->showNormal():this->showFullScreen();
 }
 
-void DGWindow::zoomOut() {}
-void DGWindow::zoomIn() {}
+void DGWindow::zoomOut() {
+	this->centralWidget->getEditor()->fontSizeDec();
+
+}
+void DGWindow::zoomIn() {
+	this->centralWidget->getEditor()->fontSizeInc();
+}
+void DGWindow::zoomReset() {
+	this->centralWidget->getEditor()->fontSizeRes();
+}
 
 void DGWindow::nullSlot() {}
 

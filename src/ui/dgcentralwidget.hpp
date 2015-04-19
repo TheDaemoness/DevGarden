@@ -21,6 +21,8 @@ class DGCentralWidget : public QWidget
 	public:
 		explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
+		inline CodeEditorWidget* getEditor() {return textEditor;}
+
 	private:
 		void createWidgets();
 		void createLayout();

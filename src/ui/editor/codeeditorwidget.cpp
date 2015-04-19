@@ -62,6 +62,28 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 	}
 }
 
+void CodeEditorWidget::fontSizeInc() {
+	if(textFont.pointSize() >= 12)
+		textFont.setPointSize(textFont.pointSize()+2);
+	else
+		textFont.setPointSize(textFont.pointSize()+1);
+	this->setFont(textFont);
+}
+
+void CodeEditorWidget::fontSizeDec() {
+	if(textFont.pointSize() > 12)
+		textFont.setPointSize(textFont.pointSize()-2);
+	else if(textFont.pointSize() > 8)
+		textFont.setPointSize(textFont.pointSize()-1);
+	this->setFont(textFont);
+}
+
+void CodeEditorWidget::fontSizeRes() {
+	if(textFont.pointSize() > 12)
+		textFont.setPointSize(12);
+	this->setFont(textFont);
+}
+
 // Overload needed to handle resizing the line number area which is manually painted on.
 void CodeEditorWidget::resizeEvent(QResizeEvent *e)
 {

@@ -22,6 +22,7 @@ private slots:
 	void openBugReportPage();
 	void quit();
 	void toggleFullscreen();
+	void zoomReset();
 	void zoomIn();
 	void zoomOut();
 	void nullSlot();
