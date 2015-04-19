@@ -21,6 +21,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = DevGarden
 TEMPLATE = app
 
+macx:ICON = assets/icon.icns
+win32:RC_ICONS += assets/icon.ico
 
 SOURCES += \
     src/main.cpp \
@@ -49,3 +51,6 @@ HEADERS  += \
 FORMS    +=
 
 TRANSLATIONS = DevGarden_fr.ts
+
+RESOURCES += \
+    assets/icons.qrc

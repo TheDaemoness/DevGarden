@@ -1,4 +1,5 @@
 #include "ui/dgwindow.h"
+#include "envmacros.h"
 
 #include <QApplication>
 #include <QTranslator>
@@ -7,6 +8,8 @@
 
 int main(int argc, char **argv) {
 	QApplication a(argc, argv);
+	a.setApplicationName("DevGarden");
+	a.setWindowIcon(QIcon("://icon.png"));\
 
 	// Translation
 	QTranslator translator;
