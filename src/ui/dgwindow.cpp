@@ -136,7 +136,7 @@ void DGWindow::createMenuActions() {
 }
 
 void DGWindow::openProjectPage() {
-	QDesktopServices::openUrl(QUrl("https://github.com/TheRabbitologist/DevGarden"));
+	QDesktopServices::openUrl(QUrl("https://github.com/TheRabbitologist/DevGarden/tree/devel"));
 }
 
 void DGWindow::openBugReportPage() {

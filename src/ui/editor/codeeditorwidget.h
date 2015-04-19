@@ -28,6 +28,7 @@ class CodeEditorWidget : public QPlainTextEdit
 		void updateLineNumberArea(const QRect& rect, int dy);
 
 	private:
+		QFont textFont;
 		QWidget* lineNumberArea;
 		SyntaxHighlighter* syntaxHighlighter;
 };

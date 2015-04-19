@@ -1,8 +1,10 @@
 #include "codeeditorwidget.h"
 #include "syntaxhighlighter.h"
 #include "linenumberarea.h"
+
 #include <QPainter>
 #include <QTextBlock>
+#include <QFontDatabase>
 
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
@@ -17,9 +19,11 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	colors.setColor(QPalette::Text, Qt::white);
 	setPalette(colors);
 
-	QFont font = QFont("Consolas", 10);
-	font.setBold(true);
-	setFont(font);
+	textFont.setStyleHint(QFont::Monospace);
+	textFont.setPointSize(12);
+	this->setFont(textFont);
+
+	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
 
 	// Syntax highlighting. If you wish to turn off syntax highlighting
 	// at the moment only way to do so is to not initialize the member.
@@ -47,7 +51,7 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 		{
 			QString number = QString::number(blockNumber + 1);
 			painter.setPen(QColor(188,188,188));
-			painter.setFont(QFont("Consolas", 10));
+			painter.setFont(textFont);
 			painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
 		}
 
@@ -70,7 +74,7 @@ void CodeEditorWidget::resizeEvent(QResizeEvent *e)
 // Creates signal/slot connections
 void CodeEditorWidget::createConnections()
 {
-	connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
+	connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth()));
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect, int)));
 	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 }
