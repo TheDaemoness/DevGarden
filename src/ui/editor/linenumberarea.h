@@ -9,22 +9,22 @@ class LineNumberArea : public QWidget
 {
 	Q_OBJECT
 
-	public:
-		LineNumberArea(CodeEditorWidget* editor) : QWidget(editor), codeEditor(editor) {}
+public:
+	LineNumberArea(CodeEditorWidget* editor) : QWidget(editor), codeEditor(editor) {}
 
-		QSize sizeHint() const Q_DECL_OVERRIDE
-		{
-			return QSize(codeEditor->lineNumberAreaWidth(), 0);
-		}
+	QSize sizeHint() const Q_DECL_OVERRIDE
+	{
+		return QSize(codeEditor->lineNumberAreaWidth(), 0);
+	}
 
-	protected:
-		void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE
-		{
-			codeEditor->lineNumberPaintEvent(event);
-		}
+protected:
+	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE
+	{
+		codeEditor->lineNumberPaintEvent(event);
+	}
 
-	private:
-		CodeEditorWidget* codeEditor;
+private:
+	CodeEditorWidget* codeEditor;
 };
 
 #endif // LINE_NUMBER_AREA

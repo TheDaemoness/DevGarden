@@ -18,38 +18,38 @@ class DGCentralWidget : public QWidget
 {
 	Q_OBJECT
 
-	public:
-		explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
+public:
+	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
-		inline CodeEditorWidget* getEditor() {return textEditor;}
+	inline CodeEditorWidget* getEditor() {return textEditor;}
 
-	private:
-		void createWidgets();
-		void createLayout();
-		void setupConnections();
+private:
+	void createWidgets();
+	void createLayout();
+	void setupConnections();
 
-	private slots:
-		void resizeDirView();
-		void changeProject(const QString& str);
+private slots:
+	void resizeDirView();
+	void changeProject(const QString& str);
 
-	private:
-		// Views
-		QTreeView* projectDirView;
+private:
+	// Views
+	QTreeView* projectDirView;
 
-		// Models
-		QFileSystemModel* projectDirModel;
+	// Models
+	QFileSystemModel* projectDirModel;
 
-		// Widgets
-		QComboBox* auxComboBox;
-		CodeEditorWidget* textEditor;
-		QComboBox* projectComboBox;
-		QListWidget* auxPane; // Just a placeholder till custom widget is created.
-		QLineEdit* bottomBar; // Placeholder
-		QPlainTextEdit* splitViewPane; // Placeholder
-		QPushButton* bottomButton;
+	// Widgets
+	QComboBox* auxComboBox;
+	CodeEditorWidget* textEditor;
+	QComboBox* projectComboBox;
+	QListWidget* auxPane; // Just a placeholder till custom widget is created.
+	QLineEdit* bottomBar; // Placeholder
+	QPlainTextEdit* splitViewPane; // Placeholder
+	QPushButton* bottomButton;
 
-		//Controller ptr (NO OWNERSHIP)
-		DGController* ctrl;
+	//Controller ptr (NO OWNERSHIP)
+	DGController* ctrl;
 };
 
 #endif // DGCENTRALWIDGET_HPP

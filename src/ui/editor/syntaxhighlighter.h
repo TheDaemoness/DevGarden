@@ -7,48 +7,48 @@ class SyntaxHighlighter : public QSyntaxHighlighter
 {
 	Q_OBJECT
 
-	public:
-		SyntaxHighlighter(QTextDocument* parent = 0);
+public:
+	SyntaxHighlighter(QTextDocument* parent = 0);
 
-	protected:
-		void highlightBlock(const QString& text) Q_DECL_OVERRIDE;
+protected:
+	void highlightBlock(const QString& text) Q_DECL_OVERRIDE;
 
-	private:
-		struct HighlightingRule
-		{
-			QRegExp pattern;
-			QTextCharFormat format;
-		};
+private:
+	struct HighlightingRule
+	{
+		QRegExp pattern;
+		QTextCharFormat format;
+	};
 
-		QVector<HighlightingRule> highlightingRules;
+	QVector<HighlightingRule> highlightingRules;
 
-		QRegExp commentStartExp;
-		QRegExp commentEndExp;
+	QRegExp commentStartExp;
+	QRegExp commentEndExp;
 
-		QTextCharFormat keywordFormat;
-		QColor keywordColor;
+	QTextCharFormat keywordFormat;
+	QColor keywordColor;
 
-		QTextCharFormat integerFormat;
-		QColor integerColor;
+	QTextCharFormat integerFormat;
+	QColor integerColor;
 
-		QTextCharFormat includeHeaderFormat;
-		QColor headerColor;
+	QTextCharFormat includeHeaderFormat;
+	QColor headerColor;
 
-		QTextCharFormat extraKeywordFormat;
-		QColor extraKeywordColor;
+	QTextCharFormat extraKeywordFormat;
+	QColor extraKeywordColor;
 
-		QTextCharFormat classFormat;
-		QColor classColor;
+	QTextCharFormat classFormat;
+	QColor classColor;
 
-		QTextCharFormat singleLineCommentFormat;
-		QTextCharFormat multiLineCommentFormat;
-		QColor commentColor;
+	QTextCharFormat singleLineCommentFormat;
+	QTextCharFormat multiLineCommentFormat;
+	QColor commentColor;
 
-		QTextCharFormat quotationFormat;
-		QColor quotationColor;
+	QTextCharFormat quotationFormat;
+	QColor quotationColor;
 
-		QTextCharFormat functionFormat;
-		QColor functionColor;
+	QTextCharFormat functionFormat;
+	QColor functionColor;
 };
 
 #endif // SYNTAX_HIGHLIGHTER_H
