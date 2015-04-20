@@ -36,7 +36,7 @@
 * Prefer the range-based for loop over the C-style for loop for iteration over a structure.
 
 ## C++ Standard Library
-* Use <c*> headers over <*.h> standard headers.
+* Use `<c*>` headers over `<*.h>` standard headers.
 * Prefer Qt features over standard C++ features where possible, with a few exceptions (see Qt).
 * Avoid deprecated features of the C++ standard library where possible.
 * std::shared_ptr est interdit. Don't use it.
