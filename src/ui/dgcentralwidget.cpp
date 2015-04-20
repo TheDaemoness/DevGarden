@@ -17,6 +17,7 @@
 #include <QScrollBar>
 
 #include "../dgcontroller.h"
+#include "../envmacros.h"
 
 DGCentralWidget::DGCentralWidget(DGController* ctrl, QWidget *parent) :
 	QWidget(parent), ctrl(ctrl)
@@ -133,6 +134,7 @@ void DGCentralWidget::changeProject(int index) {
 		resizeDirView();
 	}
 	projectDirView->setHidden(!m);
+	static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME) + " - " + projectComboBox->currentText());
 }
 
 void DGCentralWidget::upateProjectList() {
