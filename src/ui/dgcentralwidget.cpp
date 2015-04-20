@@ -50,6 +50,7 @@ void DGCentralWidget::createWidgets()
 	// Project
 	projectComboBox = new QComboBox;
 	projectComboBox->addItem("Projects");
+	projectComboBox->setHidden(true);
 	this->connect(this->projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
 
 	// Auxiliary Pane
@@ -58,10 +59,9 @@ void DGCentralWidget::createWidgets()
 
 	// Text Editor
 	textEditor = new CodeEditorWidget;
-	textEditor->setPlainText("#include <iostream>\n\n"
-							 "int main()\n"
-							 "{\n"
-							 "    std::cout << \"dtscode is a nim consort\";\n"
+	textEditor->setPlainText("#include <stdio.h>\n\n"
+							 "int main(int argc, char** argv) {\n"
+							 "    printf(\"dtscode is a nim cohort\\n\");\n"
 							 "    return 0;\n"
 							 "}");
 
@@ -142,6 +142,7 @@ void DGCentralWidget::upateProjectList() {
 	this->projectComboBox->setCurrentIndex(this->ctrl->getProjects().length()-1);
 	this->changeProject(this->ctrl->getProjects().length()-1);
 	this->projectComboBox->blockSignals(false);
+	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
 }
 
 

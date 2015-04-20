@@ -39,9 +39,11 @@ QStringList DGController::getProjects() {
 QString DGController::changeProject(size_t index) {
 	if(!l->changeCurrent(index))
 		return "";
-	if(l->getCurrent()->isSingleFile() && fsm) {
-		delete fsm;
-		fsm = nullptr;
+	if(l->getCurrent()->isSingleFile()) {
+		if(fsm) {
+			delete fsm;
+			fsm = nullptr;
+		}
 		return "";
 	}
 	else {

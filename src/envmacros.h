@@ -13,8 +13,6 @@
 		#define DG_ENV_MACOS
 		#define DG_ENV_UNIX
 		#define DG_ENV_POSIX
-	#elif TARGET_IPHONE_SIMULATOR == 1 || TARGET_OS_IPHONE == 1
-		#define DG_ENV_IOS
 	#endif
 #elif defined(__unix__) || defined(__unix)
 	#define DG_ENV_UNIX

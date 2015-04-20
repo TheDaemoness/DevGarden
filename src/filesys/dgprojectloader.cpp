@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QStringList>
 
+#include "../dgdebug.hpp"
+
 bool DGProjectLoader::changeCurrent(size_t index) {
 	if(index >= projs.size())
 		return false;
@@ -35,6 +37,7 @@ DGProjectInfo* DGProjectLoader::getCurrent() {
 
 bool DGProjectLoader::addFile(QString path) {
 	QFile* f = new QFile(path);
+	f->open(QFile::ReadWrite);
 	if(!f->isOpen()) {
 		delete f;
 		return false;

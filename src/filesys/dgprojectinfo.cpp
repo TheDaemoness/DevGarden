@@ -21,8 +21,11 @@ DGProjectInfo::DGProjectInfo(QDir* f) : isdir(true) {
 DGProjectInfo::~DGProjectInfo() {
 	if(isdir)
 		delete content.dir;
-	else
+	else {
+		if(content.file->isOpen())
+			content.file->close();
 		delete content.file;
+	}
 }
 
 QString DGProjectInfo::getName() const {
