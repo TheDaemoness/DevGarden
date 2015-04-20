@@ -47,7 +47,8 @@ HEADERS  += \
 	src/ui/editor/syntaxhighlighter.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h \
-    CODESTYLE.md
+    CODESTYLE.md \
+    src/dgdebug.hpp
 
 TRANSLATIONS = DevGarden_fr.ts
 
