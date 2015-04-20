@@ -146,11 +146,7 @@ void DGCentralWidget::upateProjectList() {
 		this->changeProject(this->ctrl->getProjects().length()-1);
 	} else {
 		projectDirView->setModel(nullptr);
-<<<<<<< HEAD
 		projectDirView->setHidden(true);
-=======
-		projectDirView->setHidden(!m);
->>>>>>> 966933486123b8e21ae9dfe844a0768fa94dea40
 		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
 	}
 	this->projectComboBox->blockSignals(false);
