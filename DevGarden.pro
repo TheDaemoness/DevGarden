@@ -6,7 +6,7 @@
 
 cache()
 
-QMAKE_CXXFLAGS += -pedantic -std=c++11
+QMAKE_CXXFLAGS += -pedantic -std=c++14
 
 macx {
 	QMAKE_CXXFLAGS += -stdlib=libc++
@@ -52,3 +52,6 @@ TRANSLATIONS = DevGarden_fr.ts
 
 RESOURCES += \
     assets/icons.qrc
+
+OTHER_FILES += \
+    src/CODESTYLE.md
