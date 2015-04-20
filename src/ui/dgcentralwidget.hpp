@@ -24,7 +24,8 @@ public:
 	inline CodeEditorWidget* getEditor() {return textEditor;}
 
 public slots:
-	void upateProjectList();
+	void updateProjectList();
+	void shrinkProjectList();
 
 private:
 	void createWidgets();

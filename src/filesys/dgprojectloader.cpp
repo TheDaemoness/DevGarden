@@ -12,27 +12,38 @@ bool DGProjectLoader::changeCurrent(size_t index) {
 	current = projs.begin() + index;
 	return true;
 }
-void DGProjectLoader::closeCurrent() {
-
+bool DGProjectLoader::closeCurrent() {
+	if(projs.empty())
+		return false;
+	delete *current;
+	current = projs.erase(current);
+	return true;
 }
 
-void DGProjectLoader::closeOthers() {
+bool DGProjectLoader::closeOthers() {
+	if(projs.size() <= 1)
+		return false;
 	DGProjectInfo* temp = *current;
 	projs.erase(current);
 	for(auto e : projs)
 		delete e;
 	projs.resize(1);
 	projs.at(0) = temp;
+	current = projs.begin();
+	return true;
 }
 
-void DGProjectLoader::closeAll() {
+bool DGProjectLoader::closeAll() {
+	if(projs.empty())
+		return false;
 	for(auto e : projs)
 		delete e;
 	projs.clear();
+	return true;
 }
 
 DGProjectInfo* DGProjectLoader::getCurrent() {
-	return *current;
+	return (projs.empty()?nullptr:*current);
 }
 
 bool DGProjectLoader::addFile(QString path) {

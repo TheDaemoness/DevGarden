@@ -1,7 +1,7 @@
 #ifndef DGDEBUG_HPP
 #define DGDEBUG_HPP
 
-//For those of us who can't use GDB.
+//For those of us who can't use a debugger with Qt Creator.
 
 #include <iostream>
 #include <cassert>

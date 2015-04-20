@@ -15,9 +15,9 @@ private:
 public:
 	inline bool empty() {return projs.empty();}
 	bool changeCurrent(size_t index);
-	void closeCurrent();
-	void closeOthers();
-	void closeAll();
+	bool closeCurrent();
+	bool closeOthers();
+	bool closeAll();
 	DGProjectInfo* getCurrent();
 	bool addFile(QString path);
 	bool addFolder(QString path);

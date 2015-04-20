@@ -32,6 +32,25 @@ void DGController::saveFileAs() {
 	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
 }
 
+void DGController::closeCurrent() {
+	if(l->closeCurrent()) {
+		emit sigProjectClosed();
+		emit sigProjectChanged();
+	}
+}
+
+void DGController::closeOthers() {
+	if(l->closeOthers())
+		emit sigProjectListChanged();
+}
+
+void DGController::closeAll() {
+	if(l->closeAll()) {
+		emit sigProjectListChanged();
+		emit sigProjectClosed();
+	}
+}
+
 QStringList DGController::getProjects() {
 	return l->getProjectNames();
 }

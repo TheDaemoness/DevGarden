@@ -21,13 +21,26 @@ public:
 	QStringList getProjects();
 
 signals:
+	/**
+	 * @brief sigProjectChanged Emitted when the active project has been switched to another.
+	 */
 	void sigProjectChanged();
+	/**
+	 * @brief sigProjectListChanged() Emitted when the project list changes but the current project is not closed.
+	 */
 	void sigProjectListChanged();
+	/**
+	 * @brief sigProjectListClosed() Emitted when the current project list has closed.
+	 */
+	void sigProjectClosed();
 
 public slots:
 	void openFolder();
 	void openFiles();
 	void saveFileAs();
+	void closeCurrent();
+	void closeOthers();
+	void closeAll();
 
 private:
 	QFileSystemModel* fsm; //No relation.

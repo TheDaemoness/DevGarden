@@ -114,7 +114,8 @@ void DGCentralWidget::setupConnections() {
 	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
 	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
 	this->connect(projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
-	this->connect(ctrl,SIGNAL(sigProjectListChanged()),SLOT(upateProjectList()));
+	this->connect(ctrl,SIGNAL(sigProjectListChanged()),SLOT(updateProjectList()));
+	this->connect(ctrl,SIGNAL(sigProjectClosed()),SLOT(shrinkProjectList()));
 }
 
 void DGCentralWidget::resizeDirView() {
@@ -137,7 +138,19 @@ void DGCentralWidget::changeProject(int index) {
 	static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME) + " - " + projectComboBox->currentText());
 }
 
-void DGCentralWidget::upateProjectList() {
+void DGCentralWidget::shrinkProjectList() {
+	if(!ctrl->getProjects().isEmpty())
+		this->projectComboBox->removeItem(this->projectComboBox->currentIndex());
+	else {
+		this->projectComboBox->clear();
+		projectDirView->setModel(nullptr);
+		projectDirView->setHidden(true);
+		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
+	}
+	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
+}
+
+void DGCentralWidget::updateProjectList() {
 	this->projectComboBox->clear();
 	this->projectComboBox->blockSignals(true);
 	if(!ctrl->getProjects().isEmpty()) {

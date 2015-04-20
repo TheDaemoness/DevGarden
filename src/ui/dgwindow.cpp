@@ -36,8 +36,13 @@ void DGWindow::createMenuActions() {
 	menuFile->addAction(tr("Save All"));
 	menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);
 	menuFile->addSeparator();
-	menuFile->addAction(tr("Close"), this, SLOT(nullSlot()), QKeySequence::Close);
-	menuFile->addAction(tr("Close Project"));
+	menuFile->addAction(tr("Close File"));
+	menuFile->addAction(tr("Close Other Files"));
+	menuFile->addAction(tr("Close All Files"));
+	menuFile->addSeparator();
+	menuFile->addAction(tr("Close Project"), ctrl, SLOT(closeCurrent()), QKeySequence::Close);
+	menuFile->addAction(tr("Close Other Projects"), ctrl, SLOT(closeOthers()));
+	menuFile->addAction(tr("Close All Projects"), ctrl, SLOT(closeAll()));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Import..."));
 	menuFile->addAction(tr("Export..."));
