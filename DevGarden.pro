@@ -46,12 +46,12 @@ HEADERS  += \
     src/ui/editor/linenumberarea.h \
 	src/ui/editor/syntaxhighlighter.h \
     src/filesys/dgprojectloader.h \
-	src/filesys/dgprojectinfo.h
+	src/filesys/dgprojectinfo.h \
+    CODESTYLE.md
 
 TRANSLATIONS = DevGarden_fr.ts
 
 RESOURCES += \
     assets/icons.qrc
 
-OTHER_FILES += \
-    src/CODESTYLE.md
+OTHER_FILES +=
