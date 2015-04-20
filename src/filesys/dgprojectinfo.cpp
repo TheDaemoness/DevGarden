@@ -1,13 +1,20 @@
 #include "dgprojectinfo.h"
 
 #include <QFile>
-#include <QFileSystemModel>
+#include <QDir>
+#include <QString>
+
+bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
+	if(this->isdir != b.isdir)
+		return this->isdir;
+	return this->getName() < b.getName();
+}
 
 DGProjectInfo::DGProjectInfo(QFile* f) : isdir(false) {
 	content.file = f;
 }
 
-DGProjectInfo::DGProjectInfo(QFileSystemModel* f) : isdir(true) {
+DGProjectInfo::DGProjectInfo(QDir* f) : isdir(true) {
 	content.dir = f;
 }
 
@@ -16,4 +23,8 @@ DGProjectInfo::~DGProjectInfo() {
 		delete content.dir;
 	else
 		delete content.file;
+}
+
+QString DGProjectInfo::getName() const {
+	return isdir?content.dir->dirName():content.file->fileName();
 }

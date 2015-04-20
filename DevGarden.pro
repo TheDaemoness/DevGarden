@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-04-11T15:31:26
+# Project created by some lunatics in April 2015.
 #
 #-------------------------------------------------
 
@@ -14,7 +14,7 @@ macx {
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
 }
 
-QT       += core gui
+QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -47,8 +47,6 @@ HEADERS  += \
 	src/ui/editor/syntaxhighlighter.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h
-
-FORMS    +=
 
 TRANSLATIONS = DevGarden_fr.ts
 

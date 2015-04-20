@@ -2,23 +2,27 @@
 #define DGPROJECTINFO_H
 
 class QFile;
-class QFileSystemModel;
+class QDir;
+class QString;
 
 class DGProjectInfo
 {
 public:
 	explicit DGProjectInfo(QFile* f);
-	explicit DGProjectInfo(QFileSystemModel* f);
+	explicit DGProjectInfo(QDir* f);
 	virtual ~DGProjectInfo();
 
-	inline bool isSingleFile() {return !isdir;}
-	inline QFile* getFile() {return (isdir?nullptr:content.file);}
-	inline QFileSystemModel* getDir() {return (isdir?content.dir:nullptr);}
+	bool operator<(const DGProjectInfo& cmp) const;
+
+	QString getName() const;
+	inline bool isSingleFile() const {return !isdir;}
+	inline QFile* getFile() const {return (isdir?nullptr:content.file);}
+	inline QDir* getDir() const {return (isdir?content.dir:nullptr);}
 private:
 	const bool isdir;
 	union {
 		QFile* file;
-		QFileSystemModel* dir;
+		QDir* dir;
 	} content;
 };
 

@@ -1,36 +1,59 @@
 #include "dgcontroller.h"
 
+#include "filesys/dgprojectloader.h"
+
 #include <QFileDialog>
 #include <QWindow>
 #include <QFileSystemModel>
 
-DGController::DGController(QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, QObject *parent) :
 	QObject(parent) {
+	fsm = nullptr;
+	l = pl;
 }
 
 void DGController::openFolder() {
-	QFileDialog dg;
-	dg.setWindowTitle(tr("Open Folder"));
-	dg.setFileMode(QFileDialog::Directory);
-	dg.setViewMode(QFileDialog::List);
-	dg.setOption(QFileDialog::ShowDirsOnly, true);
-	if(dg.exec())
-		QStringList names = dg.selectedFiles();
+	QString str = QFileDialog::getExistingDirectory(nullptr, tr("Open Folder"), QDir::home().absolutePath());
+	if(!str.isEmpty())
+		l->addFolder(str);
+	emit sigProjectListChanged();
+	emit sigProjectChanged();
 }
 void DGController::openFiles() {
-	QFileDialog dg;
-	dg.setWindowTitle(tr("Open Files"));
-	dg.setFileMode(QFileDialog::ExistingFiles);
-	dg.setViewMode(QFileDialog::Detail);
-	if(dg.exec())
-		QStringList names = dg.selectedFiles();
+	QStringList li = QFileDialog::getOpenFileNames(nullptr, tr("Open Files"), QDir::home().absolutePath());
+	if(!li.isEmpty()) {
+		for(QString str : li)
+			l->addFile(str);
+	}
+	emit sigProjectListChanged();
+	emit sigProjectChanged();
 }
 void DGController::saveFileAs() {
 	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
 }
 
-void DGController::changeProject(const QString &str) {}
+QStringList DGController::getProjects() {
+	return l->getProjectNames();
+}
+
+QString DGController::changeProject(size_t index) {
+	if(!l->changeCurrent(index))
+		return "";
+	if(l->getCurrent()->isSingleFile() && fsm) {
+		delete fsm;
+		fsm = nullptr;
+		return "";
+	}
+	else {
+		if(!fsm)
+			fsm = new QFileSystemModel();
+		const QString& retval = l->getCurrent()->getDir()->absolutePath();
+		fsm->setRootPath(retval);
+		emit sigProjectChanged();
+		return retval;
+	}
+}
 
 QFileSystemModel* DGController::getActiveProjectModel() {
-	return nullptr;
+	return fsm;
 }

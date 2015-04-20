@@ -23,6 +23,9 @@ public:
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
 
+public slots:
+	void upateProjectList();
+
 private:
 	void createWidgets();
 	void createLayout();
@@ -30,7 +33,7 @@ private:
 
 private slots:
 	void resizeDirView();
-	void changeProject(const QString& str);
+	void changeProject(int index);
 
 private:
 	// Views

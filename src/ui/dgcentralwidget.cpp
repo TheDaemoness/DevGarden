@@ -41,9 +41,6 @@ void DGCentralWidget::createWidgets()
 	projectDirView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 	projectDirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	projectDirView->header()->hide();
-	projectDirView->setColumnHidden(1, true);
-	projectDirView->setColumnHidden(2, true);
-	projectDirView->setColumnHidden(3, true);
 	projectDirView->setHidden(true);
 
 	// Auxiliary ComboBox
@@ -53,7 +50,7 @@ void DGCentralWidget::createWidgets()
 	// Project
 	projectComboBox = new QComboBox;
 	projectComboBox->addItem("Projects");
-	this->connect(this->projectComboBox,SIGNAL(currentIndexChanged(QString)),SLOT(changeProject(QString)));
+	this->connect(this->projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
 
 	// Auxiliary Pane
 	auxPane = new QListWidget();
@@ -115,17 +112,36 @@ void DGCentralWidget::createLayout()
 void DGCentralWidget::setupConnections() {
 	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
 	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
-	this->connect(projectComboBox,SIGNAL(currentIndexChanged(QString)),SLOT(changeProject(QString)));
+	this->connect(projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
+	this->connect(ctrl,SIGNAL(sigProjectListChanged()),SLOT(upateProjectList()));
 }
 
 void DGCentralWidget::resizeDirView() {
 	projectDirView->resizeColumnToContents(0);
 }
 
-void DGCentralWidget::changeProject(const QString &str) {
-	ctrl->changeProject(str);
+void DGCentralWidget::changeProject(int index) {
+	projectDirView->setModel(nullptr);
+	QString root = ctrl->changeProject(index);
 	QFileSystemModel* m = ctrl->getActiveProjectModel();
-	if(m)
+	if(m) {
 		projectDirView->setModel(m);
+		projectDirView->setRootIndex(m->index(root));
+		projectDirView->setColumnHidden(1, true);
+		projectDirView->setColumnHidden(2, true);
+		projectDirView->setColumnHidden(3, true);
+		resizeDirView();
+	}
 	projectDirView->setHidden(!m);
 }
+
+void DGCentralWidget::upateProjectList() {
+	this->projectComboBox->clear();
+	this->projectComboBox->blockSignals(true);
+	this->projectComboBox->addItems(ctrl->getProjects());
+	this->projectComboBox->setCurrentIndex(this->ctrl->getProjects().length()-1);
+	this->changeProject(this->ctrl->getProjects().length()-1);
+	this->projectComboBox->blockSignals(false);
+}
+
+

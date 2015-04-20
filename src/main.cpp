@@ -1,6 +1,8 @@
 #include "ui/dgwindow.h"
 #include "envmacros.h"
 
+#include "filesys/dgprojectloader.h"
+
 #include <QApplication>
 #include <QTranslator>
 
@@ -18,7 +20,8 @@ int main(int argc, char **argv) {
 
 	makeConfigDirs();
 
-	DGController ctrl;
+	DGProjectLoader loader;
+	DGController ctrl(&loader);
 	DGWindow w(&ctrl);
 
 	w.show();
