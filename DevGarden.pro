@@ -38,7 +38,6 @@ SOURCES += \
 HEADERS  += \
     src/ui/dgwindow.h \
     src/dgcontroller.h \
-    src/util/stringtree.h \
     src/ui/dgcentralwidget.hpp \
     src/configloader.h \
 	src/envmacros.h \

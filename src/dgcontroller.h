@@ -30,7 +30,7 @@ signals:
 	 */
 	void sigProjectListChanged();
 	/**
-	 * @brief sigProjectListClosed() Emitted when the current project list has closed.
+	 * @brief sigProjectListClosed() Emitted when the current project has closed.
 	 */
 	void sigProjectClosed();
 

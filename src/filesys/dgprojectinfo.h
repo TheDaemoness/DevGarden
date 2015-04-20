@@ -5,8 +5,7 @@ class QFile;
 class QDir;
 class QString;
 
-class DGProjectInfo
-{
+class DGProjectInfo {
 public:
 	explicit DGProjectInfo(QFile* f);
 	explicit DGProjectInfo(QDir* f);
