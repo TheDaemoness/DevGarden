@@ -140,9 +140,15 @@ void DGCentralWidget::changeProject(int index) {
 void DGCentralWidget::upateProjectList() {
 	this->projectComboBox->clear();
 	this->projectComboBox->blockSignals(true);
-	this->projectComboBox->addItems(ctrl->getProjects());
-	this->projectComboBox->setCurrentIndex(this->ctrl->getProjects().length()-1);
-	this->changeProject(this->ctrl->getProjects().length()-1);
+	if(!ctrl->getProjects().isEmpty()) {
+		this->projectComboBox->addItems(ctrl->getProjects());
+		this->projectComboBox->setCurrentIndex(this->ctrl->getProjects().length()-1);
+		this->changeProject(this->ctrl->getProjects().length()-1);
+	} else {
+		projectDirView->setModel(nullptr);
+		projectDirView->setHidden(!m);
+		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
+	}
 	this->projectComboBox->blockSignals(false);
 	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
 }
