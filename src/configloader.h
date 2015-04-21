@@ -19,10 +19,11 @@
 	#define DG_CONFIG_PREFIX_LOCAL_NOCD
 #endif
 
-#include <fstream>
-#include <string>
+class QFile;
 
 void makeConfigDirs();
-std::ifstream* getConfigFile(const std::string& name); //TODO: Qt-Specific file stuff.
+bool runScript(const char* name);
+QFile* getConfigFileRead(const char* name);
+QFile* getConfigFileWrite(const char* name);
 
 #endif // CONFIGLOADER_H

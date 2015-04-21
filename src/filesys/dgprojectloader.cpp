@@ -47,9 +47,8 @@ DGProjectInfo* DGProjectLoader::getCurrent() {
 }
 
 bool DGProjectLoader::addFile(QString path) {
-	QFile* f = new QFile(path);
-	f->open(QFile::ReadWrite);
-	if(!f->isOpen()) {
+	QFileInfo* f = new QFileInfo(path);
+	if(!f->isReadable() || !f->isWritable()) {
 		delete f;
 		return false;
 	}

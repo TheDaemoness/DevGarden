@@ -1,13 +1,15 @@
 #ifndef DGPROJECTINFO_H
 #define DGPROJECTINFO_H
 
-class QFile;
+#include <array>
+
+class QFileInfo;
 class QDir;
 class QString;
 
 class DGProjectInfo {
 public:
-	explicit DGProjectInfo(QFile* f);
+	explicit DGProjectInfo(QFileInfo* f);
 	explicit DGProjectInfo(QDir* f);
 	virtual ~DGProjectInfo();
 
@@ -15,14 +17,12 @@ public:
 
 	QString getName() const;
 	inline bool isSingleFile() const {return !isdir;}
-	inline QFile* getFile() const {return (isdir?nullptr:content.file);}
-	inline QDir* getDir() const {return (isdir?content.dir:nullptr);}
+	inline QFileInfo* getFile() const {return file;}
+	inline QDir* getDir() const {return (isdir?dir:nullptr);}
 private:
 	const bool isdir;
-	union {
-		QFile* file;
-		QDir* dir;
-	} content;
+	QFileInfo* file;
+	QDir* dir;
 };
 
 #endif // DGPROJECTINFO_H

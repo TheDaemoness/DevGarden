@@ -1,16 +1,33 @@
 #include "configloader.h"
-#include <QDir>
-#include <iostream>
 
-std::ifstream* getConfigFile(const std::string& name) {
-	std::ifstream* retval = new std::ifstream;
-	retval->open(std::string(DG_CONFIG_PREFIX_LOCAL)+DG_NAME+"/"+name);
-	if(!retval->is_open())
-		retval->open(std::string(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
-	if(retval->is_open())
+#include <QDir>
+#include <QFile>
+#include <QString>
+#include <QFileInfo>
+
+QFile* getConfigFileRead(const char* name) {
+	QFile* retval = new QFile;
+	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	retval->open(QFile::ReadOnly);
+	if(!retval->isOpen()) {
+		retval->setFileName(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+		retval->open(QFile::ReadOnly);
+	}
+	if(retval->isOpen())
 		return retval;
 	delete retval;
 	return nullptr;
+}
+
+QFile* getConfigFileWrite(const char* name) {
+	QFile* retval = new QFile;
+	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+"/"+name);
+	retval->open(QFile::WriteOnly);
+	if(!retval->isOpen()) {
+		delete retval;
+		return nullptr;
+	}
+	return retval;
 }
 
 void makeConfigDirs() {
@@ -31,4 +48,8 @@ void makeConfigDirs() {
 		d.cd(QString(DG_CONFIG_PREFIX_LOCAL)+DG_NAME);
 	}
 #endif
+}
+
+bool runScript(const char* name) {
+	return false;
 }
