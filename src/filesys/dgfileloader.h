@@ -11,13 +11,18 @@
 
 class DGFileLoader {
 private:
-	std::map<QString,std::pair<QTextDocument*,size_t>> files;
-	std::map<DGProjectInfo*, std::list<QFileInfo>> proj_files;
+	std::list<std::pair<QString,QTextDocument*>> unsaved_files; //Unlimited.
+	std::list<std::pair<QString,QTextDocument*>> saved_files; //Auto-limits to 16 files.
+	QTextDocument* current;
+	void unloadDoc();
 public:
 	DGFileLoader();
-	inline QTextDocument* getDocument(const QFileInfo& fi) {return files.count(fi.absolutePath())?files[fi.absolutePath()].first:nullptr;}
-	void loadFile(DGProjectInfo* proj, const QFileInfo& fi);
-	void unloadFile(DGProjectInfo* proj, const QFileInfo& fi);
+	void closeCurrent();
+	void closeOthers();
+	void closeAll();
+	QTextDocument* get(const QString& fi, bool enqueue = true);
+	QTextDocument* get() {return current;}
+
 };
 
 #endif // DGFILELOADER_H
