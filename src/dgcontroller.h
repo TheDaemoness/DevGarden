@@ -6,11 +6,12 @@
 class QFileSystemModel;
 class QString;
 class DGProjectLoader;
+class DGFileLoader;
 
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -45,6 +46,7 @@ public slots:
 private:
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* l;
+	DGFileLoader* f;
 };
 
 #endif // DGCONTROLLER_H

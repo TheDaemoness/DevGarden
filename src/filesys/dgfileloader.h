@@ -17,9 +17,17 @@ private:
 	void unloadDoc();
 public:
 	DGFileLoader();
+	/**
+	 * @brief fileEdited Moves the current file to the front of the unsaved files list.
+	 */
+	void fileEdited();
 	void closeCurrent();
 	void closeOthers();
+	void closeSaved();
 	void closeAll();
+	void saveCurrent();
+	void saveCurrentAs();
+	void saveAll();
 	QTextDocument* get(const QString& fi, bool enqueue = true);
 	QTextDocument* get() {return current;}
 

@@ -1,15 +1,18 @@
 #include "dgcontroller.h"
 
 #include "filesys/dgprojectloader.h"
+#include "filesys/dgfileloader.h"
 
 #include <QFileDialog>
 #include <QWindow>
 #include <QFileSystemModel>
 
-DGController::DGController(DGProjectLoader* pl, QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
 	l = pl;
+	f = fl;
+
 }
 
 void DGController::openFolder() {

@@ -2,9 +2,12 @@
 #include "envmacros.h"
 
 #include "filesys/dgprojectloader.h"
+#include "filesys/dgfileloader.h"
 
 #include <QApplication>
 #include <QTranslator>
+
+#include <memory>
 
 #include "configloader.h"
 
@@ -20,8 +23,10 @@ int main(int argc, char **argv) {
 
 	makeConfigDirs();
 
+	std::unique_ptr<DGFileLoader> fl;
+	fl.reset(new DGFileLoader());
 	DGProjectLoader loader;
-	DGController ctrl(&loader);
+	DGController ctrl(&loader, fl.get());
 	DGWindow w(&ctrl);
 
 	w.show();
