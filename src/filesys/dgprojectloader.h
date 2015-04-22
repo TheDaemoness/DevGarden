@@ -11,8 +11,6 @@
 class QString;
 class QStringList;
 
-constexpr size_t FILES_OPEN_PER_PROJECT = 16;
-
 class DGProjectLoader {
 private:
 	std::vector<DGProjectInfo*> projs;
