@@ -19,7 +19,7 @@ private:
 	inline bool isCurrentSaved() {return current.second == saved_files.front().second;}
 	void unloadSaved();
 	void appendSaved(const std::pair<QString,QTextDocument*>& doc);
-	void save(QTextDocument* tosave, const QString& path);
+	bool save(QTextDocument* tosave, const QString& path);
 public:
 	DGFileLoader(size_t save_buffer);
 	DGFileLoader() : DGFileLoader(8) {}
