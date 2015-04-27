@@ -1,41 +1,61 @@
 #ifndef DGFILELOADER_H
 #define DGFILELOADER_H
 
-#include <map>
-#include <array>
+#include <QHash>
+#include <vector>
 
-#include <QFileInfo>
+#include <QString>
 #include <QTextDocument>
 
 #include "dgprojectloader.h"
 
-class DGFileLoader {
-private:
-	std::list<std::pair<QString,QTextDocument*>> unsaved_files; //Unlimited.
-	std::list<std::pair<QString,QTextDocument*>> saved_files; //Auto-limited.
-
-	std::pair<QString,QTextDocument*> current;
-	size_t save_buffer_len;
-	inline bool isCurrentSaved() {return current.second == saved_files.front().second;}
-	void unloadSaved();
-	void appendSaved(const std::pair<QString,QTextDocument*>& doc);
-	bool save(QTextDocument* tosave, const QString& path);
+class DGFileLoader { //TODO: Implement and connect.
 public:
-	DGFileLoader(size_t save_buffer);
-	DGFileLoader() : DGFileLoader(8) {}
-	/**
-	 * @brief fileEdited Moves the current file to the front of the unsaved files list.
-	 */
-	void fileEdited();
-	void closeCurrent();
-	void closeOthers(bool save = true);
-	void closeSaved();
-	void closeAll();
-	void saveCurrent();
+	struct FileRef {
+		QString path;
+		QTextDocument* doc;
+		bool saved;
+	};
+private:
+	struct FileData {
+		QTextDocument* doc;
+		size_t refcount;
+	};
+	QHash<QString, FileData> unsaved;
+	QHash<QString, FileData> saved;
+	std::vector<FileRef> current;
+	bool save(QTextDocument* tosave, const QString& path);
+	bool isVisible(const FileData& dat) {return dat.refcount;}
+public:
+
+	DGFileLoader();
+	void fileEdited(size_t index = 0);
 	void saveCurrentAs(const QString& path);
-	void saveAll();
-	QTextDocument* get(const QString& fi);
-	QTextDocument* get() {return current.second;}
+
+	size_t addView();
+	size_t remView(size_t index = 1);
+
+	inline size_t getCountViews()    {return current.size();}
+	inline size_t getCountSaved()    {return saved.size();}
+	inline size_t getCountUnsaved()  {return unsaved.size();}
+
+	QTextDocument* set(const QString& path, size_t index = 0);
+	QTextDocument* get(size_t index = 0);
+
+	void saveCurrent(size_t index = 0);
+	void saveVisible();
+	void saveOthers();
+	void saveAll() {saveVisible(); saveOthers();}
+
+	void reloadCurrent(size_t index = 0);
+	void reloadVisible();
+	void reloadOthers() {closeOthers();}
+	void reloadAll() {closeOthers(); reloadVisible();}
+
+	void closeCurrent(size_t index = 0);
+	void closeVisible();
+	void closeOthers();
+	void closeAll();
 
 };
 
