@@ -23,6 +23,7 @@ public:
 	QFileSystemModel* getActiveProjectModel();
 	QString changeProject(size_t index);
 	QStringList getProjects();
+	QString getPath();
 
 	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
 
@@ -45,7 +46,8 @@ public slots:
 	void openFolder();
 	void openFiles();
 	void saveFileAs();
-	void saveCurrent();
+	void saveFile();
+	void closeFile();
 	void closeCurrent();
 	void closeOthers();
 	void closeAll();

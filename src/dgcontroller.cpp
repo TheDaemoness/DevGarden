@@ -11,6 +11,8 @@
 #include <QFileSystemModel>
 #include <QTextDocument>
 
+#include "dgdebug.hpp"
+
 DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
@@ -39,7 +41,7 @@ void DGController::saveFileAs() {
 	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
 }
 
-void DGController::saveCurrent() {
+void DGController::saveFile() {
 	if(current.saved)
 		return;
 	QFile f(current.path);
@@ -55,7 +57,7 @@ void DGController::getFile(const QString& path) {
 	if(!f.open(QFile::ReadOnly))
 		return;
 	if(current.doc)
-		closeCurrent();
+		closeFile();
 	current.path = path;
 	CodeEditorWidget* w = dgw->centralWidget->getEditor();
 	w->blockSignals(true);
@@ -70,19 +72,42 @@ void DGController::fileEdited() {
 	current.saved = false;
 }
 
-void DGController::closeCurrent() {
-	saveCurrent();
+void DGController::closeFile() {
+	saveFile();
 	dgw->centralWidget->getEditor()->clear();
 	if(current.doc) {
 		//delete current.doc;
 		current.doc = nullptr;
 	}
 }
-void DGController::closeOthers() {closeCurrent();}
-void DGController::closeAll() {closeCurrent();}
+
+void DGController::closeCurrent() {
+	pl->closeCurrent();
+	emit sigProjectClosed();
+	emit sigProjectListChanged();
+}
+
+void DGController::closeOthers() {
+	pl->closeOthers();
+	emit sigProjectListChanged();
+}
+
+void DGController::closeAll() {
+	pl->closeAll();
+	emit sigProjectClosed();
+	emit sigProjectListChanged();
+}
 
 QStringList DGController::getProjects() {
 	return pl->getProjectNames();
+}
+
+QString DGController::getPath() {
+	DGProjectInfo* p = pl->getCurrent();
+	if(p->isSingleFile())
+		return p->getFile()->absolutePath()+'/'+p->getFile()->fileName();
+	else
+		return p->getDir()->absolutePath();
 }
 
 QString DGController::changeProject(size_t index) {
