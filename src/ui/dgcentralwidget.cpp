@@ -111,11 +111,14 @@ void DGCentralWidget::createLayout()
 }
 
 void DGCentralWidget::setupConnections() {
-	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
-	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
-	this->connect(projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
-	this->connect(ctrl,SIGNAL(sigProjectListChanged()),SLOT(updateProjectList()));
-	this->connect(ctrl,SIGNAL(sigProjectClosed()),SLOT(shrinkProjectList()));
+	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),              SLOT(resizeDirView()));
+	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),             SLOT(resizeDirView()));
+	this->connect(projectComboBox,  SIGNAL(currentIndexChanged(int)),           SLOT(changeProject(int)));
+	this->connect(ctrl,             SIGNAL(sigProjectListChanged()),            SLOT(updateProjectList()));
+	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
+	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
+
+	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
 
 void DGCentralWidget::resizeDirView() {
@@ -148,6 +151,13 @@ void DGCentralWidget::shrinkProjectList() {
 		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
 	}
 	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
+}
+
+void DGCentralWidget::changeFile(const QModelIndex& val) {
+	if(projectDirModel->isDir(val))
+		return;
+	QString path = projectDirModel->filePath(val);
+	ctrl->getFile(path);
 }
 
 void DGCentralWidget::updateProjectList() {

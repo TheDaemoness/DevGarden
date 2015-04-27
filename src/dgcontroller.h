@@ -3,10 +3,13 @@
 
 #include <QObject>
 
+#include "filesys/dgfileloader.h"
+
 class QFileSystemModel;
 class QString;
+class QTextDocument;
 class DGProjectLoader;
-class DGFileLoader;
+class DGWindow;
 
 class DGController : public QObject {
 	Q_OBJECT
@@ -20,6 +23,8 @@ public:
 	QFileSystemModel* getActiveProjectModel();
 	QString changeProject(size_t index);
 	QStringList getProjects();
+
+	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
 
 signals:
 	/**
@@ -36,17 +41,24 @@ signals:
 	void sigProjectClosed();
 
 public slots:
+	void getFile(const QString& path);
 	void openFolder();
 	void openFiles();
 	void saveFileAs();
+	void saveCurrent();
 	void closeCurrent();
 	void closeOthers();
 	void closeAll();
+	void fileEdited();
 
 private:
+	//NOTE: This is temporary until DGFileLoader is implemented.
+	DGFileLoader::FileRef current;
+
+	DGWindow* dgw;
 	QFileSystemModel* fsm; //No relation.
-	DGProjectLoader* l;
-	DGFileLoader* f;
+	DGProjectLoader* pl;
+	DGFileLoader* fl;
 };
 
 #endif // DGCONTROLLER_H

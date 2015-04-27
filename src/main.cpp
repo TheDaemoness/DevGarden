@@ -29,7 +29,10 @@ int main(int argc, char **argv) {
 	DGController ctrl(&loader, fl.get());
 	DGWindow w(&ctrl);
 
+	ctrl.setView(&w);
 	w.show();
 
 	return a.exec();
 }
+
+//First edit made by DevGarden!

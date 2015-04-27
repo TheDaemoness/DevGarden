@@ -10,6 +10,7 @@ class DGCentralWidget;
 class DGWindow : public QMainWindow {
 	Q_OBJECT
 
+	friend class DGController;
 public:
 	explicit DGWindow(DGController* dgc, QWidget *parent = 0);
 	~DGWindow();

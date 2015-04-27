@@ -18,6 +18,7 @@ class DGCentralWidget : public QWidget
 {
 	Q_OBJECT
 
+	friend class DGController;
 public:
 	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
@@ -35,6 +36,7 @@ private:
 private slots:
 	void resizeDirView();
 	void changeProject(int index);
+	void changeFile(const QModelIndex& val);
 
 private:
 	// Views
