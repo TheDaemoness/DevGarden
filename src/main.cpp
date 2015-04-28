@@ -6,6 +6,7 @@
 
 #include <QApplication>
 #include <QTranslator>
+#include <QSystemTrayIcon>
 
 #include <memory>
 
@@ -14,7 +15,7 @@
 int main(int argc, char **argv) {
 	QApplication a(argc, argv);
 	a.setApplicationName("DevGarden");
-	a.setWindowIcon(QIcon("://icon.png"));\
+	a.setWindowIcon(QIcon("://icon.png"));
 
 	// Translation
 	QTranslator translator;
@@ -23,15 +24,13 @@ int main(int argc, char **argv) {
 
 	makeConfigDirs();
 
-	std::unique_ptr<DGFileLoader> fl;
-	fl.reset(new DGFileLoader());
-	DGProjectLoader loader;
-	DGController ctrl(&loader, fl.get());
+	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
+	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader);
+	DGController ctrl(pl.get(), fl.get());
 	DGWindow w(&ctrl);
-
 	ctrl.setView(&w);
-	w.show();
 
+	w.show();
 	return a.exec();
 }
 

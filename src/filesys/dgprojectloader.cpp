@@ -4,8 +4,6 @@
 #include <QDir>
 #include <QStringList>
 
-#include "../dgdebug.hpp"
-
 bool DGProjectLoader::changeCurrent(size_t index) {
 	if(index >= projs.size())
 		return false;

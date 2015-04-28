@@ -11,8 +11,6 @@
 #include <QFileSystemModel>
 #include <QTextDocument>
 
-#include "dgdebug.hpp"
-
 DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
