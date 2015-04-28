@@ -111,11 +111,14 @@ void DGCentralWidget::createLayout()
 }
 
 void DGCentralWidget::setupConnections() {
-	this->connect(projectDirView,SIGNAL(expanded(QModelIndex)),SLOT(resizeDirView()));
-	this->connect(projectDirView,SIGNAL(collapsed(QModelIndex)),SLOT(resizeDirView()));
-	this->connect(projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
-	this->connect(ctrl,SIGNAL(sigProjectListChanged()),SLOT(updateProjectList()));
-	this->connect(ctrl,SIGNAL(sigProjectClosed()),SLOT(shrinkProjectList()));
+	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),              SLOT(resizeDirView()));
+	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),             SLOT(resizeDirView()));
+	this->connect(projectComboBox,  SIGNAL(currentIndexChanged(int)),           SLOT(changeProject(int)));
+	this->connect(ctrl,             SIGNAL(sigProjectListChanged()),            SLOT(updateProjectList()));
+	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
+	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
+
+	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
 
 void DGCentralWidget::resizeDirView() {
@@ -133,7 +136,8 @@ void DGCentralWidget::changeProject(int index) {
 		projectDirView->setColumnHidden(2, true);
 		projectDirView->setColumnHidden(3, true);
 		resizeDirView();
-	}
+	} else
+		ctrl->getFile(ctrl->getPath());
 	projectDirView->setHidden(!m);
 	static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME) + " - " + projectComboBox->currentText());
 }
@@ -148,6 +152,12 @@ void DGCentralWidget::shrinkProjectList() {
 		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
 	}
 	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
+}
+
+void DGCentralWidget::changeFile(const QModelIndex& val) {
+	if(projectDirModel->isDir(val))
+		return;
+	ctrl->getFile(projectDirModel->filePath(val));
 }
 
 void DGCentralWidget::updateProjectList() {

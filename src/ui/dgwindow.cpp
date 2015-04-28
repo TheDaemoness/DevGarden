@@ -31,7 +31,7 @@ void DGWindow::createMenuActions() {
 	menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
 	menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
 	menuFile->addSeparator();
-	menuFile->addAction(tr("Save"), this, SLOT(nullSlot()), QKeySequence::Save);
+	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
 	menuFile->addAction(tr("Save As..."), this, SLOT(nullSlot()), QKeySequence::SaveAs);
 	menuFile->addAction(tr("Save All"));
 	menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);

@@ -50,3 +50,5 @@
 
 ## Git
 * Never ever push to master.
+* Do not push to devel, if avoidable (especially TheRabbitologist).
+* Each contributor should create their own personal branch to push to, and send pull requests into devel when their code is ready.
