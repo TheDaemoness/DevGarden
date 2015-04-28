@@ -6,7 +6,7 @@
 
 #include <QApplication>
 #include <QTranslator>
-#include <QSystemTrayIcon>
+#include <QStyle>
 
 #include <memory>
 

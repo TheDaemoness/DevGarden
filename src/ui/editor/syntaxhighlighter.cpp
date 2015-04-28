@@ -44,8 +44,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent)
 	QStringList extraKeywordPatterns;
 	extraKeywordPatterns << "\\bprivate\\b" << "\\bpublic\\b" << "\\bprotected\\b"
 						 << "\\bifndef\\b" << "\\bendif\\b" << "\\binclude\\b"
-						 << "\\bvirtual\\b" << "\\binclude\\b" << "\\bdefine\\b"
-						 << "\\bexplicit\\b";
+						 << "\\bvirtual\\b" << "\\binclude\\b" << "\\bdefine\\b";
 
 	foreach (const QString& pattern, extraKeywordPatterns)
 	{
@@ -55,17 +54,17 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent)
 	}
 
 	integerFormat.setForeground(integerColor);
-	rule.pattern = QRegExp("[0-9]+");
+	rule.pattern = QRegExp("[0-9]+(?:\\.[0-9]+)?");
 	rule.format = integerFormat;
 	highlightingRules.append(rule);
 
 	classFormat.setForeground(classColor);
-	rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
+	rule.pattern = QRegExp("[A-Za-z][A-Za-z0-9_]*");
 	rule.format = classFormat;
 	highlightingRules.append(rule);
 
 	quotationFormat.setForeground(quotationColor);
-	rule.pattern = QRegExp("\".*\"");
+	rule.pattern = QRegExp("\".*?[^\\]\"");
 	rule.format = quotationFormat;
 	highlightingRules.append(rule);
 

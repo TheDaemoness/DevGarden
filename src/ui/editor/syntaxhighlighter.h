@@ -1,6 +1,8 @@
 #ifndef SYNTAX_HIGHLIGHTER_H
 #define SYNTAX_HIGHLIGHTER_H
 
+#include "codestyle.h"
+
 #include <QSyntaxHighlighter>
 
 class SyntaxHighlighter : public QSyntaxHighlighter

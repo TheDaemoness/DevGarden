@@ -29,7 +29,7 @@ void DGController::openFolder() {
 void DGController::openFiles() {
 	QStringList li = QFileDialog::getOpenFileNames(nullptr, tr("Open Files"), QDir::home().absolutePath());
 	if(!li.isEmpty()) {
-		for(QString str : li)
+		for(const QString& str : li)
 			pl->addFile(str);
 		emit sigProjectListChanged();
 		emit sigProjectChanged();
@@ -112,7 +112,7 @@ QString DGController::getPath() {
 		return p->getDir()->absolutePath();
 }
 
-QString DGController::changeProject(size_t index) {\
+QString DGController::changeProject(size_t index) {
 	if(!pl->changeCurrent(index))
 		return "";
 	if(pl->getCurrent()->isSingleFile()) {

@@ -49,7 +49,8 @@ HEADERS  += \
 	src/filesys/dgprojectinfo.h \
     CODESTYLE.md \
     src/dgdebug.hpp \
-    src/filesys/dgfileloader.h
+    src/filesys/dgfileloader.h \
+    src/ui/editor/codestyle.h
 
 TRANSLATIONS = DevGarden_fr.ts
 
