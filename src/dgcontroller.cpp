@@ -82,6 +82,8 @@ void DGController::closeFile() {
 }
 
 void DGController::closeCurrent() {
+	if(pl->getCurrent()->isSingleFile())
+		closeFile();
 	pl->closeCurrent();
 	emit sigProjectClosed();
 	emit sigProjectListChanged();
@@ -104,13 +106,15 @@ QStringList DGController::getProjects() {
 
 QString DGController::getPath() {
 	DGProjectInfo* p = pl->getCurrent();
+	if(!p)
+		return "";
 	if(p->isSingleFile())
 		return p->getFile()->absolutePath()+'/'+p->getFile()->fileName();
 	else
 		return p->getDir()->absolutePath();
 }
 
-QString DGController::changeProject(size_t index) {
+QString DGController::changeProject(size_t index) {\
 	if(!pl->changeCurrent(index))
 		return "";
 	if(pl->getCurrent()->isSingleFile()) {
