@@ -12,6 +12,8 @@
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QGridLayout>
+#include <QSpacerItem>
 
 #include <QHeaderView>
 #include <QScrollBar>
@@ -25,6 +27,14 @@ DGCentralWidget::DGCentralWidget(DGController* ctrl, QWidget *parent) :
 	createWidgets();
 	createLayout();
 	setupConnections();
+}
+
+QPushButton* DGCentralWidget::makeButton(const QString& txt, int width, int height) {
+	auto* retval = new QPushButton(txt);
+	retval->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	retval->setMinimumSize(width, height);
+	retval->setMaximumSize(width, height);
+	return retval;
 }
 
 void DGCentralWidget::createWidgets()
@@ -66,17 +76,26 @@ void DGCentralWidget::createWidgets()
 							 "    return 0;\n"
 							 "}");
 
+	// Bottom Push Button
+	bottomButton = makeButton("CMD", 48, 48);
+
 	// Bottom Bar
-	bottomBar = new QLineEdit;
-	bottomBar->setText("Regen/Build/Clean/Run/Debug/Setup - File Info");
-	bottomBar->setAlignment(Qt::AlignCenter);
+	bottomBar = new QHBoxLayout();
+	bottomBar->addWidget(makeButton("Regen", 48, 48));
+	bottomBar->addWidget(makeButton("Build", 48, 48));
+	bottomBar->addWidget(makeButton("Clean", 48, 48));
+	bottomBar->addWidget(makeButton("Run", 48, 48));
+	bottomBar->addWidget(makeButton("Setup", 48, 48));
+	bottomBar->setSpacing(12);
+	bottomBar->addStretch();
+	bottomBar->addWidget(bottomButton);
 
 	// Split View Options Pane
-	splitViewPane = new QPlainTextEdit;
-	splitViewPane->setPlainText("Split\nView\nOptions\nPane");
-
-	// Bottom Push Button
-	bottomButton = new QPushButton("O"); // Placeholder until an QIcon can be created
+	splitViewPane = new QVBoxLayout();
+	splitViewPane->setSpacing(12);
+	splitViewPane->addWidget(makeButton("Code", 48));
+	splitViewPane->addWidget(makeButton("Dox", 48));
+	splitViewPane->addStretch();
 }
 
 void DGCentralWidget::createLayout()
@@ -86,26 +105,28 @@ void DGCentralWidget::createLayout()
 
 	// ProjectDir, AuxCombo, AuxPane
 	QVBoxLayout* leftSideLayout = new QVBoxLayout;
+	leftSideLayout->setSpacing(0);
 	leftSideLayout->addWidget(projectComboBox, 1);
 	leftSideLayout->addWidget(projectDirView, 3);
 	leftSideLayout->addWidget(auxComboBox, 1);
 	leftSideLayout->addWidget(auxPane, 3);
 
 	// TextEditor, BottomBar
-	QVBoxLayout* centralLayout = new QVBoxLayout;
-	centralLayout->addWidget(textEditor, 6);
-	centralLayout->addWidget(bottomBar, 2);
+	QHBoxLayout* centralLayout = new QHBoxLayout;
+	centralLayout->setSpacing(0);
+	centralLayout->addWidget(textEditor);
+	centralLayout->addLayout(splitViewPane);
 
-	// SplitViewPane, BottomButton
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
-	rightSideLayout->addWidget(splitViewPane, 7);
-	rightSideLayout->addWidget(bottomButton, 1);
+	centralLayout->setSpacing(0);
+	rightSideLayout->addLayout(centralLayout);
+	rightSideLayout->addLayout(bottomBar);
 
 	// Main Layout (Combination of all child layouts)
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
+	mainLayout->setSpacing(0);
 	mainLayout->addLayout(leftSideLayout, 3);
-	mainLayout->addLayout(centralLayout, 20);
-	mainLayout->addLayout(rightSideLayout, 1);
+	mainLayout->addLayout(rightSideLayout, 20);
 
 	setLayout(mainLayout);
 }
