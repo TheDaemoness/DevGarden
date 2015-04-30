@@ -105,7 +105,7 @@ void DGCentralWidget::createLayout()
 
 	// ProjectDir, AuxCombo, AuxPane
 	QVBoxLayout* leftSideLayout = new QVBoxLayout;
-	leftSideLayout->setSpacing(0);
+	leftSideLayout->setSpacing(4);
 	leftSideLayout->addWidget(projectComboBox, 1);
 	leftSideLayout->addWidget(projectDirView, 3);
 	leftSideLayout->addWidget(auxComboBox, 1);
@@ -113,18 +113,18 @@ void DGCentralWidget::createLayout()
 
 	// TextEditor, BottomBar
 	QHBoxLayout* centralLayout = new QHBoxLayout;
-	centralLayout->setSpacing(0);
+	centralLayout->setSpacing(4);
 	centralLayout->addWidget(textEditor);
 	centralLayout->addLayout(splitViewPane);
 
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
-	centralLayout->setSpacing(0);
+	centralLayout->setSpacing(4);
 	rightSideLayout->addLayout(centralLayout);
 	rightSideLayout->addLayout(bottomBar);
 
 	// Main Layout (Combination of all child layouts)
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
-	mainLayout->setSpacing(0);
+	mainLayout->setSpacing(4);
 	mainLayout->addLayout(leftSideLayout, 3);
 	mainLayout->addLayout(rightSideLayout, 20);
 
