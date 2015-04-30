@@ -77,24 +77,24 @@ void DGCentralWidget::createWidgets()
 							 "}");
 
 	// Bottom Push Button
-	bottomButton = makeButton("CMD", 48, 48);
+	bottomButton = makeButton("CMD", 48, 32);
 
 	// Bottom Bar
 	bottomBar = new QHBoxLayout();
-	bottomBar->addWidget(makeButton("Regen", 48, 48));
-	bottomBar->addWidget(makeButton("Build", 48, 48));
-	bottomBar->addWidget(makeButton("Clean", 48, 48));
-	bottomBar->addWidget(makeButton("Run", 48, 48));
-	bottomBar->addWidget(makeButton("Setup", 48, 48));
-	bottomBar->setSpacing(12);
+	bottomBar->addWidget(makeButton("Regen", 48, 32));
+	bottomBar->addWidget(makeButton("Build", 48, 32));
+	bottomBar->addWidget(makeButton("Clean", 48, 32));
+	bottomBar->addWidget(makeButton("Run", 48, 32));
+	bottomBar->addWidget(makeButton("Setup", 48, 32));
+	bottomBar->setSpacing(4);
 	bottomBar->addStretch();
 	bottomBar->addWidget(bottomButton);
 
 	// Split View Options Pane
 	splitViewPane = new QVBoxLayout();
-	splitViewPane->setSpacing(12);
+	splitViewPane->setSpacing(4);
 	splitViewPane->addWidget(makeButton("Code", 48));
-	splitViewPane->addWidget(makeButton("Dox", 48));
+	splitViewPane->addWidget(makeButton("Docs", 48));
 	splitViewPane->addStretch();
 }
 
