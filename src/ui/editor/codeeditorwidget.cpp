@@ -2,6 +2,8 @@
 #include "syntaxhighlighter.h"
 #include "linenumberarea.h"
 
+#include "../dgstyle.h"
+
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontDatabase>
@@ -12,10 +14,9 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	lineNumberArea = new LineNumberArea(this);
 
 	// Modify editor color and font settings
-	QColor backgroundColor = QColor(39,40,34);
 	QPalette colors = palette();
-	colors.setColor(QPalette::Active, QPalette::Base, backgroundColor);
-	colors.setColor(QPalette::Inactive, QPalette::Base, backgroundColor);
+	colors.setColor(QPalette::Active, QPalette::Base, DGStyle::COLOR_BACKGROUND);
+	colors.setColor(QPalette::Inactive, QPalette::Base, DGStyle::COLOR_BACKGROUND);
 	colors.setColor(QPalette::Text, Qt::white);
 	setPalette(colors);
 
@@ -38,7 +39,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 {
 	QPainter painter(lineNumberArea);
-	painter.fillRect(event->rect(), QColor(59,58,50).lighter(160)); // TODO: Maybe get rid of magic number for color?
+	painter.fillRect(event->rect(), DGStyle::COLOR_LOLIGHT.lighter(160)); // TODO: Maybe get rid of magic number for color?
 
 	QTextBlock block = firstVisibleBlock();
 	int blockNumber = block.blockNumber();
@@ -131,9 +132,7 @@ void CodeEditorWidget::highlightCurrentLine()
 	{
 		QTextEdit::ExtraSelection selection;
 
-		QColor lineColor = QColor(73,72,62);
-
-		selection.format.setBackground(lineColor);
+		selection.format.setBackground(DGStyle::COLOR_LOLIGHT);
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 		selection.cursor = textCursor();
 		selection.cursor.clearSelection();
