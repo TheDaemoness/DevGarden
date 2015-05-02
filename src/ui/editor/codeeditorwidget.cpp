@@ -44,29 +44,25 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 
 void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 	if(key->key() == Qt::Key_Tab) {
+		if(textCursor().hasSelection())
+			textCursor().removeSelectedText();
+		QTextCursor curse = textCursor();
+		curse.select(QTextCursor::LineUnderCursor);
+		QString line = curse.selectedText();
+		bool sec = false;
+		for(size_t i = 0; i < textCursor().columnNumber(); ++i) {
+			if(!line.at(i).isSpace()) {
+				sec=true;
+				break;
+			}
+		}
+		curse.clearSelection();
 		if(spaced) {
 			if(!tabbed)
 				this->textCursor().deletePreviousChar();
-			indent(indent_secondary);
-		} else {
-			QTextCursor curse = textCursor();
-			curse.select(QTextCursor::LineUnderCursor);
-			QString line = curse.selectedText(); //NOTE: This auto-quotes. Compenaste for it.
-			auto e = line.cbegin()+curse.columnNumber();
-			bool sec = false;
-			if(line.length() > 1) {
-				for(auto i = line.cbegin()+1; i != e; ++i) {
-					if(!i->isSpace()) {
-						sec=true;
-						break;
-					}
-				}
-			}
-			curse.clearSelection();
-			if(sec)
-				indent(indent_secondary);
-			else
-				indent(indent_primary);
+			indent(sec?indent_primary:indent_secondary);
+		} else
+			indent(sec?indent_secondary:indent_primary);
 			spaced = false;
 		}
 		tabbed = true;
