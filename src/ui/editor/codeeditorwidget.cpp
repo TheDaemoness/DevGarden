@@ -7,10 +7,12 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontDatabase>
+#include <QKeyEvent>
 
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
 {
+
 	lineNumberArea = new LineNumberArea(this);
 
 	// Modify editor color and font settings
@@ -24,6 +26,9 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	textFont.setPointSize(12);
 	this->setFont(textFont);
 
+	indent_primary = 4;
+	indent_secondary = 4;
+
 	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
 
 	// Syntax highlighting. If you wish to turn off syntax highlighting
@@ -33,6 +38,18 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 
 	createConnections();
 	updateLineNumberAreaWidth();
+}
+
+void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
+	if(key->key() == Qt::Key_Tab) {
+		if(indent_primary) {
+			uint8_t indent_level = (indent_primary-this->textCursor().columnNumber()%indent_primary);
+			this->textCursor().insertText(QString(indent_level, ' '));
+		} else
+			this->textCursor().insertText("\t");
+	}
+	else
+		QPlainTextEdit::keyPressEvent(key);
 }
 
 // Paints line number area off to the left

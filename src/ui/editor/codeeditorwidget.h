@@ -5,6 +5,7 @@
 #include <QPlainTextEdit>
 
 class SyntaxHighlighter;
+class QKeyEvent;
 
 class CodeEditorWidget : public QPlainTextEdit
 {
@@ -23,6 +24,7 @@ class CodeEditorWidget : public QPlainTextEdit
 
 	protected:
 		void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+		void keyPressEvent(QKeyEvent* key) Q_DECL_OVERRIDE;
 
 	private:
 		void createConnections();
@@ -36,6 +38,7 @@ class CodeEditorWidget : public QPlainTextEdit
 		QFont textFont;
 		QWidget* lineNumberArea;
 		SyntaxHighlighter* syntaxHighlighter;
+		uint8_t indent_primary, indent_secondary;
 };
 
 #endif // CODEEDITORWIDGET_H
