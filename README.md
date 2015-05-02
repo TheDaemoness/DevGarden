@@ -1,4 +1,6 @@
 # DevGarden
+
+[![Join the chat at https://gitter.im/TheRabbitologist/DevGarden](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TheRabbitologist/DevGarden?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A versatile and modern IDE for versatile and modern people.
 
 Developed by members of the community at #cplusplus.com on Freenode.
