@@ -9,6 +9,8 @@
 #include <QFontDatabase>
 #include <QKeyEvent>
 
+#include "../../configloader.h"
+
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
 {
@@ -77,6 +79,38 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 		top = bottom;
 		bottom = top + static_cast<int>(blockBoundingRect(block).height());
 		++blockNumber;
+	}
+}
+
+void CodeEditorWidget::configure(ConfigFile& cfg) {
+	ConfigEntry* a = cfg.at("indent-primary");
+	ConfigEntry* b = cfg.at("indent-secondary");
+	if(a) {
+		DEBUG_EMIT("A");
+		a->split();
+		parseConfigEntry(*a,indent_primary);
+	}
+	if(b) {
+		DEBUG_EMIT("B");
+		b->split();
+		parseConfigEntry(*b,indent_secondary);
+	}
+}
+
+void CodeEditorWidget::parseConfigEntry(const ConfigEntry& data, uint8_t& field) {
+	const QString* word;
+	word = data.getData(1);
+	if(word) {
+		if(*word == "tab")
+			field = 0;
+		else if(*word == "space") {
+			word = data.getData(2);
+			if(word) {
+				uint8_t val = word->toUShort();
+				field = val?val:4;
+			} else
+				field = 4;
+		}
 	}
 }
 

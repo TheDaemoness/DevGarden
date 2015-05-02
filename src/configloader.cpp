@@ -4,7 +4,26 @@
 #include <QFile>
 #include <QString>
 #include <QFileInfo>
-#include <QTextStream>
+#include <algorithm>
+
+ConfigFile::ConfigFile(const char* name) {
+	QFile* ptr = getUtilityFileRead(name);
+	if(!ptr)
+		return;
+	this->name = name;
+	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
+		entries.push_back(e);
+	ptr->close();
+	delete ptr;
+}
+
+ConfigEntry* ConfigFile::at(const QString& name) const {
+	for(ConfigEntry* entry : entries) {
+		if(entry->firstWord() == name)
+			return entry;
+	}
+	return nullptr;
+}
 
 QFile* getUtilityFileRead(const char* name) {
 	QFile* retval = new QFile;
@@ -93,17 +112,6 @@ ConfigEntry* getConfigEntry(QFile* ptr) {
 	if(ws_count)
 		return recurseGetConfigEntry(ptr, retval, ws_count);
 	return retval;
-}
-
-bool readConfig(const char* name, std::vector<ConfigEntry*>& entries) {
-	QFile* ptr = getUtilityFileRead(name);
-	if(!ptr)
-		return false;
-	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
-		entries.push_back(e);
-	ptr->close();
-	delete ptr;
-	return true;
 }
 
 bool runScript(const char* name) {

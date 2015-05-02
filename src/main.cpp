@@ -27,12 +27,16 @@ int main(int argc, char **argv) {
 	std::cout << "Loading configuration..." << std::endl;
 	makeConfigDirs();
 
+	ConfigFile f("config/editor.conf");
+
 	std::cout << "Initializing..." << std::endl;
 	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader);
 	DGController ctrl(pl.get(), fl.get());
 	DGWindow w(&ctrl);
 	ctrl.setView(&w);
+
+	w.configure(f);
 
 	DGStyle::applyStyle(&a);
 

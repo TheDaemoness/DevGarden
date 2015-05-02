@@ -7,6 +7,9 @@
 class SyntaxHighlighter;
 class QKeyEvent;
 
+class ConfigFile;
+class ConfigEntry;
+
 class CodeEditorWidget : public QPlainTextEdit
 {
 	Q_OBJECT
@@ -16,6 +19,8 @@ class CodeEditorWidget : public QPlainTextEdit
 
 		void lineNumberPaintEvent(QPaintEvent* event);
 		int lineNumberAreaWidth();
+
+		void configure(ConfigFile& cfg);
 
 	public slots:
 		void fontSizeInc();
@@ -28,6 +33,7 @@ class CodeEditorWidget : public QPlainTextEdit
 
 	private:
 		void createConnections();
+		void parseConfigEntry(const ConfigEntry& data, uint8_t& field);
 
 	private slots:
 		void updateLineNumberAreaWidth();

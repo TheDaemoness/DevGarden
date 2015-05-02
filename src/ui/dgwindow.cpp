@@ -6,6 +6,7 @@
 #include <QUrl>
 #include <QMenuBar>
 
+#include "../configloader.h"
 
 DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMainWindow(parent)
@@ -22,6 +23,11 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 
 	centralWidget = new DGCentralWidget(dgc, this);
 	setCentralWidget(centralWidget);
+}
+
+void DGWindow::configure(ConfigFile& f) {
+	if(f.getName() == "config/editor.conf")
+		this->centralWidget->getEditor()->configure(f);
 }
 
 void DGWindow::createMenuActions() {
@@ -115,6 +121,13 @@ void DGWindow::createMenuActions() {
 	menuDebug->addSeparator();
 	menuDebug->addAction(tr("Test"));
 	menuDebug->addAction(tr("Test Settings..."));
+
+	menuVersion = menuBar()->addMenu(tr("&VCS"));
+	menuVersionInit = menuVersion->addMenu(tr("Create Repository"));
+	menuVersionInit->addAction(tr("Subversion..."));
+	menuVersionInit->addAction(tr("Mercurial..."));
+	menuVersionInit->addAction(tr("Git..."));
+	menuVersion->addAction(tr("Repository Settings..."));
 
 	menuWindow = menuBar()->addMenu(tr("&Window"));
 	menuWindow->addAction(tr("Minimize"), this, SLOT(showMinimized()));
