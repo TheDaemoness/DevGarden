@@ -89,6 +89,8 @@ void DGController::closeFile() {
 }
 
 void DGController::closeCurrent() {
+	if(pl->empty())
+		return;
 	if(pl->getCurrent()->isSingleFile())
 		closeFile();
 	pl->closeCurrent();

@@ -35,6 +35,7 @@ class CodeEditorWidget : public QPlainTextEdit
 		void createConnections();
 		void parseConfigEntry(const ConfigEntry& data, uint8_t& field);
 		void indent(const uint8_t& lvl);
+		void setTabWidth(uint8_t len);
 
 	private slots:
 		void updateLineNumberAreaWidth();
