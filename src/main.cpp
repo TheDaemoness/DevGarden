@@ -9,6 +9,7 @@
 #include <QStyleFactory>
 
 #include <memory>
+#include <iostream>
 
 #include "configloader.h"
 #include "ui/dgstyle.h"

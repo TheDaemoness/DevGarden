@@ -2,12 +2,12 @@
 #define CONFIGLOADER_H
 
 #include "envmacros.h"
+#include "configentry.h"
 
 #include <vector>
-#include <string>
 
 #if defined(DG_ENV_MACOS)
-	#define DG_CONFIG_PREFIX_GLOBAL "Library/Application Support/"
+	#define DG_CONFIG_PREFIX_GLOBAL "/Library/Application Support/"
 	#define DG_CONFIG_PREFIX_LOCAL  "Library/Application Support/"
 #elif defined(DG_ENV_WINDOZE)
 	#define DG_CONFIG_PREFIX_GLOBAL "ProgramData/"
@@ -24,16 +24,11 @@
 
 class QFile;
 
-struct ConfigEntry {
-	std::string data;
-	std::string* inherit;
-	std::vector<ConfigEntry*> children;
-};
-
 void makeConfigDirs();
 bool runScript(const char* name);
+bool readConfig(const char* name, std::vector<ConfigEntry*>& entries);
 ConfigEntry* getConfigEntry(QFile* ptr);
-QFile* getConfigFileRead(const char* name);
-QFile* getConfigFileWrite(const char* name);
+QFile* getUtilityFileRead(const char* name);
+QFile* getUtilityFileWrite(const char* name);
 
 #endif // CONFIGLOADER_H
