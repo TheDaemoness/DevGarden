@@ -28,7 +28,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	textFont.setPointSize(12);
 	this->setFont(textFont);
 
-	indent_primary = 4;
+	indent_primary = 0;
 	indent_secondary = 4;
 
 	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
@@ -44,14 +44,44 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 
 void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 	if(key->key() == Qt::Key_Tab) {
-		if(indent_primary) {
-			uint8_t indent_level = (indent_primary-this->textCursor().columnNumber()%indent_primary);
-			this->textCursor().insertText(QString(indent_level, ' '));
-		} else
-			this->textCursor().insertText("\t");
+		if(spaced) {
+			if(!tabbed)
+				this->textCursor().deletePreviousChar();
+			indent(indent_secondary);
+		} else {
+			QTextCursor curse = textCursor();
+			curse.select(QTextCursor::LineUnderCursor);
+			QString line = curse.selectedText();
+			curse.clearSelection();
+			auto e = line.cbegin()+curse.columnNumber()+1;
+			bool sec = false;
+			for(auto i = line.cbegin(); i != e; ++i) {
+				if(!i->isSpace()) {
+					sec=true;
+					break;
+				}
+			}
+			if(sec)
+				indent(indent_secondary);
+			else
+				indent(indent_primary);
+			spaced = false;
+		}
+		tabbed = true;
 	}
-	else
+	else {
+		tabbed = false;
+		spaced = key->key() == Qt::Key_Space;
 		QPlainTextEdit::keyPressEvent(key);
+	}
+}
+
+void CodeEditorWidget::indent(const uint8_t& lvl) {
+	if(lvl) {
+		uint8_t indent_level = (lvl-this->textCursor().columnNumber()%lvl);
+		this->textCursor().insertText(QString(indent_level, ' '));
+	} else
+		this->textCursor().insertText("\t");
 }
 
 // Paints line number area off to the left
@@ -86,12 +116,10 @@ void CodeEditorWidget::configure(ConfigFile& cfg) {
 	ConfigEntry* a = cfg.at("indent-primary");
 	ConfigEntry* b = cfg.at("indent-secondary");
 	if(a) {
-		DEBUG_EMIT("A");
 		a->split();
 		parseConfigEntry(*a,indent_primary);
 	}
 	if(b) {
-		DEBUG_EMIT("B");
 		b->split();
 		parseConfigEntry(*b,indent_secondary);
 	}

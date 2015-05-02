@@ -6,7 +6,8 @@
 #include <QString>
 #include <QStringList>
 
-struct ConfigEntry {
+class ConfigEntry {
+public:
 	ConfigEntry() {}
 	ConfigEntry(const QString& dat) {data.push_back(dat.trimmed());}
 	~ConfigEntry() {
@@ -18,6 +19,7 @@ struct ConfigEntry {
 
 	ConfigEntry* setData(const QString& val);
 	const QString* getData(size_t index = 0) const {return index>=data.length()?nullptr:&data.at(index);}
+	size_t sizeData() const {return data.length();}
 	QString firstWord() const;
 
 	bool operator<(const ConfigEntry& b) {

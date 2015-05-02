@@ -34,6 +34,7 @@ class CodeEditorWidget : public QPlainTextEdit
 	private:
 		void createConnections();
 		void parseConfigEntry(const ConfigEntry& data, uint8_t& field);
+		void indent(const uint8_t& lvl);
 
 	private slots:
 		void updateLineNumberAreaWidth();
@@ -45,6 +46,7 @@ class CodeEditorWidget : public QPlainTextEdit
 		QWidget* lineNumberArea;
 		SyntaxHighlighter* syntaxHighlighter;
 		uint8_t indent_primary, indent_secondary;
+		bool spaced, tabbed;
 };
 
 #endif // CODEEDITORWIDGET_H
