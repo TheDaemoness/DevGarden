@@ -57,16 +57,18 @@ void DGCentralWidget::createWidgets()
 	// Auxiliary ComboBox
 	auxComboBox = new QComboBox;
 	auxComboBox->addItem("Aux ComboBox");
+	auxComboBox->hide();
 
 	// Project
 	projectComboBox = new QComboBox;
 	projectComboBox->addItem("Projects");
-	projectComboBox->setHidden(true);
+	projectComboBox->hide();
 	this->connect(this->projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
 
 	// Auxiliary Pane
 	auxPane = new QListWidget();
 	auxPane->addItem("Auxiliary Pane!");
+	auxPane->hide();
 
 	// Text Editor
 	textEditor = new CodeEditorWidget;
@@ -104,12 +106,13 @@ void DGCentralWidget::createLayout()
 	// Later on will be switching to size policies to make the sizing right.
 
 	// ProjectDir, AuxCombo, AuxPane
-	QVBoxLayout* leftSideLayout = new QVBoxLayout;
+	leftSideLayout = new QVBoxLayout;
 	leftSideLayout->setSpacing(4);
 	leftSideLayout->addWidget(projectComboBox, 1);
 	leftSideLayout->addWidget(projectDirView, 3);
 	leftSideLayout->addWidget(auxComboBox, 1);
 	leftSideLayout->addWidget(auxPane, 3);
+	leftSideLayout->update();
 
 	// TextEditor, BottomBar
 	QHBoxLayout* centralLayout = new QHBoxLayout;
@@ -123,9 +126,9 @@ void DGCentralWidget::createLayout()
 	rightSideLayout->addLayout(bottomBar);
 
 	// Main Layout (Combination of all child layouts)
-	QHBoxLayout* mainLayout = new QHBoxLayout(this);
+	mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(4);
-	mainLayout->addLayout(leftSideLayout, 3);
+	mainLayout->addLayout(leftSideLayout);
 	mainLayout->addLayout(rightSideLayout, 20);
 
 	setLayout(mainLayout);
@@ -172,7 +175,14 @@ void DGCentralWidget::shrinkProjectList() {
 		projectDirView->setHidden(true);
 		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
 	}
-	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
+	size_t len = this->ctrl->getProjects().length();
+
+	this->projectComboBox->setHidden(len < 2);
+
+	//LEFT PANE HIDING.
+	this->auxComboBox->setHidden(len < 1);
+	this->auxPane->setHidden(len < 1);
+	this->setHiddenLeft(len < 1);
 }
 
 void DGCentralWidget::changeFile(const QModelIndex& val) {
@@ -194,7 +204,17 @@ void DGCentralWidget::updateProjectList() {
 		static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME));
 	}
 	this->projectComboBox->blockSignals(false);
-	this->projectComboBox->setHidden(this->ctrl->getProjects().length() < 2);
+	size_t len = this->ctrl->getProjects().length();
+
+	this->projectComboBox->setHidden(len < 2);
+
+	this->auxComboBox->setHidden(len < 1);
+	this->auxPane->setHidden(len < 1);
+	this->setHiddenLeft(len < 1);
+}
+
+void DGCentralWidget::setHiddenLeft(bool hide) {
+	mainLayout->setStretch(0,hide?0:3);
 }
 
 

@@ -52,6 +52,7 @@ private slots:
 	void resizeDirView();
 	void changeProject(int index);
 	void changeFile(const QModelIndex& val);
+	void setHiddenLeft(bool hide);
 
 private:
 	// Views
@@ -65,8 +66,8 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QHBoxLayout* bottomBar; // Placeholder
-	QVBoxLayout* splitViewPane; // Placeholder
+	QHBoxLayout *bottomBar, *mainLayout; // Placeholder
+	QVBoxLayout *splitViewPane, *leftSideLayout; // Placeholder
 	QPushButton* bottomButton;
 
 	std::vector<QPushButton*> buttonsLower;
