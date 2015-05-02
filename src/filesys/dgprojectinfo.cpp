@@ -10,24 +10,23 @@ bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 	return this->getName() < b.getName();
 }
 
-DGProjectInfo::DGProjectInfo(QFile* f) : isdir(false) {
-	content.file = f;
+DGProjectInfo::DGProjectInfo(QFileInfo* f) : isdir(false) {
+	file = f;
+	dir = nullptr;
 }
 
 DGProjectInfo::DGProjectInfo(QDir* f) : isdir(true) {
-	content.dir = f;
+	dir = f;
+	file = nullptr;
 }
 
 DGProjectInfo::~DGProjectInfo() {
 	if(isdir)
-		delete content.dir;
-	else {
-		if(content.file->isOpen())
-			content.file->close();
-		delete content.file;
-	}
+		delete dir;
+	else
+		delete file;
 }
 
 QString DGProjectInfo::getName() const {
-	return isdir?content.dir->dirName():content.file->fileName();
+	return isdir?dir->dirName():file->fileName();
 }

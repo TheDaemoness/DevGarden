@@ -6,6 +6,7 @@
 #include <QUrl>
 #include <QMenuBar>
 
+#include "../configloader.h"
 
 DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMainWindow(parent)
@@ -24,6 +25,11 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	setCentralWidget(centralWidget);
 }
 
+void DGWindow::configure(ConfigFile& f) {
+	if(f.getName() == "config/editor.conf")
+		this->centralWidget->getEditor()->configure(f);
+}
+
 void DGWindow::createMenuActions() {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
@@ -31,8 +37,8 @@ void DGWindow::createMenuActions() {
 	menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
 	menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
 	menuFile->addSeparator();
-	menuFile->addAction(tr("Save"), this, SLOT(nullSlot()), QKeySequence::Save);
-	menuFile->addAction(tr("Save As..."), this, SLOT(nullSlot()), QKeySequence::SaveAs);
+	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
+	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
 	menuFile->addAction(tr("Save All"));
 	menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);
 	menuFile->addSeparator();
@@ -115,6 +121,13 @@ void DGWindow::createMenuActions() {
 	menuDebug->addSeparator();
 	menuDebug->addAction(tr("Test"));
 	menuDebug->addAction(tr("Test Settings..."));
+
+	menuVersion = menuBar()->addMenu(tr("&VCS"));
+	menuVersionInit = menuVersion->addMenu(tr("Create Repository"));
+	menuVersionInit->addAction(tr("Subversion..."));
+	menuVersionInit->addAction(tr("Mercurial..."));
+	menuVersionInit->addAction(tr("Git..."));
+	menuVersion->addAction(tr("Repository Settings..."));
 
 	menuWindow = menuBar()->addMenu(tr("&Window"));
 	menuWindow->addAction(tr("Minimize"), this, SLOT(showMinimized()));

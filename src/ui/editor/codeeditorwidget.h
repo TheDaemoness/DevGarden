@@ -5,6 +5,10 @@
 #include <QPlainTextEdit>
 
 class SyntaxHighlighter;
+class QKeyEvent;
+
+class ConfigFile;
+class ConfigEntry;
 
 class CodeEditorWidget : public QPlainTextEdit
 {
@@ -16,6 +20,8 @@ class CodeEditorWidget : public QPlainTextEdit
 		void lineNumberPaintEvent(QPaintEvent* event);
 		int lineNumberAreaWidth();
 
+		void configure(ConfigFile& cfg);
+
 	public slots:
 		void fontSizeInc();
 		void fontSizeDec();
@@ -23,9 +29,13 @@ class CodeEditorWidget : public QPlainTextEdit
 
 	protected:
 		void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+		void keyPressEvent(QKeyEvent* key) Q_DECL_OVERRIDE;
 
 	private:
 		void createConnections();
+		void parseConfigEntry(const ConfigEntry& data, uint8_t& field);
+		void indent(const uint8_t& lvl);
+		void setTabWidth(uint8_t len);
 
 	private slots:
 		void updateLineNumberAreaWidth();
@@ -36,6 +46,8 @@ class CodeEditorWidget : public QPlainTextEdit
 		QFont textFont;
 		QWidget* lineNumberArea;
 		SyntaxHighlighter* syntaxHighlighter;
+		uint8_t indent_primary, indent_secondary;
+		bool spaced, tabbed;
 };
 
 #endif // CODEEDITORWIDGET_H

@@ -1,4 +1,6 @@
 # DevGarden
+
+[![Join the chat at https://gitter.im/TheRabbitologist/DevGarden](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TheRabbitologist/DevGarden?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A versatile and modern IDE for versatile and modern people.
 
 Developed by members of the community at #cplusplus.com on Freenode.
@@ -8,6 +10,8 @@ It can autogenerate build files, or simply be used as an editor if the user pref
 
 More details to come.
 
-Dependencies:
+## Dependencies:
 * A (mostly) C++14-compliant compiler. DevGarden supports clang 3.5 and g++ 4.9.2.
 * Qt 5.2 or later.
+* cmake 3.1 or later.
+* ruby 2.0 or later.

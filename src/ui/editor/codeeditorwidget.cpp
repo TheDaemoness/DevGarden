@@ -2,26 +2,37 @@
 #include "syntaxhighlighter.h"
 #include "linenumberarea.h"
 
+#include "../dgstyle.h"
+
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontDatabase>
+#include <QKeyEvent>
+
+#include "../../configloader.h"
 
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
 {
+
 	lineNumberArea = new LineNumberArea(this);
 
 	// Modify editor color and font settings
-	QColor backgroundColor = QColor(39,40,34);
 	QPalette colors = palette();
-	colors.setColor(QPalette::Active, QPalette::Base, backgroundColor);
-	colors.setColor(QPalette::Inactive, QPalette::Base, backgroundColor);
+	colors.setColor(QPalette::Active, QPalette::Base, DGStyle::COLOR_BACKGROUND);
+	colors.setColor(QPalette::Inactive, QPalette::Base, DGStyle::COLOR_BACKGROUND);
 	colors.setColor(QPalette::Text, Qt::white);
 	setPalette(colors);
 
 	textFont.setStyleHint(QFont::Monospace);
 	textFont.setPointSize(12);
 	this->setFont(textFont);
+
+	indent_primary = 0;
+	indent_secondary = 4;
+
+	spaced = false;
+	tabbed = false;
 
 	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
 
@@ -34,11 +45,57 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	updateLineNumberAreaWidth();
 }
 
+void CodeEditorWidget::setTabWidth(uint8_t len) {
+	len = len?len:8;
+	QFontMetrics metrics(this->font());
+	setTabStopWidth(len * metrics.width(' '));
+}
+
+void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
+	if(key->key() == Qt::Key_Tab) {
+		if(textCursor().hasSelection())
+			textCursor().removeSelectedText();
+		QTextCursor curse = textCursor();
+		curse.select(QTextCursor::LineUnderCursor);
+		QString line = curse.selectedText();
+		bool sec = false;
+		for(size_t i = 0; i < textCursor().columnNumber(); ++i) {
+			if(!line.at(i).isSpace()) {
+				sec=true;
+				break;
+			}
+		}
+		curse.clearSelection();
+		if(spaced) {
+			if(!tabbed)
+				this->textCursor().deletePreviousChar();
+			indent(indent_secondary);
+		} else {
+			indent(sec?indent_secondary:indent_primary);
+			spaced = false;
+		}
+		tabbed = true;
+	}
+	else {
+		tabbed = false;
+		spaced = key->key() == Qt::Key_Space;
+		QPlainTextEdit::keyPressEvent(key);
+	}
+}
+
+void CodeEditorWidget::indent(const uint8_t& lvl) {
+	if(lvl) {
+		uint8_t indent_level = (lvl-this->textCursor().columnNumber()%lvl);
+		this->textCursor().insertText(QString(indent_level, ' '));
+	} else
+		this->textCursor().insertText("\t");
+}
+
 // Paints line number area off to the left
 void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 {
 	QPainter painter(lineNumberArea);
-	painter.fillRect(event->rect(), QColor(59,58,50).lighter(160)); // TODO: Maybe get rid of magic number for color?
+	painter.fillRect(event->rect(), DGStyle::COLOR_LOLIGHT.lighter(128));
 
 	QTextBlock block = firstVisibleBlock();
 	int blockNumber = block.blockNumber();
@@ -59,6 +116,39 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 		top = bottom;
 		bottom = top + static_cast<int>(blockBoundingRect(block).height());
 		++blockNumber;
+	}
+}
+
+void CodeEditorWidget::configure(ConfigFile& cfg) {
+	ConfigEntry* a = cfg.at("indent-primary");
+	ConfigEntry* b = cfg.at("indent-secondary");
+	ConfigEntry* t = cfg.at("tab-length");
+	if(a) {
+		a->split();
+		parseConfigEntry(*a,indent_primary);
+	}
+	if(b) {
+		b->split();
+		parseConfigEntry(*b,indent_secondary);
+	}
+	if(t)
+		setTabWidth(t->getData()->section(' ',1,1).toUShort());
+}
+
+void CodeEditorWidget::parseConfigEntry(const ConfigEntry& data, uint8_t& field) {
+	const QString* word;
+	word = data.getData(1);
+	if(word) {
+		if(*word == "tab")
+			field = 0;
+		else if(*word == "space") {
+			word = data.getData(2);
+			if(word) {
+				uint8_t val = word->toUShort();
+				field = val?val:4;
+			} else
+				field = 4;
+		}
 	}
 }
 
@@ -131,9 +221,7 @@ void CodeEditorWidget::highlightCurrentLine()
 	{
 		QTextEdit::ExtraSelection selection;
 
-		QColor lineColor = QColor(73,72,62);
-
-		selection.format.setBackground(lineColor);
+		selection.format.setBackground(DGStyle::COLOR_LOLIGHT);
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 		selection.cursor = textCursor();
 		selection.cursor.clearSelection();

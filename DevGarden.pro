@@ -33,12 +33,14 @@ SOURCES += \
     src/ui/editor/codeeditorwidget.cpp \
 	src/ui/editor/syntaxhighlighter.cpp \
     src/filesys/dgprojectloader.cpp \
-	src/filesys/dgprojectinfo.cpp
+	src/filesys/dgprojectinfo.cpp \
+    src/filesys/dgfileloader.cpp \
+    src/ui/dgstyle.cpp \
+    src/configentry.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
     src/dgcontroller.h \
-    src/util/stringtree.h \
     src/ui/dgcentralwidget.hpp \
     src/configloader.h \
 	src/envmacros.h \
@@ -47,8 +49,11 @@ HEADERS  += \
 	src/ui/editor/syntaxhighlighter.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h \
-    CODESTYLE.md \
-    src/dgdebug.hpp
+    src/dgdebug.hpp \
+    src/filesys/dgfileloader.h \
+    src/ui/editor/codestyle.h \
+    src/ui/dgstyle.h \
+    src/configentry.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

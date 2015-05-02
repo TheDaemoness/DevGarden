@@ -9,8 +9,8 @@
 * All files should have a single empty line at the end, where possible.
 
 ## Naming
-* Macro names should be `UPPER_CASE`.
-* Variable/field names should be `lowercase`, and may have abbrviations.
+* Macro names and constants should be `UPPER_CASE`.
+* Variable/field names should be `lowercase`, and may have abbreviations.
 * Type names must be `UpperCamelCase`.
 * Function names must be `lowerCamelCase`.
 * Qt signal names must be `lowerCamelCase` AND be prefixed with "sig", i.e. "sigSauer".
@@ -23,12 +23,12 @@
 
 ## Portability
 * All code must compile using `-pedantic -std=c++14` on clang 3.5 and g++ 4.9.2.
-* Written code should generally not rely on langauge extensions that are not disabled by -pedantic.
+* Written code should generally not rely on language extensions that are not disabled by -pedantic.
 * Prefer cross-platform solutions offered by Qt over platform-specific options.
 * Platform-specific code must always be wrapped in an #ifdef block using macros in envmacro.h. No exceptions.
 
 ## C++ Features
-* No `using` constructs are to be used outside of class declarations.
+* No `using` constructs are to be used, unless they are in a class declaration, or are used for type aliasing, i.e. `using StringMap = QHash<QString,QString>`
 * No exception throwing or exception handling.
 * Classes should be declared using class rather than struct.
 * Prefer const variables over macro constants.
@@ -39,14 +39,15 @@
 * Use `<c*>` headers over `<*.h>` standard headers.
 * Prefer Qt features over standard C++ features where possible, with a few exceptions (see Qt).
 * Avoid deprecated features of the C++ standard library where possible.
-* std::shared_ptr est interdit. Don't use it.
-* Prefer the pre-coded algorithms in <algorithm> over handwritten or Qt's equivalents.
+* Shared pointers, such as std::shared_ptr, sont interdites. Don't use them.
+* Prefer the pre-coded algorithms in `<algorithm>` over handwritten or Qt's equivalents.
 
 ## Qt
 * Prefer QString over std::string (listed here for emphasis).
-* Prefer C++'s containers over Qt's.
-* Prefer Qt's smart pointers over C++'s for QObjects.
-* Prefer C++ smart pointers for everything else.
+* Prefer QHash for associative structures where the key is a QString, unless alphabetization is important.
+* In general, prefer C++'s containers over Qt's.
 
 ## Git
 * Never ever push to master.
+* Do not push to devel, if avoidable (especially TheRabbitologist).
+* Each contributor should create their own personal branch to push to, and send pull requests into devel when their code is ready.
