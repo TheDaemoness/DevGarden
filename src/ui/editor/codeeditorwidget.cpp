@@ -51,16 +51,18 @@ void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 		} else {
 			QTextCursor curse = textCursor();
 			curse.select(QTextCursor::LineUnderCursor);
-			QString line = curse.selectedText();
-			curse.clearSelection();
-			auto e = line.cbegin()+curse.columnNumber()+1;
+			QString line = curse.selectedText(); //NOTE: This auto-quotes. Compenaste for it.
+			auto e = line.cbegin()+curse.columnNumber();
 			bool sec = false;
-			for(auto i = line.cbegin(); i != e; ++i) {
-				if(!i->isSpace()) {
-					sec=true;
-					break;
+			if(line.length() > 2) {
+				for(auto i = line.cbegin()+1; i != e; ++i) {
+					if(!i->isSpace()) {
+						sec=true;
+						break;
+					}
 				}
 			}
+			curse.clearSelection();
 			if(sec)
 				indent(indent_secondary);
 			else
