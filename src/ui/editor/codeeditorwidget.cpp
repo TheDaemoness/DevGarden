@@ -45,6 +45,12 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	updateLineNumberAreaWidth();
 }
 
+void CodeEditorWidget::setTabWidth(uint8_t len) {
+	len = len?len:8;
+	QFontMetrics metrics(this->font());
+	setTabStopWidth(len * metrics.width(' '));
+}
+
 void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 	if(key->key() == Qt::Key_Tab) {
 		if(textCursor().hasSelection())
@@ -116,6 +122,7 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 void CodeEditorWidget::configure(ConfigFile& cfg) {
 	ConfigEntry* a = cfg.at("indent-primary");
 	ConfigEntry* b = cfg.at("indent-secondary");
+	ConfigEntry* t = cfg.at("tab-length");
 	if(a) {
 		a->split();
 		parseConfigEntry(*a,indent_primary);
@@ -124,6 +131,8 @@ void CodeEditorWidget::configure(ConfigFile& cfg) {
 		b->split();
 		parseConfigEntry(*b,indent_secondary);
 	}
+	if(t)
+		setTabWidth(t->getData()->section(' ',1,1).toUShort());
 }
 
 void CodeEditorWidget::parseConfigEntry(const ConfigEntry& data, uint8_t& field) {
