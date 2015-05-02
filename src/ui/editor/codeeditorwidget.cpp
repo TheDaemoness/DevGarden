@@ -54,7 +54,7 @@ void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 			QString line = curse.selectedText(); //NOTE: This auto-quotes. Compenaste for it.
 			auto e = line.cbegin()+curse.columnNumber();
 			bool sec = false;
-			if(line.length() > 2) {
+			if(line.length() > 1) {
 				for(auto i = line.cbegin()+1; i != e; ++i) {
 					if(!i->isSpace()) {
 						sec=true;
