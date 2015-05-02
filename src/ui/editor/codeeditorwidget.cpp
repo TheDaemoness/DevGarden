@@ -30,6 +30,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 
 	indent_primary = 0;
 	indent_secondary = 4;
+	tab_width = 8;
 
 	spaced = false;
 	tabbed = false;
@@ -48,7 +49,8 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 void CodeEditorWidget::setTabWidth(uint8_t len) {
 	len = len?len:8;
 	QFontMetrics metrics(this->font());
-	setTabStopWidth(len * metrics.width(' '));
+	setTabStopWidth(len * (metrics.width(' ')+1));
+	tab_width = len;
 }
 
 void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
@@ -158,6 +160,7 @@ void CodeEditorWidget::fontSizeInc() {
 	else
 		textFont.setPointSize(textFont.pointSize()+1);
 	this->setFont(textFont);
+	this->setTabWidth(tab_width);
 }
 
 void CodeEditorWidget::fontSizeDec() {
@@ -166,6 +169,7 @@ void CodeEditorWidget::fontSizeDec() {
 	else if(textFont.pointSize() > 8)
 		textFont.setPointSize(textFont.pointSize()-1);
 	this->setFont(textFont);
+	this->setTabWidth(tab_width);
 }
 
 void CodeEditorWidget::fontSizeRes() {
