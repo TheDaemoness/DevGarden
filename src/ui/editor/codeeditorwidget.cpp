@@ -63,7 +63,7 @@ void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 		if(spaced) {
 			if(!tabbed)
 				this->textCursor().deletePreviousChar();
-			indent(sec?indent_primary:indent_secondary);
+			indent(indent_secondary);
 		} else {
 			indent(sec?indent_secondary:indent_primary);
 			spaced = false;
@@ -89,7 +89,7 @@ void CodeEditorWidget::indent(const uint8_t& lvl) {
 void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 {
 	QPainter painter(lineNumberArea);
-	painter.fillRect(event->rect(), DGStyle::COLOR_LOLIGHT.lighter(160)); // TODO: Maybe get rid of magic number for color?
+	painter.fillRect(event->rect(), DGStyle::COLOR_LOLIGHT.lighter(128));
 
 	QTextBlock block = firstVisibleBlock();
 	int blockNumber = block.blockNumber();
