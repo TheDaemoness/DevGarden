@@ -3,6 +3,9 @@
 
 #include "envmacros.h"
 
+#include <vector>
+#include <string>
+
 #if defined(DG_ENV_MACOS)
 	#define DG_CONFIG_PREFIX_GLOBAL "Library/Application Support/"
 	#define DG_CONFIG_PREFIX_LOCAL  "Library/Application Support/"
@@ -21,8 +24,15 @@
 
 class QFile;
 
+struct ConfigEntry {
+	std::string data;
+	std::string* inherit;
+	std::vector<ConfigEntry*> children;
+};
+
 void makeConfigDirs();
 bool runScript(const char* name);
+ConfigEntry* getConfigEntry(QFile* ptr);
 QFile* getConfigFileRead(const char* name);
 QFile* getConfigFileWrite(const char* name);
 

@@ -50,6 +50,14 @@ void makeConfigDirs() {
 #endif
 }
 
+static ConfigEntry* recurseGetConfigEntry(QFile* ptr, ConfigEntry* parent = new ConfigEntry, size_t depth = 0) {
+	return parent;
+}
+
+ConfigEntry* getConfigEntry(QFile* ptr) {
+	return recurseGetConfigEntry(ptr);
+}
+
 bool runScript(const char* name) {
 	return false;
 }
