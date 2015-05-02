@@ -31,6 +31,9 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	indent_primary = 0;
 	indent_secondary = 4;
 
+	spaced = false;
+	tabbed = false;
+
 	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
 
 	// Syntax highlighting. If you wish to turn off syntax highlighting
