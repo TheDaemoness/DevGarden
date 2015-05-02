@@ -49,7 +49,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 void CodeEditorWidget::setTabWidth(uint8_t len) {
 	len = len?len:8;
 	QFontMetrics metrics(this->font());
-	setTabStopWidth(len * (metrics.width(' ')+1));
+	setTabStopWidth(len * (metrics.width(' ')));
 	tab_width = len;
 }
 

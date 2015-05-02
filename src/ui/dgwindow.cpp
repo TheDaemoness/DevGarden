@@ -13,7 +13,7 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 {
 	this->setWindowTitle("DevGarden");
 	this->resize(1080,640);
-	this->setMinimumSize(640,360);
+	this->setMinimumSize(560,240);
 	ctrl = dgc;
 
 	QMenuBar* bar = new QMenuBar(nullptr);
