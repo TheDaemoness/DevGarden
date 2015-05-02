@@ -7,10 +7,14 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontDatabase>
+#include <QKeyEvent>
+
+#include "../../configloader.h"
 
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
 {
+
 	lineNumberArea = new LineNumberArea(this);
 
 	// Modify editor color and font settings
@@ -24,6 +28,12 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	textFont.setPointSize(12);
 	this->setFont(textFont);
 
+	indent_primary = 0;
+	indent_secondary = 4;
+
+	spaced = false;
+	tabbed = false;
+
 	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
 
 	// Syntax highlighting. If you wish to turn off syntax highlighting
@@ -33,6 +43,46 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 
 	createConnections();
 	updateLineNumberAreaWidth();
+}
+
+void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
+	if(key->key() == Qt::Key_Tab) {
+		if(textCursor().hasSelection())
+			textCursor().removeSelectedText();
+		QTextCursor curse = textCursor();
+		curse.select(QTextCursor::LineUnderCursor);
+		QString line = curse.selectedText();
+		bool sec = false;
+		for(size_t i = 0; i < textCursor().columnNumber(); ++i) {
+			if(!line.at(i).isSpace()) {
+				sec=true;
+				break;
+			}
+		}
+		curse.clearSelection();
+		if(spaced) {
+			if(!tabbed)
+				this->textCursor().deletePreviousChar();
+			indent(sec?indent_primary:indent_secondary);
+		} else {
+			indent(sec?indent_secondary:indent_primary);
+			spaced = false;
+		}
+		tabbed = true;
+	}
+	else {
+		tabbed = false;
+		spaced = key->key() == Qt::Key_Space;
+		QPlainTextEdit::keyPressEvent(key);
+	}
+}
+
+void CodeEditorWidget::indent(const uint8_t& lvl) {
+	if(lvl) {
+		uint8_t indent_level = (lvl-this->textCursor().columnNumber()%lvl);
+		this->textCursor().insertText(QString(indent_level, ' '));
+	} else
+		this->textCursor().insertText("\t");
 }
 
 // Paints line number area off to the left
@@ -60,6 +110,36 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 		top = bottom;
 		bottom = top + static_cast<int>(blockBoundingRect(block).height());
 		++blockNumber;
+	}
+}
+
+void CodeEditorWidget::configure(ConfigFile& cfg) {
+	ConfigEntry* a = cfg.at("indent-primary");
+	ConfigEntry* b = cfg.at("indent-secondary");
+	if(a) {
+		a->split();
+		parseConfigEntry(*a,indent_primary);
+	}
+	if(b) {
+		b->split();
+		parseConfigEntry(*b,indent_secondary);
+	}
+}
+
+void CodeEditorWidget::parseConfigEntry(const ConfigEntry& data, uint8_t& field) {
+	const QString* word;
+	word = data.getData(1);
+	if(word) {
+		if(*word == "tab")
+			field = 0;
+		else if(*word == "space") {
+			word = data.getData(2);
+			if(word) {
+				uint8_t val = word->toUShort();
+				field = val?val:4;
+			} else
+				field = 4;
+		}
 	}
 }
 

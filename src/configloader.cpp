@@ -4,8 +4,28 @@
 #include <QFile>
 #include <QString>
 #include <QFileInfo>
+#include <algorithm>
 
-QFile* getConfigFileRead(const char* name) {
+ConfigFile::ConfigFile(const char* name) {
+	QFile* ptr = getUtilityFileRead(name);
+	if(!ptr)
+		return;
+	this->name = name;
+	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
+		entries.push_back(e);
+	ptr->close();
+	delete ptr;
+}
+
+ConfigEntry* ConfigFile::at(const QString& name) const {
+	for(ConfigEntry* entry : entries) {
+		if(entry->firstWord() == name)
+			return entry;
+	}
+	return nullptr;
+}
+
+QFile* getUtilityFileRead(const char* name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	retval->open(QFile::ReadOnly);
@@ -19,7 +39,7 @@ QFile* getConfigFileRead(const char* name) {
 	return nullptr;
 }
 
-QFile* getConfigFileWrite(const char* name) {
+QFile* getUtilityFileWrite(const char* name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+"/"+name);
 	retval->open(QFile::WriteOnly);
@@ -48,6 +68,50 @@ void makeConfigDirs() {
 		d.cd(QString(DG_CONFIG_PREFIX_LOCAL)+DG_NAME);
 	}
 #endif
+}
+
+static ConfigEntry* recurseGetConfigEntry(QFile* ptr, ConfigEntry* parent, size_t depth = 0) {
+	size_t ws_count = depth;
+	do {
+		if(!ptr->atEnd()) {
+			ConfigEntry* child = nullptr;
+			if(ws_count == depth)
+				child = new ConfigEntry(ptr->readLine());
+			else if(ws_count > depth)
+				child = recurseGetConfigEntry(ptr, parent->back(), ws_count);
+			if(child)
+				parent->push_back(child);
+		}
+		ws_count = 0;
+		char val = ptr->peek(1)[0];
+		while(val == '\t' || val == ' ' || val == '\n' || val == '\r') {
+			ptr->read(1);
+			if(val == '\n' || val == '\r')
+				ws_count = 0;
+			else
+				++ws_count;
+			val = ptr->peek(1)[0];
+		}
+	} while(ws_count >= depth && !ptr->atEnd());
+	return parent;
+}
+
+ConfigEntry* getConfigEntry(QFile* ptr) {
+	if(!ptr->isOpen() || ptr->atEnd())
+		return nullptr;
+	ConfigEntry* retval = new ConfigEntry;
+	size_t ws_count;
+	ws_count = 0;
+	retval->setData(ptr->readLine());
+	char val = ptr->peek(1)[0];
+	while(val == '\t' || val == ' ') {
+		ptr->read(1);
+		++ws_count;
+		val = ptr->peek(1)[0];
+	}
+	if(ws_count)
+		return recurseGetConfigEntry(ptr, retval, ws_count);
+	return retval;
 }
 
 bool runScript(const char* name) {

@@ -6,6 +6,7 @@
 #include "../dgcontroller.h"
 
 class DGCentralWidget;
+class ConfigFile;
 
 class DGWindow : public QMainWindow {
 	Q_OBJECT
@@ -14,6 +15,7 @@ class DGWindow : public QMainWindow {
 public:
 	explicit DGWindow(DGController* dgc, QWidget *parent = 0);
 	~DGWindow();
+	void configure(ConfigFile& f);
 
 private:
 	void createMenuActions();
@@ -32,8 +34,8 @@ private:
 	DGController* ctrl;
 
 	QMenuBar* bar;
-	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuWindow, *menuHelp;
-	QMenu *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll;
+	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
+	QMenu *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
 
 	DGCentralWidget* centralWidget;
 };

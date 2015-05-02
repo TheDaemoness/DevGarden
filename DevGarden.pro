@@ -35,7 +35,8 @@ SOURCES += \
     src/filesys/dgprojectloader.cpp \
 	src/filesys/dgprojectinfo.cpp \
     src/filesys/dgfileloader.cpp \
-    src/ui/dgstyle.cpp
+    src/ui/dgstyle.cpp \
+    src/configentry.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -51,7 +52,8 @@ HEADERS  += \
     src/dgdebug.hpp \
     src/filesys/dgfileloader.h \
     src/ui/editor/codestyle.h \
-    src/ui/dgstyle.h
+    src/ui/dgstyle.h \
+    src/configentry.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

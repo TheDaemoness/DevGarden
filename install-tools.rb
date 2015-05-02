@@ -2,7 +2,13 @@
 
 require 'rbconfig'
 require 'FileUtils'
+require 'etc'
 include RbConfig
+
+if Process.euid != 0
+    print "This script requires elevated privileges to run.\n"
+    exit;
+end
 
 _dir_global = "/usr/share/DevGarden/"
 _dir_local =  ".DevGarden/"
