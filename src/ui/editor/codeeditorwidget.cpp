@@ -61,7 +61,7 @@ void CodeEditorWidget::keyPressEvent(QKeyEvent* key) {
 			if(!tabbed)
 				this->textCursor().deletePreviousChar();
 			indent(sec?indent_primary:indent_secondary);
-		} else
+		} else {
 			indent(sec?indent_secondary:indent_primary);
 			spaced = false;
 		}
