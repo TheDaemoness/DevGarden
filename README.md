@@ -8,6 +8,8 @@ It can autogenerate build files, or simply be used as an editor if the user pref
 
 More details to come.
 
-Dependencies:
+## Dependencies:
 * A (mostly) C++14-compliant compiler. DevGarden supports clang 3.5 and g++ 4.9.2.
 * Qt 5.2 or later.
+* cmake 3.1 or later.
+* ruby 2.0 or later.

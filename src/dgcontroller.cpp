@@ -29,14 +29,23 @@ void DGController::openFolder() {
 void DGController::openFiles() {
 	QStringList li = QFileDialog::getOpenFileNames(nullptr, tr("Open Files"), QDir::home().absolutePath());
 	if(!li.isEmpty()) {
-		for(QString str : li)
+		for(const QString& str : li)
 			pl->addFile(str);
 		emit sigProjectListChanged();
 		emit sigProjectChanged();
 	}
 }
-void DGController::saveFileAs() {
+void DGController::saveFileCopy() {
 	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
+	QFile f(name);
+	if(!f.open(QFile::WriteOnly))
+		return;
+	if(current.doc)
+		f.write(current.doc->toPlainText().toLocal8Bit());
+	else
+		f.write(dgw->centralWidget->getEditor()->document()->toPlainText().toLocal8Bit());
+	f.close();
+	current.saved = true;
 }
 
 void DGController::saveFile() {
@@ -112,7 +121,7 @@ QString DGController::getPath() {
 		return p->getDir()->absolutePath();
 }
 
-QString DGController::changeProject(size_t index) {\
+QString DGController::changeProject(size_t index) {
 	if(!pl->changeCurrent(index))
 		return "";
 	if(pl->getCurrent()->isSingleFile()) {

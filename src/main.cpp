@@ -6,11 +6,12 @@
 
 #include <QApplication>
 #include <QTranslator>
-#include <QSystemTrayIcon>
+#include <QStyleFactory>
 
 #include <memory>
 
 #include "configloader.h"
+#include "ui/dgstyle.h"
 
 int main(int argc, char **argv) {
 	QApplication a(argc, argv);
@@ -29,6 +30,8 @@ int main(int argc, char **argv) {
 	DGController ctrl(pl.get(), fl.get());
 	DGWindow w(&ctrl);
 	ctrl.setView(&w);
+
+	DGStyle::applyStyle(&a);
 
 	w.show();
 	return a.exec();

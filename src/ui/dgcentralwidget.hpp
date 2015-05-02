@@ -12,6 +12,9 @@ class QLineEdit;
 class QPushButton;
 class CodeEditorWidget;
 
+class QHBoxLayout;
+class QVBoxLayout;
+
 class DGController;
 
 class DGCentralWidget : public QWidget
@@ -23,6 +26,18 @@ public:
 	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
+
+	enum class ButtonIdLower: size_t {
+		SETUP = 0,
+		REGEN,
+		BUILD,
+		REBULD,
+		RUN,
+		DEBUG,
+		ANALYZE,
+		RELEASE
+	};
+	const static size_t BUTTON_LOWER_COUNT = 8;
 
 public slots:
 	void updateProjectList();
@@ -50,12 +65,17 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QLineEdit* bottomBar; // Placeholder
-	QPlainTextEdit* splitViewPane; // Placeholder
+	QHBoxLayout* bottomBar; // Placeholder
+	QVBoxLayout* splitViewPane; // Placeholder
 	QPushButton* bottomButton;
+
+	std::vector<QPushButton*> buttonsLower;
+	std::vector<QPushButton*> buttonsSide;
 
 	//Controller ptr (NO OWNERSHIP)
 	DGController* ctrl;
+
+	QPushButton* makeButton(const QString& txt, int width = 32, int height = 32);
 };
 
 #endif // DGCENTRALWIDGET_HPP

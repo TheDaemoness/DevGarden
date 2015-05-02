@@ -45,7 +45,7 @@ public slots:
 	void getFile(const QString& path);
 	void openFolder();
 	void openFiles();
-	void saveFileAs();
+	void saveFileCopy();
 	void saveFile();
 	void closeFile();
 	void closeCurrent();

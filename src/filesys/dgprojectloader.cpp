@@ -40,11 +40,11 @@ bool DGProjectLoader::closeAll() {
 	return true;
 }
 
-DGProjectInfo* DGProjectLoader::getCurrent() {
+DGProjectInfo* DGProjectLoader::getCurrent() const {
 	return (projs.empty()?nullptr:*current);
 }
 
-bool DGProjectLoader::addFile(QString path) {
+bool DGProjectLoader::addFile(const QString& path) {
 	QFileInfo* f = new QFileInfo(path);
 	if(!f->isReadable() || !f->isWritable()) {
 		delete f;
@@ -55,7 +55,7 @@ bool DGProjectLoader::addFile(QString path) {
 	return true;
 }
 
-bool DGProjectLoader::addFolder(QString path) {
+bool DGProjectLoader::addFolder(const QString& path) {
 	QDir* f = new QDir(path);
 	if(!f->exists()) {
 		delete f;
@@ -66,10 +66,10 @@ bool DGProjectLoader::addFolder(QString path) {
 	return true;
 }
 
-QStringList DGProjectLoader::getProjectNames() {
+QStringList DGProjectLoader::getProjectNames() const {
 	QStringList l;
 	l.reserve(projs.size());
-	for(DGProjectInfo* proj : projs)
+	for(const DGProjectInfo* proj : projs)
 		l.append(proj->getName());
 	return l;
 }
