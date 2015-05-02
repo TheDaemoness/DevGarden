@@ -48,7 +48,6 @@ HEADERS  += \
 	src/ui/editor/syntaxhighlighter.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h \
-    CODESTYLE.md \
     src/dgdebug.hpp \
     src/filesys/dgfileloader.h \
     src/ui/editor/codestyle.h \
