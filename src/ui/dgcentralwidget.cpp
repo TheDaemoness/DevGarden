@@ -189,6 +189,10 @@ void DGCentralWidget::changeFile(const QModelIndex& val) {
 	if(projectDirModel->isDir(val))
 		return;
 	ctrl->getFile(projectDirModel->filePath(val));
+	QString title = QString(DG_NAME) + " - " + projectComboBox->currentText();
+	if(this->ctrl->getActiveProjectModel())
+		title += " - " + projectDirModel->fileName(val);
+	static_cast<QWidget*>(this->parent())->setWindowTitle(title);
 }
 
 void DGCentralWidget::updateProjectList() {
@@ -214,7 +218,7 @@ void DGCentralWidget::updateProjectList() {
 }
 
 void DGCentralWidget::setHiddenLeft(bool hide) {
-	mainLayout->setStretch(0,hide?0:3);
+	mainLayout->setStretch(0,hide?0:5);
 }
 
 
