@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QString>
 #include <QFileInfo>
+#include <QProcess>
 #include <algorithm>
 
 ConfigFile::ConfigFile(const char* name) {
@@ -114,6 +115,27 @@ ConfigEntry* getConfigEntry(QFile* ptr) {
 	return retval;
 }
 
-bool runScript(const char* name) {
-	return false;
+bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in) {
+	QFileInfo* retval = new QFileInfo;
+	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	if(!retval->isExecutable())
+		retval->setFile(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+	if(!retval->isExecutable()) {
+		delete retval;
+		return false;
+	}
+	QProcess proc;
+	proc.setProgram(retval->absolutePath());
+	if(args)
+		proc.setArguments(*args);
+	proc.start();
+	if(!proc.waitForStarted())
+		return false;
+	if(in)
+		proc.write(*in);
+	if(!proc.waitForFinished())
+		return !out;
+	if(out)
+		*out = proc.readAllStandardOutput();
+	return true;
 }
