@@ -125,7 +125,7 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 		return false;
 	}
 	QProcess proc;
-	proc.setProgram(retval->absolutePath());
+	proc.setProgram(retval->absoluteFilePath());
 	if(args)
 		proc.setArguments(*args);
 	proc.start();
