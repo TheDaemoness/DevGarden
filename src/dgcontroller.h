@@ -24,6 +24,7 @@ public:
 	QString changeProject(size_t index);
 	QStringList getProjects();
 	QString getPath();
+	QString getDir();
 
 	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
 
@@ -43,15 +44,23 @@ signals:
 
 public slots:
 	void getFile(const QString& path);
+
 	void openFolder();
 	void openFiles();
+
 	void saveFileCopy();
 	void saveFile();
+
 	void closeFile();
 	void closeCurrent();
 	void closeOthers();
 	void closeAll();
+
 	void fileEdited();
+
+	void newFile();
+	void newTemplateFile();
+	void newTemplateProject();
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.

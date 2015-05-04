@@ -33,7 +33,10 @@ void DGWindow::configure(ConfigFile& f) {
 void DGWindow::createMenuActions() {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
-	menuFile->addAction(tr("New File/Project..."), this, SLOT(nullSlot()), QKeySequence::New);
+	QMenu* newMenu = menuFile->addMenu(tr("New"));
+	newMenu->addAction(tr("Quick File..."), ctrl, SLOT(newFile()), QKeySequence::New);
+	newMenu->addAction(tr("File..."), this, SLOT(nullSlot()));
+	newMenu->addAction(tr("Project..."), this, SLOT(nullSlot()));
 	menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
 	menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
 	menuFile->addSeparator();

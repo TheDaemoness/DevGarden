@@ -35,7 +35,7 @@ private:
 
 	QMenuBar* bar;
 	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
-	QMenu *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
+	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
 
 	DGCentralWidget* centralWidget;
 };

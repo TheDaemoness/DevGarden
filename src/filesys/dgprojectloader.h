@@ -29,6 +29,7 @@ public:
 	inline ProjectListType::const_iterator cbegin() const {return projs.cbegin();}
 	inline ProjectListType::const_iterator cend()   const {return projs.cend();}
 	QStringList getProjectNames() const;
+	inline size_t count() {return projs.size();}
 };
 
 #endif // DGPROJECTLOADER_H
