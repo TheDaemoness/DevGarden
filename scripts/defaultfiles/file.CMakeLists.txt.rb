@@ -10,6 +10,4 @@ end
 if(_ver != 0)
 	print "cmake_minimum_required("<<_ver<<")\n"
 end
-print "project("
-print ARGV[0].split('/')[-2]
-print ")\n"
+print "project("+(ARGV[0].split('/')[-2])+")\n"
