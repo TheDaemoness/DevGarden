@@ -50,7 +50,7 @@ public:
 };
 
 void makeConfigDirs();
-bool runScript(const char* name);
+bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
 ConfigEntry* getConfigEntry(QFile* ptr);
 QFile* getUtilityFileRead(const char* name);
 QFile* getUtilityFileWrite(const char* name);

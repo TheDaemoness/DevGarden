@@ -7,6 +7,8 @@
 #include "ui/dgcentralwidget.hpp"
 #include "ui/editor/codeeditorwidget.h"
 
+#include "configloader.h"
+
 #include <QFileDialog>
 #include <QFileSystemModel>
 #include <QTextDocument>
@@ -123,6 +125,16 @@ QString DGController::getPath() {
 		return p->getDir()->absolutePath();
 }
 
+QString DGController::getDir() {
+	DGProjectInfo* p = pl->getCurrent();
+	if(!p)
+		return QDir::home().absolutePath();
+	if(p->isSingleFile())
+		return p->getFile()->absoluteDir().absolutePath();
+	else
+		return p->getDir()->absolutePath();
+}
+
 QString DGController::changeProject(size_t index) {
 	if(!pl->changeCurrent(index))
 		return "";
@@ -142,6 +154,44 @@ QString DGController::changeProject(size_t index) {
 		return retval;
 	}
 }
+
+void DGController::newFile() {
+	QString naem = QFileDialog::getSaveFileName(0,tr("Quick New File..."),this->getDir(),"",0,0);
+	if(naem.isEmpty())
+		return;
+	QByteArray data;
+	QString exact_name = QString("file.")+naem.section('/',-1)+".rb";
+	QString path_name = QString("filetype.")+naem.section('.',-1)+".rb";
+	QStringList args;
+	args << QFileInfo(naem).absoluteFilePath();
+	args << (pl->empty()?QFileInfo(naem).absolutePath():getPath());
+
+	QString filetext = "";
+	QString filetype = "";
+
+	bool ran;
+
+	ran = runTool("scripts/defaultfiles/"+exact_name,&args,&data);
+	if(!ran)
+		ran = runTool("scripts/defaultfiles/"+path_name,&args,&data);
+	if(ran) {
+		filetext = data;
+		filetype = filetext.section('\n',0);
+		filetext = filetext.section('\n',1);
+	}
+	QFile fi(naem);
+	if(fi.open(QFile::WriteOnly)) {
+		fi.write(filetext.toLocal8Bit());
+		fi.close();
+		if(filetype.contains("\\bexecutable\\b"))
+			fi.setPermissions(fi.permissions() | QFile::ExeOwner);
+		if(!pl->empty() && !pl->getCurrent()->isSingleFile())
+			getFile(naem);
+	}
+}
+
+void DGController::newTemplateFile() {}
+void DGController::newTemplateProject() {}
 
 QFileSystemModel* DGController::getActiveProjectModel() {
 	return fsm;
