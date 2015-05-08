@@ -9,6 +9,9 @@
 
 #include "dgprojectloader.h"
 
+/**
+ * @brief Loads and manages project metadata.
+ */
 class DGFileLoader { //TODO: Implement and connect.
 public:
 	struct FileRef {

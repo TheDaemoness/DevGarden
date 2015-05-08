@@ -90,7 +90,7 @@ void DGController::closeFile() {
 	}
 }
 
-void DGController::closeCurrent() {
+void DGController::closeProjCurrent() {
 	if(pl->empty())
 		return;
 	if(pl->getCurrent()->isSingleFile())
@@ -100,12 +100,12 @@ void DGController::closeCurrent() {
 	emit sigProjectListChanged();
 }
 
-void DGController::closeOthers() {
+void DGController::closeProjOthers() {
 	pl->closeOthers();
 	emit sigProjectListChanged();
 }
 
-void DGController::closeAll() {
+void DGController::closeProjAll() {
 	pl->closeAll();
 	emit sigProjectClosed();
 	emit sigProjectListChanged();

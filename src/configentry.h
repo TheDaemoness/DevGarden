@@ -6,6 +6,9 @@
 #include <QString>
 #include <QStringList>
 
+/**
+ * @brief Stores one configuration file entry, including child entries.
+ */
 class ConfigEntry {
 public:
 	ConfigEntry() {}

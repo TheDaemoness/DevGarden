@@ -7,6 +7,9 @@ class QFileInfo;
 class QDir;
 class QString;
 
+/**
+ * @brief Stores metadata about one project.
+ */
 class DGProjectInfo {
 public:
 	explicit DGProjectInfo(QFileInfo* f);

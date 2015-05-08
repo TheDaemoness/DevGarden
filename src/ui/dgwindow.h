@@ -8,6 +8,9 @@
 class DGCentralWidget;
 class ConfigFile;
 
+/**
+ * @brief The main window. Contains no widgets.
+ */
 class DGWindow : public QMainWindow {
 	Q_OBJECT
 

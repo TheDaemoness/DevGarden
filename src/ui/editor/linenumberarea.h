@@ -5,6 +5,9 @@
 #include <QSize>
 #include "codeeditorwidget.h"
 
+/**
+ * @brief Widget for the line numbers of the code editor widget.
+ */
 class LineNumberArea : public QWidget
 {
 	Q_OBJECT

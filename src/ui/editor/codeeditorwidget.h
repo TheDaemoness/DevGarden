@@ -10,6 +10,9 @@ class QKeyEvent;
 class ConfigFile;
 class ConfigEntry;
 
+/**
+ * @brief The central code editor widget.
+ */
 class CodeEditorWidget : public QPlainTextEdit
 {
 	Q_OBJECT

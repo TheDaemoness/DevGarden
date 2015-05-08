@@ -24,6 +24,9 @@
 
 class QFile;
 
+/**
+ * @brief Stores one file worth of configuration entires.
+ */
 class ConfigFile {
 	using EntryList = std::vector<ConfigEntry*>;
 	QString name;

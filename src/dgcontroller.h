@@ -11,6 +11,11 @@ class QTextDocument;
 class DGProjectLoader;
 class DGWindow;
 
+/**
+ * @brief A file loader QObject interface.
+ * Provides a QObject to control DevGarden's file, project, and configuration loaders.
+ * It additionally emits signals to alert UI components/other QObjects of updates.
+ */
 class DGController : public QObject {
 	Q_OBJECT
 public:
@@ -52,9 +57,9 @@ public slots:
 	void saveFile();
 
 	void closeFile();
-	void closeCurrent();
-	void closeOthers();
-	void closeAll();
+	void closeProjCurrent();
+	void closeProjOthers();
+	void closeProjAll();
 
 	void fileEdited();
 

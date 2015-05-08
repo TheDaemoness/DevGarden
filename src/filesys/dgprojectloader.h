@@ -11,6 +11,9 @@
 class QString;
 class QStringList;
 
+/**
+ * @brief Loads, stores, and manages all projects' metadata.
+ */
 class DGProjectLoader {
 public: using ProjectListType = std::vector<DGProjectInfo*>;
 private:

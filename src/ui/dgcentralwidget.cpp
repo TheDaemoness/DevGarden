@@ -83,11 +83,12 @@ void DGCentralWidget::createWidgets()
 
 	// Bottom Bar
 	bottomBar = new QHBoxLayout();
-	bottomBar->addWidget(makeButton("Regen", 48, 32));
-	bottomBar->addWidget(makeButton("Build", 48, 32));
-	bottomBar->addWidget(makeButton("Clean", 48, 32));
-	bottomBar->addWidget(makeButton("Run", 48, 32));
-	bottomBar->addWidget(makeButton("Setup", 48, 32));
+	bottomBar->addWidget(makeButton("Regen", 64, 32));
+	bottomBar->addWidget(makeButton("Build", 64, 32));
+	bottomBar->addWidget(makeButton("Clean", 64, 32));
+	bottomBar->addWidget(makeButton("Run", 64, 32));
+	bottomBar->addWidget(makeButton("Install", 64, 32));
+	bottomBar->addWidget(makeButton("Setup", 64, 32));
 	bottomBar->setSpacing(4);
 	bottomBar->addStretch();
 	bottomBar->addWidget(bottomButton);

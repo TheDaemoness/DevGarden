@@ -17,6 +17,9 @@ class QVBoxLayout;
 
 class DGController;
 
+/**
+ * @brief The actual widgets of the main window.
+ */
 class DGCentralWidget : public QWidget
 {
 	Q_OBJECT
