@@ -21,7 +21,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPalette colors = palette();
 	colors.setColor(QPalette::Active, QPalette::Base, DGStyle::COLOR_BACKGROUND);
 	colors.setColor(QPalette::Inactive, QPalette::Base, DGStyle::COLOR_BACKGROUND);
-	colors.setColor(QPalette::Text, Qt::white);
+	colors.setColor(QPalette::Text, DGStyle::COLOR_TEXT_EDITOR);
 	setPalette(colors);
 
 	textFont.setStyleHint(QFont::Monospace);

@@ -12,20 +12,20 @@ void DGStyle::applyStyle(QApplication* app) {
 
 	QPalette darkPalette;
 	darkPalette.setColor(QPalette::Window, DGStyle::COLOR_BASE);
-	darkPalette.setColor(QPalette::WindowText, Qt::cyan);
+	darkPalette.setColor(QPalette::WindowText, DGStyle::COLOR_TEXT);
 	darkPalette.setColor(QPalette::Base, DGStyle::COLOR_BASE);
 	darkPalette.setColor(QPalette::AlternateBase, QColor(53,53,53));
 	darkPalette.setColor(QPalette::ToolTipBase, Qt::darkGray);
-	darkPalette.setColor(QPalette::ToolTipText, Qt::cyan);
-	darkPalette.setColor(QPalette::Text, Qt::cyan);
+	darkPalette.setColor(QPalette::ToolTipText, DGStyle::COLOR_TEXT);
+	darkPalette.setColor(QPalette::Text, DGStyle::COLOR_TEXT);
 	darkPalette.setColor(QPalette::Button, DGStyle::COLOR_BASE);
 	darkPalette.setColor(QPalette::Background, DGStyle::COLOR_BASE);
-	darkPalette.setColor(QPalette::ButtonText, Qt::cyan);
-	darkPalette.setColor(QPalette::BrightText, Qt::green);
+	darkPalette.setColor(QPalette::ButtonText, DGStyle::COLOR_TEXT);
+	darkPalette.setColor(QPalette::BrightText, DGStyle::COLOR_TEXT_BRIGHT);
 	darkPalette.setColor(QPalette::Link, DGStyle::COLOR_HILIGHT);
 
 	darkPalette.setColor(QPalette::Highlight, DGStyle::COLOR_HILIGHT);
-	darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+	darkPalette.setColor(QPalette::HighlightedText, DGStyle::COLOR_TEXT_HILIGHTED);
 
 	app->setPalette(darkPalette);
 
