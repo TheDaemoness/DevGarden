@@ -53,6 +53,7 @@ public slots:
 	void openFolder();
 	void openFiles();
 
+	void reloadFile();
 	void saveFileCopy();
 	void saveFile();
 
@@ -69,7 +70,7 @@ public slots:
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.
-	DGFileLoader::FileRef current;
+	DGFileLoader::FileRef curr_file;
 
 	DGWindow* dgw;
 	QFileSystemModel* fsm; //No relation.

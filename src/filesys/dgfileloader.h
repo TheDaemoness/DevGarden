@@ -10,7 +10,8 @@
 #include "dgprojectloader.h"
 
 /**
- * @brief Loads and manages project metadata.
+ * @brief Prototype reference-counting file loader.
+ * @deprecated INCOMPLETE, DO NOT USE!
  */
 class DGFileLoader { //TODO: Implement and connect.
 public:

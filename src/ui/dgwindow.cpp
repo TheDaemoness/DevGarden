@@ -43,7 +43,7 @@ void DGWindow::createMenuActions() {
 	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
 	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
 	menuFile->addAction(tr("Save All"));
-	menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);
+	menuFile->addAction(tr("Reload"), ctrl, SLOT(reloadFile()), QKeySequence::Refresh);
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Close File"));
 	menuFile->addAction(tr("Close Other Files"));

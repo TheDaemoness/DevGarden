@@ -42,51 +42,51 @@ void DGController::saveFileCopy() {
 	QFile f(name);
 	if(!f.open(QFile::WriteOnly))
 		return;
-	if(current.doc)
-		f.write(current.doc->toPlainText().toLocal8Bit());
+	if(curr_file.doc)
+		f.write(curr_file.doc->toPlainText().toLocal8Bit());
 	else
 		f.write(dgw->centralWidget->getEditor()->document()->toPlainText().toLocal8Bit());
 	f.close();
-	current.saved = true;
+	curr_file.saved = true;
 }
 
 void DGController::saveFile() {
-	if(current.saved)
+	if(curr_file.saved)
 		return;
-	QFile f(current.path);
+	QFile f(curr_file.path);
 	if(!f.open(QFile::WriteOnly))
 		return;
-	f.write(current.doc->toPlainText().toLocal8Bit());
+	f.write(curr_file.doc->toPlainText().toLocal8Bit());
 	f.close();
-	current.saved = true;
+	curr_file.saved = true;
 }
 
 void DGController::getFile(const QString& path) {
 	QFile f(path);
 	if(!f.open(QFile::ReadOnly))
 		return;
-	if(current.doc)
+	if(curr_file.doc)
 		closeFile();
-	current.path = path;
+	curr_file.path = path;
 	CodeEditorWidget* w = dgw->centralWidget->getEditor();
 	w->blockSignals(true);
 	w->setPlainText(f.readAll());
 	w->blockSignals(false);
 	f.close();
-	current.doc = w->document();
-	current.saved = true;
+	curr_file.doc = w->document();
+	curr_file.saved = true;
 }
 
 void DGController::fileEdited() {
-	current.saved = false;
+	curr_file.saved = false;
 }
 
 void DGController::closeFile() {
 	saveFile();
 	dgw->centralWidget->getEditor()->clear();
-	if(current.doc) {
+	if(curr_file.doc) {
 		//delete current.doc;
-		current.doc = nullptr;
+		curr_file.doc = nullptr;
 	}
 }
 
@@ -188,6 +188,11 @@ void DGController::newFile() {
 		if(!pl->empty() && !pl->getCurrent()->isSingleFile())
 			getFile(naem);
 	}
+}
+
+void DGController::reloadFile() {
+	this->curr_file.saved = true;
+	this->getFile(this->curr_file.path);
 }
 
 void DGController::newTemplateFile() {}
