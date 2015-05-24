@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPlainTextEdit>
 
-class SyntaxHighlighter;
+class OldSyntaxHighlighter;
 class QKeyEvent;
 
 class ConfigFile;
@@ -48,7 +48,7 @@ class CodeEditorWidget : public QPlainTextEdit
 	private:
 		QFont textFont;
 		QWidget* lineNumberArea;
-		SyntaxHighlighter* syntaxHighlighter;
+		OldSyntaxHighlighter* syntaxHighlighter;
 		uint8_t indent_primary, indent_secondary, tab_width;
 		bool spaced, tabbed;
 };
