@@ -160,8 +160,8 @@ void DGController::newFile() {
 	if(naem.isEmpty())
 		return;
 	QByteArray data;
-	QString exact_name = QString("file.")+naem.section('/',-1)+".rb";
-	QString path_name = QString("filetype.")+naem.section('.',-1)+".rb";
+	const QString exact_name = QString("file.")+naem.section('/',-1)+".rb";
+	const QString path_name = QString("filetype.")+naem.section('.',-1)+".rb";
 	QStringList args;
 	args << QFileInfo(naem).absoluteFilePath();
 	args << (pl->empty()?QFileInfo(naem).absolutePath():getPath());

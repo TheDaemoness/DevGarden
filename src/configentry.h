@@ -25,7 +25,7 @@ public:
 	size_t sizeData() const {return data.length();}
 	QString firstWord() const;
 
-	bool operator<(const ConfigEntry& b) {
+	bool operator<(const ConfigEntry& b) const {
 		if(firstWord() == b.firstWord()) {
 			if(data.length() == b.data.length())
 				return children.size() < b.children.size();
@@ -34,7 +34,7 @@ public:
 		return firstWord() < b.firstWord();
 	}
 
-	bool operator==(const QString& word) {return firstWord() == word;}
+	bool operator==(const QString& word) const {return firstWord() == word;}
 
 	std::vector<ConfigEntry*>& getChildren() {return children;}
 	ConfigEntry*& back() {return children.back();}
