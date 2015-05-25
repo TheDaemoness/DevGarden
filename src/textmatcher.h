@@ -32,6 +32,7 @@ public:
 
 public slots:
 	void markDirty() {dirty = true;}
+
 protected:
 	void doMatching(const QString* matches);
 	std::vector<QRegExp*> rules;

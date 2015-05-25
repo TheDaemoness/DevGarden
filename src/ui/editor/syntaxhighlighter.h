@@ -3,7 +3,7 @@
 
 #include <QSyntaxHighlighter>
 
-#include "../../textrule.hpp"
+#include "../../textmatcher.h"
 
 class SyntaxHighlighter : public QSyntaxHighlighter
 {
@@ -14,7 +14,7 @@ public:
 protected:
 	void highlightBlock(const QString& text) Q_DECL_OVERRIDE;
 
-	struct HighlightRule : public TextRule {
+	struct HighlightRule : public TextMatcher {
 		QColor color;
 		QTextFormat format;
 	};

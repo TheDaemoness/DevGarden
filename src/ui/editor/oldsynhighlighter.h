@@ -9,12 +9,12 @@
  * @brief Incomplete temporary C++ syntax highlighter.
  * @deprecated Will be replaced with a configurable system later.
  */
-class SyntaxHighlighter : public QSyntaxHighlighter
+class OldSyntaxHighlighter : public QSyntaxHighlighter
 {
 	Q_OBJECT
 
 public:
-	SyntaxHighlighter(QTextDocument* parent = 0);
+	OldSyntaxHighlighter(QTextDocument* parent = 0);
 
 protected:
 	void highlightBlock(const QString& text) Q_DECL_OVERRIDE;

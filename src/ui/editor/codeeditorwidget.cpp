@@ -1,15 +1,15 @@
 #include "codeeditorwidget.h"
-#include "syntaxhighlighter.h"
 #include "linenumberarea.h"
 
 #include "../dgstyle.h"
+#include "../../configloader.h"
 
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontDatabase>
 #include <QKeyEvent>
 
-#include "../../configloader.h"
+#include "oldsynhighlighter.h"
 
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
