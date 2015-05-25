@@ -40,7 +40,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	// Syntax highlighting. If you wish to turn off syntax highlighting
 	// at the moment only way to do so is to not initialize the member.
 	// Will work on getting up more control over this in future updates.
-	syntaxHighlighter = new OldSyntaxHighlighter(document());
+	//syntaxHighlighter = new OldSyntaxHighlighter(document());
 
 	createConnections();
 	updateLineNumberAreaWidth();

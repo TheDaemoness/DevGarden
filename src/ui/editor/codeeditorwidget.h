@@ -48,7 +48,7 @@ class CodeEditorWidget : public QPlainTextEdit
 	private:
 		QFont textFont;
 		QWidget* lineNumberArea;
-		OldSyntaxHighlighter* syntaxHighlighter;
+		//OldSyntaxHighlighter* syntaxHighlighter;
 		uint8_t indent_primary, indent_secondary, tab_width;
 		bool spaced, tabbed;
 };
