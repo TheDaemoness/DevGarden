@@ -5,6 +5,7 @@
 #include <QString>
 #include <QFileInfo>
 #include <QProcess>
+#include <QStringList>
 #include <algorithm>
 
 ConfigFile::ConfigFile(const char* name) {
@@ -138,4 +139,18 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 	if(out)
 		*out = proc.readAllStandardOutput();
 	return true;
+}
+
+QSet<QString> getConfigDirs(const char* name) {
+	QSet<QString> retval;
+	QDir local = QDir(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	QDir global = QDir(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+	QStringList v;
+	v = local.entryList(QStringList(),QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
+	for(QString& s : v)
+		retval.insert(s);
+	v = global.entryList(QStringList(),QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
+	for(QString& s : v)
+		retval.insert(s);
+	return retval;
 }

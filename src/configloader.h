@@ -23,6 +23,10 @@
 #endif
 
 class QFile;
+class QDir;
+
+#include <QSet>
+#include <QString>
 
 /**
  * @brief Stores one file worth of configuration entires.
@@ -57,5 +61,6 @@ bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out =
 ConfigEntry* getConfigEntry(QFile* ptr);
 QFile* getUtilityFileRead(const char* name);
 QFile* getUtilityFileWrite(const char* name);
+QSet<QString> getConfigDirs(const char* name); //Gets unique subdirectories of a provided config directory, across both config folders.
 
 #endif // CONFIGLOADER_H
