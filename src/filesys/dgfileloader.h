@@ -19,6 +19,7 @@ public:
 		QString path;
 		QTextDocument* doc;
 		bool saved;
+		QString lang;
 	};
 private:
 	struct FileData {

@@ -39,7 +39,8 @@ SOURCES += \
     src/filesys/projectfile.cpp \
     src/ui/editor/oldsynhighlighter.cpp \
     src/ui/editor/syntaxhighlighter.cpp \
-    src/textmatcher.cpp
+    src/textmatcher.cpp \
+    src/langrefcount.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -59,7 +60,8 @@ HEADERS  += \
     src/filesys/projectfile.h \
     src/ui/editor/oldsynhighlighter.h \
     src/ui/editor/syntaxhighlighter.h \
-    src/textmatcher.h
+    src/textmatcher.h \
+    src/langrefcount.h
 
 TRANSLATIONS = DevGarden_fr.ts
 
