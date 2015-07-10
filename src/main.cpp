@@ -19,7 +19,7 @@
 int main(int argc, char **argv) {
 
 	QApplication a(argc, argv);
-	a.setApplicationName("DevGarden");
+	a.setApplicationName(DG_NAME);
 	a.setWindowIcon(QIcon("://icon.png"));
 
 	// Translation
