@@ -14,17 +14,32 @@ ConfigFile::ConfigFile(const char* name) {
 		return;
 	this->name = name;
 	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
-		entries.push_back(e);
+		entries.insert(e->firstWord(),e);
 	ptr->close();
 	delete ptr;
 }
 
 ConfigEntry* ConfigFile::at(const QString& name) const {
-	for(ConfigEntry* entry : entries) {
-		if(entry->firstWord() == name)
-			return entry;
+	for(const QString& key : entries.keys()) {
+		if(key == name)
+			return entries.value(key);
 	}
 	return nullptr;
+}
+
+bool ConfigFile::insert(ConfigEntry* ce) {
+	entries.insert(ce->firstWord(),ce);
+}
+
+void ConfigFile::erase(const QString& name) {
+	if(ConfigEntry* e = remove(name))
+		delete e;
+}
+
+ConfigEntry* ConfigFile::remove(const QString& name) {
+	ConfigEntry* temp = at(name);
+	entries.remove(name);
+	return temp;
 }
 
 QFile* getUtilityFileRead(const char* name) {

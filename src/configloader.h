@@ -26,34 +26,36 @@ class QFile;
 class QDir;
 
 #include <QSet>
+#include <QMap>
 #include <QString>
 
 /**
  * @brief Stores one file worth of configuration entires.
  */
 class ConfigFile {
-	using EntryList = std::vector<ConfigEntry*>;
+	using EntryList = QMap<QString,ConfigEntry*>;
 	QString name;
 	EntryList entries;
 public:
 	ConfigFile() {};
 	ConfigFile(const char* name);
+	~ConfigFile() {for (ConfigEntry* mem : entries.values()) delete mem;}
 	inline bool isLoaded() const {return !entries.empty();}
 	inline const QString& getName() const {return name;}
 
 	inline EntryList::iterator begin() {return entries.begin();}
 	inline EntryList::iterator end() {return entries.begin();}
-	inline EntryList::reverse_iterator rbegin() {return entries.rbegin();}
-	inline EntryList::reverse_iterator rend() {return entries.rend();}
 
 	inline EntryList::const_iterator cbegin() const {return entries.cbegin();}
 	inline EntryList::const_iterator cend() const {return entries.cend();}
-	inline EntryList::const_reverse_iterator crbegin() const {return entries.crbegin();}
-	inline EntryList::const_reverse_iterator crend() const {return entries.crend();}
 
 	inline size_t size() const {return entries.size();}
 	ConfigEntry* at(size_t index) const {return index>=entries.size()?nullptr:entries[index];}
 	ConfigEntry* at(const QString& name) const;
+
+	bool insert(ConfigEntry* ce);
+	ConfigEntry* remove(const QString& name);
+	void erase(const QString& name);
 };
 
 void makeConfigDirs();
