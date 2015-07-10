@@ -39,9 +39,10 @@ class ConfigFile {
 public:
 	ConfigFile() {};
 	ConfigFile(const char* name);
+	ConfigFile(QFile* f);
 	~ConfigFile() {for (ConfigEntry* mem : entries.values()) delete mem;}
 	inline bool isLoaded() const {return !entries.empty();}
-	inline const QString& getName() const {return name;}
+	//inline const QString& getName() const {return name;}
 
 	inline EntryList::iterator begin() {return entries.begin();}
 	inline EntryList::iterator end() {return entries.begin();}
@@ -50,7 +51,6 @@ public:
 	inline EntryList::const_iterator cend() const {return entries.cend();}
 
 	inline size_t size() const {return entries.size();}
-	ConfigEntry* at(size_t index) const {return index>=entries.size()?nullptr:entries[index];}
 	ConfigEntry* at(const QString& name) const;
 
 	bool insert(ConfigEntry* ce);

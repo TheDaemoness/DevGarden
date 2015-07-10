@@ -26,7 +26,7 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 }
 
 void DGWindow::configure(ConfigFile& f) {
-	if(f.getName() == "config/editor.conf")
+	//if(f.getName() == "config/editor.conf") //Basic sanity check, reinstate when ConfigFile(QFile*) sets ConfigFile::name correctly.
 		this->centralWidget->getEditor()->configure(f);
 }
 

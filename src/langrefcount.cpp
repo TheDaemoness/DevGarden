@@ -9,9 +9,9 @@ LangRefCount::LangRefCount() {
 
 	QSet<QString> langs = getConfigDirs(LangRefCount::DIR.toStdString().c_str());
 	for(const QString& s : langs) {
-		QFile* f = getUtilityFileRead((LangRefCount::DIR+'/'+s).toStdString().c_str());
+		QFile* f = getUtilityFileRead((LangRefCount::DIR+'/'+s+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
-
+			ConfigFile cf(f);
 			delete f;
 		}
 	}

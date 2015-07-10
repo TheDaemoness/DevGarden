@@ -8,6 +8,11 @@
 #include <QStringList>
 #include <algorithm>
 
+ConfigFile::ConfigFile(QFile* f) {
+	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
+		entries.insert(e->firstWord(),e);
+}
+
 ConfigFile::ConfigFile(const char* name) {
 	QFile* ptr = getUtilityFileRead(name);
 	if(!ptr)
