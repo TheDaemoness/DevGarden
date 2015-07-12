@@ -42,7 +42,8 @@ public:
 	ConfigFile(QFile* f);
 	~ConfigFile() {for (ConfigEntry* mem : entries.values()) delete mem;}
 	inline bool isLoaded() const {return !entries.empty();}
-	//inline const QString& getName() const {return name;}
+	inline ConfigFile& setName(const QString& name) {this->name = name; return *this;}
+	inline const QString& getName() const {return name;}
 
 	inline EntryList::iterator begin() {return entries.begin();}
 	inline EntryList::iterator end() {return entries.begin();}
