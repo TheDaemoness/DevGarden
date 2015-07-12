@@ -12,6 +12,7 @@ LangRefCount::LangRefCount() {
 		QFile* f = getUtilityFileRead((LangRefCount::DIR+'/'+s+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
 			ConfigFile cf(f);
+			unused.insert(s,Entry());
 			delete f;
 		}
 	}

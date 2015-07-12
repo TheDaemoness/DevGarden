@@ -1,5 +1,5 @@
 #include "ui/dgwindow.h"
-#include "envmacros.h"
+#include "ui/dgstyle.h"
 
 #include "filesys/dgprojectloader.h"
 #include "filesys/dgfileloader.h"
@@ -12,7 +12,8 @@
 #include <iostream>
 
 #include "configloader.h"
-#include "ui/dgstyle.h"
+#include "envmacros.h"
+#include "langrefcount.h"
 
 #include "dgdebug.hpp"
 
@@ -40,10 +41,15 @@ int main(int argc, char **argv) {
 	ctrl.setView(&w);
 
 	w.configure(f);
+	LangRefCount lr;
+	if(lr.count() == 1)
+		std::cout << "Loaded 1 language" << std::endl;
+	else
+		std::cout << "Loaded " << lr.count() << " languages" << std::endl;
 
 	DGStyle::applyStyle(&a);
 
-	std::cout << "Loaded " << DG_NAME << std::endl;
+	std::cout << "Finished loading " << DG_NAME << std::endl;
 	w.show();
 	return a.exec();
 }
