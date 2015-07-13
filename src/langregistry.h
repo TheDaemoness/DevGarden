@@ -6,13 +6,34 @@
 
 class LangRegistry {
 	static const QString DIR;
+	static const QString EMPTY;
 	struct Entry {Entry() {refs = 0;} size_t refs;};
-	QMap<QString,Entry> used;
-	QMap<QString,Entry> unused;
 	QMap<QString,QString> fileexts;
+	QMap<QString,Entry> langs;
 public:
 	LangRegistry();
-	inline size_t countLanguages() const {return used.count() + unused.count();}
+
+	//Tests for known mappings.
+	inline bool knowsExt(const QString& fileext) const {return fileexts.count(fileext);}
+	inline bool knowsLang(const QString& lang) const {return langs.count(lang);}
+
+	/**
+	 * @brief Test if the registry has loaded a language for a certain file extension.
+	 */
+	bool ready(const QString& fileext) const;
+
+	/**
+	 * Loads a language by file extension, increments the reference count for it, and returns the language name.
+	 * To be used when a project needs to open a file of an unexpected language.
+	 */
+	const QString load(const QString& fileext);
+
+	//Reference counting, to be incremented per PROJECT, not PER FILE!
+	bool add(const QStringList& lang);
+	bool rem(const QStringList& lang);
+
+	inline size_t countRefs(const QString& lang) const {return langs.value(lang).refs;}
+	inline size_t countLanguages() const {return langs.count();}
 	inline size_t countFileexts() const {return fileexts.count();}
 
 };
