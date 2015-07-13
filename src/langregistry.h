@@ -1,15 +1,15 @@
 #ifndef LANGREFCOUNT_H
 #define LANGREFCOUNT_H
 
-#include <QMap>
+#include <map>
 #include <QString>
 
 class LangRegistry {
 	static const QString DIR;
 	static const QString EMPTY;
 	struct Entry {Entry() {refs = 0;} size_t refs;};
-	QMap<QString,QString> fileexts;
-	QMap<QString,Entry> langs;
+	std::map<QString,QString> fileexts;
+	std::map<QString,Entry> langs;
 public:
 	LangRegistry();
 
@@ -26,15 +26,15 @@ public:
 	 * Loads a language by file extension, increments the reference count for it, and returns the language name.
 	 * To be used when a project needs to open a file of an unexpected language.
 	 */
-	const QString load(const QString& fileext);
+	const QString& load(const QString& fileext);
 
 	//Reference counting, to be incremented per PROJECT, not PER FILE!
 	bool add(const QStringList& lang);
 	bool rem(const QStringList& lang);
 
-	inline size_t countRefs(const QString& lang) const {return langs.value(lang).refs;}
-	inline size_t countLanguages() const {return langs.count();}
-	inline size_t countFileexts() const {return fileexts.count();}
+	inline size_t countRefs(const QString& lang) const {return langs.at(lang).refs;}
+	inline size_t countLanguages() const {return langs.size();}
+	inline size_t countFileexts() const {return fileexts.size();}
 
 };
 

@@ -13,18 +13,18 @@ LangRegistry::LangRegistry() {
 		QFile* f = getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
 			ConfigFile cf(f);
-			langs.insert(lang,Entry());
+			langs.insert(std::make_pair(lang,Entry()));
 			ConfigEntry* fe = cf.at("file-exts");
 			if(fe) {
 				size_t e = fe->split();
 				for(size_t i = 1; i < e; ++i) {
 					const QString* ext = fe->getData(i);
 					if(fileexts.count(*ext))
-						std::cout << "Languages '" << fileexts.value(*ext).toStdString()
+						std::cout << "Languages '" << fileexts.at(*ext).toStdString()
 								  << "' and '" << lang.toStdString() << "' use file extension '"
 								  << ext->toStdString() << "'. Preferring the former." << std::endl;
 					else
-						fileexts.insert(*ext,lang);
+						fileexts.insert(std::make_pair(*ext,lang));
 				}
 			}
 			delete f;
@@ -34,13 +34,13 @@ LangRegistry::LangRegistry() {
 
 bool LangRegistry::ready(const QString& fileext) const {
 	if(knowsExt(fileext))
-		return langs.count(fileexts.value(fileext));
+		return langs.count(fileexts.at(fileext));
 	return false;
 }
 
-const QString LangRegistry::load(const QString& fileext) {
+const QString& LangRegistry::load(const QString& fileext) {
 	if(knowsExt(fileext)) {
-		const QString& lang = fileexts.value(fileext);
+		const QString& lang = fileexts.at(fileext);
 		add(QStringList(lang));
 		return lang;
 	}
