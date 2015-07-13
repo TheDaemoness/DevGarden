@@ -13,7 +13,7 @@
 
 #include "configloader.h"
 #include "envmacros.h"
-#include "langrefcount.h"
+#include "langregistry.h"
 
 #include "dgdebug.hpp"
 
@@ -41,11 +41,12 @@ int main(int argc, char **argv) {
 	ctrl.setView(&w);
 
 	w.configure(f);
-	LangRefCount lr;
-	if(lr.count() == 1)
-		std::cout << "Loaded 1 language" << std::endl;
-	else
-		std::cout << "Loaded " << lr.count() << " languages" << std::endl;
+
+	LangRegistry lr;
+
+	//Would normally assure correct pluralization here, but these are console status messages.
+	std::cout << "Loaded " << lr.countLanguages() << " languages" << std::endl;
+	std::cout << "Loaded " << lr.countFileexts() << " file extension associations" << std::endl;
 
 	DGStyle::applyStyle(&a);
 
