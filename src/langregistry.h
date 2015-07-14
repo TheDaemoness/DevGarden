@@ -29,8 +29,8 @@ public:
 	const QString& load(const QString& fileext);
 
 	//Reference counting, to be incremented per PROJECT, not PER FILE!
-	bool add(const QStringList& lang);
-	bool rem(const QStringList& lang);
+	bool add(const QStringList& langs);
+	bool rem(const QStringList& langs);
 
 	inline size_t countRefs(const QString& lang) const {return langs.at(lang).refs;}
 	inline size_t countLanguages() const {return langs.size();}

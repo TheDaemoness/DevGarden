@@ -47,10 +47,28 @@ const QString& LangRegistry::load(const QString& fileext) {
 	return LangRegistry::EMPTY;
 }
 
-bool LangRegistry::add(const QStringList& lang) {
-
+bool LangRegistry::add(const QStringList& langs) {
+	bool issues = false;
+	for(const QString& lang : langs) {
+		if(!this->langs.at(lang).refs) {
+			//TODO: Loading code.
+		}
+		++this->langs.at(lang).refs;
+	}
+	return issues;
 }
 
-bool LangRegistry::rem(const QStringList& lang) {
-
+bool LangRegistry::rem(const QStringList& langs) {
+	bool deloaded = false;
+	for(const QString& lang : langs) {
+		bool load = this->langs.at(lang).refs;
+		if(load) {
+			load = --this->langs.at(lang).refs;
+			if(!load) {
+				deloaded = true;
+				//TODO: Unloading code.
+			}
+		}
+	}
+	return deloaded;
 }
