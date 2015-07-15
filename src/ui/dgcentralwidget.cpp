@@ -72,11 +72,6 @@ void DGCentralWidget::createWidgets()
 
 	// Text Editor
 	textEditor = new CodeEditorWidget;
-	textEditor->setPlainText("#include <stdio.h>\n\n"
-							 "int main(int argc, char** argv) {\n"
-							 "    printf(\"dtscode is a nim cohort\\n\");\n"
-							 "    return 0;\n"
-							 "}");
 
 	// Bottom Push Button
 	bottomButton = makeButton("CMD", 48, 32);
