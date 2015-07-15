@@ -1,47 +1,28 @@
 #ifndef TEXTRULE_H
 #define TEXTRULE_H
 
-#include <QObject>
 #include <QRegExp>
+#include <QSyntaxHighlighter>
 
 #include <vector>
 
-struct MatchList {
-	std::vector<std::pair<size_t,size_t>> matches;
-};
-
 /**
- * @brief Caching text matcher. Remember kids, don't play with matches.
+ * @brief QSyntaxHighlighter-friendly text matcher. Remember kids, don't play with matches.
  */
-class TextMatcher : public QObject {
-	Q_OBJECT
+class TextMatcher {
+	struct Rule {QRegExp rule; int flag;};
+	struct MetadataRule {
+		int posflags;
+		int negflags;
+		std::vector<Rule> beg;
+		std::vector<Rule> end;
+	};
+
 public:
-	TextMatcher() {
-		dirty = false;
-		handledeletion = true;
-		tomatch = nullptr;
-		matches = nullptr;
-	}
-
-	virtual ~TextMatcher() {for(QRegExp* rule : rules) delete rule;}
-
-	TextMatcher* attach(const QString* str) {if(tomatch != str) {markDirty(); tomatch=str;} return this;}
-	const MatchList* match(const QString* str = nullptr) {if(str) doMatching(str); else doMatching(tomatch); return matches;}
-	const MatchList* getMatches() {return (dirty?nullptr:matches);}
-	MatchList* disownMatches() {handledeletion = false; return matches;}
-
-public slots:
-	void markDirty() {dirty = true;}
-
-protected:
-	void doMatching(const QString* matches);
-	std::vector<QRegExp*> rules;
-	//std::vector<TextRule*> contexts; //No ownership.
-	//std::vector<TextRule*> excludes; //No ownership.
+	void doMatching(QSyntaxHighlighter& hl);
 private:
-	const QString* tomatch; //No ownership.
-	MatchList* matches;
-	bool dirty, handledeletion;
+	std::vector<Rule> rules;
+	std::vector<MetadataRule> metarules;
 };
 
 #endif // TEXTRULE_H
