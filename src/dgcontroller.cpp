@@ -23,18 +23,23 @@ DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *paren
 void DGController::openFolder() {
 	QString str = QFileDialog::getExistingDirectory(nullptr, tr("Open Folder"), QDir::home().absolutePath());
 	if(!str.isEmpty()) {
-		pl->addFolder(str);
-		emit sigProjectListChanged();
-		emit sigProjectChanged();
+		if(pl->addFolder(str)) {
+			emit sigProjectListChanged();
+			emit sigProjectChanged();
+		}
 	}
 }
 void DGController::openFiles() {
 	QStringList li = QFileDialog::getOpenFileNames(nullptr, tr("Open Files"), QDir::home().absolutePath());
 	if(!li.isEmpty()) {
-		for(const QString& str : li)
-			pl->addFile(str);
-		emit sigProjectListChanged();
-		emit sigProjectChanged();
+		bool atleastone = false;
+		for(const QString& str : li) {
+			atleastone |= pl->addFile(str);
+		}
+		if(atleastone) {
+			emit sigProjectListChanged();
+			emit sigProjectChanged();
+		}
 	}
 }
 void DGController::saveFileCopy() {
@@ -51,6 +56,20 @@ void DGController::saveFileCopy() {
 }
 
 void DGController::saveFile() {
+	if(pl->empty()) {
+		QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
+		QFile f(name);
+		if(!f.open(QFile::WriteOnly))
+			return;
+		f.write(dgw->centralWidget->getEditor()->document()->toPlainText().toLocal8Bit());
+		curr_file.saved = true;
+		f.close();
+		if(pl->addFile(name)) {
+			emit sigProjectListChanged();
+			emit sigProjectChanged();
+		}
+		return;
+	}
 	if(curr_file.saved)
 		return;
 	QFile f(curr_file.path);
