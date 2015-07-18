@@ -1,28 +1,31 @@
-#ifndef TEXTRULE_H
-#define TEXTRULE_H
-
-#include <QRegExp>
-#include <QSyntaxHighlighter>
+#ifndef TEXTMATCHER_H
+#define TEXTMATCHER_H
 
 #include <vector>
 
+#include <QRegExp>
+
+class QSyntaxHighlighter;
+
 /**
- * @brief QSyntaxHighlighter-friendly text matcher. Remember kids, don't play with matches.
+ * @brief A text matcher for use with QSyntaxHighlighters. Remember kids, don't play with matches.
+ * Called by a QSyntaxHighligher to highlight a document.
+ * Instantiated per language. Constructed by LangRegistry.
  */
 class TextMatcher {
-	struct Rule {QRegExp rule; int flag;};
-	struct MetadataRule {
-		int posflags;
-		int negflags;
-		std::vector<Rule> beg;
-		std::vector<Rule> end;
-	};
-
 public:
 	void doMatching(QSyntaxHighlighter& hl);
 private:
-	std::vector<Rule> rules;
-	std::vector<MetadataRule> metarules;
+	struct Matcher {QRegExp rule; int flag;};
+	struct Rule {
+		int posflags;
+		int negflags;
+		int color;
+		std::vector<Matcher> beg;
+		std::vector<Matcher> end;
+	};
+	std::vector<Rule> rules_color;
+	std::vector<Rule> rules_block;
 };
 
-#endif // TEXTRULE_H
+#endif // TEXTMATCHER_H
