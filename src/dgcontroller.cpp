@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QFileSystemModel>
 #include <QTextDocument>
+#include <QPushButton>
 
 DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent) :
 	QObject(parent) {
@@ -93,10 +94,12 @@ void DGController::getFile(const QString& path) {
 	w->blockSignals(true);
 	w->setContents(f.readAll());
 	w->blockSignals(false);
+	curr_file.exe = QFileInfo(path).isExecutable();
 	f.close();
 	curr_file.doc = w->document();
 	curr_file.saved = true;
 	curr_file.lang = lr->getLang(path.section('.',-1));
+	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->setHidden(!curr_file.exe);
 }
 
 void DGController::fileEdited() {

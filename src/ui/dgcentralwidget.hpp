@@ -32,7 +32,7 @@ public:
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
 
-	enum class ButtonIdLower: size_t {
+	enum ButtonIdLower {
 		SETUP = 0,
 		REGEN,
 		BUILD,

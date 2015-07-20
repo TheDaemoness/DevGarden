@@ -18,7 +18,7 @@ public:
 	struct FileRef {
 		QString path;
 		QTextDocument* doc;
-		bool saved;
+		bool saved, exe;
 		QString lang;
 	};
 private:
