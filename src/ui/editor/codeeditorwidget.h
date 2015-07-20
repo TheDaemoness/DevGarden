@@ -24,6 +24,7 @@ class CodeEditorWidget : public QPlainTextEdit
 		int lineNumberAreaWidth();
 
 		void configure(ConfigFile& cfg);
+		void setContents(const QString & text);
 
 	public slots:
 		void fontSizeInc();

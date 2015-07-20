@@ -46,6 +46,11 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	updateLineNumberAreaWidth();
 }
 
+void CodeEditorWidget::setContents(const QString & text) {
+	setPlainText(text);
+	updateLineNumberAreaWidth();
+}
+
 void CodeEditorWidget::setTabWidth(uint8_t len) {
 	len = len?len:8;
 	QFontMetrics metrics(this->font());
@@ -166,16 +171,16 @@ void CodeEditorWidget::fontSizeInc() {
 void CodeEditorWidget::fontSizeDec() {
 	if(textFont.pointSize() > 12)
 		textFont.setPointSize(textFont.pointSize()-2);
-	else if(textFont.pointSize() > 8)
+	else if(textFont.pointSize() > 6)
 		textFont.setPointSize(textFont.pointSize()-1);
 	this->setFont(textFont);
 	this->setTabWidth(tab_width);
 }
 
 void CodeEditorWidget::fontSizeRes() {
-	if(textFont.pointSize() > 12)
-		textFont.setPointSize(12);
+	textFont.setPointSize(12);
 	this->setFont(textFont);
+	this->setTabWidth(tab_width);
 }
 
 // Overload needed to handle resizing the line number area which is manually painted on.
