@@ -4,7 +4,14 @@
 #include <QFile>
 #include <QString>
 #include <QFileInfo>
+#include <QProcess>
+#include <QStringList>
 #include <algorithm>
+
+ConfigFile::ConfigFile(QFile* f) {
+	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
+		entries.insert(std::make_pair(e->firstWord(),e));
+}
 
 ConfigFile::ConfigFile(const char* name) {
 	QFile* ptr = getUtilityFileRead(name);
@@ -12,17 +19,32 @@ ConfigFile::ConfigFile(const char* name) {
 		return;
 	this->name = name;
 	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
-		entries.push_back(e);
+		entries.insert(std::make_pair(e->firstWord(),e));
 	ptr->close();
 	delete ptr;
 }
 
 ConfigEntry* ConfigFile::at(const QString& name) const {
-	for(ConfigEntry* entry : entries) {
-		if(entry->firstWord() == name)
-			return entry;
+	for(const auto& keyval : entries) {
+		if(keyval.first == name)
+			return keyval.second;
 	}
 	return nullptr;
+}
+
+bool ConfigFile::insert(ConfigEntry* ce) {
+	entries.insert(std::make_pair(ce->firstWord(),ce));
+}
+
+void ConfigFile::erase(const QString& name) {
+	if(ConfigEntry* e = remove(name))
+		delete e;
+}
+
+ConfigEntry* ConfigFile::remove(const QString& name) {
+	ConfigEntry* temp = at(name);
+	entries.erase(name);
+	return temp;
 }
 
 QFile* getUtilityFileRead(const char* name) {
@@ -114,6 +136,41 @@ ConfigEntry* getConfigEntry(QFile* ptr) {
 	return retval;
 }
 
-bool runScript(const char* name) {
-	return false;
+bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in) {
+	QFileInfo* retval = new QFileInfo;
+	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	if(!retval->isExecutable())
+		retval->setFile(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+	if(!retval->isExecutable()) {
+		delete retval;
+		return false;
+	}
+	QProcess proc;
+	proc.setProgram(retval->absoluteFilePath());
+	if(args)
+		proc.setArguments(*args);
+	proc.start();
+	if(!proc.waitForStarted())
+		return false;
+	if(in)
+		proc.write(*in);
+	if(!proc.waitForFinished())
+		return !out;
+	if(out)
+		*out = proc.readAllStandardOutput();
+	return true;
+}
+
+std::set<QString> getConfigDirs(const char* name) {
+	std::set<QString> retval;
+	QDir local = QDir(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	QDir global = QDir(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+	QStringList v;
+	v = local.entryList(QStringList(),QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
+	for(QString& s : v)
+		retval.insert(s);
+	v = global.entryList(QStringList(),QDir::Dirs|QDir::NoDotAndDotDot,QDir::Name);
+	for(QString& s : v)
+		retval.insert(s);
+	return retval;
 }

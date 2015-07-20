@@ -1,15 +1,15 @@
 #include "codeeditorwidget.h"
-#include "syntaxhighlighter.h"
 #include "linenumberarea.h"
 
 #include "../dgstyle.h"
+#include "../../configloader.h"
 
 #include <QPainter>
 #include <QTextBlock>
 #include <QFontDatabase>
 #include <QKeyEvent>
 
-#include "../../configloader.h"
+#include "oldsynhighlighter.h"
 
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
@@ -21,7 +21,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPalette colors = palette();
 	colors.setColor(QPalette::Active, QPalette::Base, DGStyle::COLOR_BACKGROUND);
 	colors.setColor(QPalette::Inactive, QPalette::Base, DGStyle::COLOR_BACKGROUND);
-	colors.setColor(QPalette::Text, Qt::white);
+	colors.setColor(QPalette::Text, DGStyle::COLOR_TEXT_EDITOR);
 	setPalette(colors);
 
 	textFont.setStyleHint(QFont::Monospace);
@@ -40,16 +40,21 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	// Syntax highlighting. If you wish to turn off syntax highlighting
 	// at the moment only way to do so is to not initialize the member.
 	// Will work on getting up more control over this in future updates.
-	syntaxHighlighter = new SyntaxHighlighter(document());
+	//syntaxHighlighter = new OldSyntaxHighlighter(document());
 
 	createConnections();
+	updateLineNumberAreaWidth();
+}
+
+void CodeEditorWidget::setContents(const QString & text) {
+	setPlainText(text);
 	updateLineNumberAreaWidth();
 }
 
 void CodeEditorWidget::setTabWidth(uint8_t len) {
 	len = len?len:8;
 	QFontMetrics metrics(this->font());
-	setTabStopWidth(len * (metrics.width(' ')+1));
+	setTabStopWidth(len * (metrics.width(' ')));
 	tab_width = len;
 }
 
@@ -166,16 +171,16 @@ void CodeEditorWidget::fontSizeInc() {
 void CodeEditorWidget::fontSizeDec() {
 	if(textFont.pointSize() > 12)
 		textFont.setPointSize(textFont.pointSize()-2);
-	else if(textFont.pointSize() > 8)
+	else if(textFont.pointSize() > 6)
 		textFont.setPointSize(textFont.pointSize()-1);
 	this->setFont(textFont);
 	this->setTabWidth(tab_width);
 }
 
 void CodeEditorWidget::fontSizeRes() {
-	if(textFont.pointSize() > 12)
-		textFont.setPointSize(12);
+	textFont.setPointSize(12);
 	this->setFont(textFont);
+	this->setTabWidth(tab_width);
 }
 
 // Overload needed to handle resizing the line number area which is manually painted on.

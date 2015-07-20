@@ -17,6 +17,11 @@ class QVBoxLayout;
 
 class DGController;
 
+#include <map>
+
+/**
+ * @brief The actual widgets of the main window.
+ */
 class DGCentralWidget : public QWidget
 {
 	Q_OBJECT
@@ -33,11 +38,12 @@ public:
 		BUILD,
 		REBULD,
 		RUN,
+		RUNFILE,
 		DEBUG,
 		ANALYZE,
 		RELEASE
 	};
-	const static size_t BUTTON_LOWER_COUNT = 8;
+	const static size_t BUTTON_LOWER_COUNT = 9;
 
 public slots:
 	void updateProjectList();
@@ -71,7 +77,7 @@ private:
 	QPushButton* bottomButton;
 
 	std::vector<QPushButton*> buttonsLower;
-	std::vector<QPushButton*> buttonsSide;
+	std::map<QString,QPushButton*> buttonsSide;
 
 	//Controller ptr (NO OWNERSHIP)
 	DGController* ctrl;

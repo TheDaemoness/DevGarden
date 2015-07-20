@@ -1,56 +1,31 @@
-#ifndef SYNTAX_HIGHLIGHTER_H
-#define SYNTAX_HIGHLIGHTER_H
-
-#include "codestyle.h"
+#ifndef SYNTAXHIGHLIGHTER_H
+#define SYNTAXHIGHLIGHTER_H
 
 #include <QSyntaxHighlighter>
+
+#include "../../textmatcher.h"
 
 class SyntaxHighlighter : public QSyntaxHighlighter
 {
 	Q_OBJECT
-
 public:
-	SyntaxHighlighter(QTextDocument* parent = 0);
+	explicit SyntaxHighlighter(QObject *parent = 0);
 
 protected:
 	void highlightBlock(const QString& text) Q_DECL_OVERRIDE;
 
-private:
-	struct HighlightingRule
-	{
-		QRegExp pattern;
-		QTextCharFormat format;
+	struct HighlightRule : public TextMatcher {
+		QColor color;
+		QTextFormat format;
 	};
 
-	QVector<HighlightingRule> highlightingRules;
+signals:
 
-	QRegExp commentStartExp;
-	QRegExp commentEndExp;
+public slots:
 
-	QTextCharFormat keywordFormat;
-	QColor keywordColor;
+private:
 
-	QTextCharFormat integerFormat;
-	QColor integerColor;
 
-	QTextCharFormat includeHeaderFormat;
-	QColor headerColor;
-
-	QTextCharFormat extraKeywordFormat;
-	QColor extraKeywordColor;
-
-	QTextCharFormat classFormat;
-	QColor classColor;
-
-	QTextCharFormat singleLineCommentFormat;
-	QTextCharFormat multiLineCommentFormat;
-	QColor commentColor;
-
-	QTextCharFormat quotationFormat;
-	QColor quotationColor;
-
-	QTextCharFormat functionFormat;
-	QColor functionColor;
 };
 
-#endif // SYNTAX_HIGHLIGHTER_H
+#endif // SYNTAXHIGHLIGHTER_H

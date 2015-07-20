@@ -1,5 +1,5 @@
 #include "ui/dgwindow.h"
-#include "envmacros.h"
+#include "ui/dgstyle.h"
 
 #include "filesys/dgprojectloader.h"
 #include "filesys/dgfileloader.h"
@@ -12,11 +12,15 @@
 #include <iostream>
 
 #include "configloader.h"
-#include "ui/dgstyle.h"
+#include "envmacros.h"
+#include "langregistry.h"
+
+#include "dgdebug.hpp"
 
 int main(int argc, char **argv) {
+
 	QApplication a(argc, argv);
-	a.setApplicationName("DevGarden");
+	a.setApplicationName(DG_NAME);
 	a.setWindowIcon(QIcon("://icon.png"));
 
 	// Translation
@@ -32,7 +36,13 @@ int main(int argc, char **argv) {
 	std::cout << "Initializing..." << std::endl;
 	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader);
-	DGController ctrl(pl.get(), fl.get());
+	std::unique_ptr<LangRegistry> lr(new LangRegistry);
+
+	//Would normally assure correct pluralization here, but these are console status messages.
+	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
+	std::cout << "Loaded " << lr->countFileexts() << " file extension associations" << std::endl;
+
+	DGController ctrl(pl.get(), fl.get(), lr.get());
 	DGWindow w(&ctrl);
 	ctrl.setView(&w);
 
@@ -40,7 +50,7 @@ int main(int argc, char **argv) {
 
 	DGStyle::applyStyle(&a);
 
-	std::cout << "Loaded " << DG_NAME << std::endl;
+	std::cout << "Finished loading " << DG_NAME << std::endl;
 	w.show();
 	return a.exec();
 }

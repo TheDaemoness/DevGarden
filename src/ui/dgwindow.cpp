@@ -13,7 +13,7 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 {
 	this->setWindowTitle("DevGarden");
 	this->resize(1080,640);
-	this->setMinimumSize(640,360);
+	this->setMinimumSize(560,240);
 	ctrl = dgc;
 
 	QMenuBar* bar = new QMenuBar(nullptr);
@@ -26,29 +26,31 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 }
 
 void DGWindow::configure(ConfigFile& f) {
-	if(f.getName() == "config/editor.conf")
-		this->centralWidget->getEditor()->configure(f);
+	this->centralWidget->getEditor()->configure(f);
 }
 
 void DGWindow::createMenuActions() {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
-	menuFile->addAction(tr("New File/Project..."), this, SLOT(nullSlot()), QKeySequence::New);
+	QMenu* newMenu = menuFile->addMenu(tr("New"));
+	newMenu->addAction(tr("Quick File..."), ctrl, SLOT(newFile()), QKeySequence::New);
+	newMenu->addAction(tr("File..."), this, SLOT(nullSlot()));
+	newMenu->addAction(tr("Project..."), this, SLOT(nullSlot()));
 	menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
 	menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
 	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
 	menuFile->addAction(tr("Save All"));
-	menuFile->addAction(tr("Reload"), this, SLOT(nullSlot()), QKeySequence::Refresh);
+	menuFile->addAction(tr("Reload"), ctrl, SLOT(reloadFile()), QKeySequence::Refresh);
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Close File"));
 	menuFile->addAction(tr("Close Other Files"));
 	menuFile->addAction(tr("Close All Files"));
 	menuFile->addSeparator();
-	menuFile->addAction(tr("Close Project"), ctrl, SLOT(closeCurrent()), QKeySequence::Close);
-	menuFile->addAction(tr("Close Other Projects"), ctrl, SLOT(closeOthers()));
-	menuFile->addAction(tr("Close All Projects"), ctrl, SLOT(closeAll()));
+	menuFile->addAction(tr("Close Project"), ctrl, SLOT(closeProjCurrent()), QKeySequence::Close);
+	menuFile->addAction(tr("Close Other Projects"), ctrl, SLOT(closeProjOthers()));
+	menuFile->addAction(tr("Close All Projects"), ctrl, SLOT(closeProjAll()));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Import..."));
 	menuFile->addAction(tr("Export..."));
@@ -72,8 +74,12 @@ void DGWindow::createMenuActions() {
 	menuEdit->addAction(tr("Comment Selection"));
 
 	menuBuild = menuBar()->addMenu(tr("&Build"));
-	menuBuild->addAction(tr("Cancel Build"));
+	menuBuildInit = menuBuild->addMenu(tr("Create Build System"));
+	menuBuildInit->addAction(tr("CMake..."));
+	menuBuildInit->addAction(tr("QMake..."));
+	menuBuildInit->addAction(tr("GNU Make..."));
 	menuBuild->addAction(tr("Regen Build Scripts"));
+	menuBuild->addAction(tr("Cancel Build"));
 	menuBuild->addAction(tr("Build Settings..."));
 	menuBuild->addSeparator();
 	menuBuildBuild = menuBuild->addMenu(tr("Build"));
@@ -171,18 +177,10 @@ void DGWindow::toggleFullscreen() {
 	this->isFullScreen()?this->showNormal():this->showFullScreen();
 }
 
-void DGWindow::zoomOut() {
-	this->centralWidget->getEditor()->fontSizeDec();
-
-}
-void DGWindow::zoomIn() {
-	this->centralWidget->getEditor()->fontSizeInc();
-}
-void DGWindow::zoomReset() {
-	this->centralWidget->getEditor()->fontSizeRes();
-}
+void DGWindow::zoomOut()    {this->centralWidget->getEditor()->fontSizeDec();}
+void DGWindow::zoomIn()     {this->centralWidget->getEditor()->fontSizeInc();}
+void DGWindow::zoomReset()  {this->centralWidget->getEditor()->fontSizeRes();}
 
 void DGWindow::nullSlot() {}
 
-DGWindow::~DGWindow() {
-}
+DGWindow::~DGWindow() {}

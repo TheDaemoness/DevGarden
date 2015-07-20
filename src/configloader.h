@@ -23,36 +23,48 @@
 #endif
 
 class QFile;
+class QDir;
 
+#include <QString>
+
+#include <set>
+#include <map>
+
+/**
+ * @brief Stores one file worth of configuration entires.
+ */
 class ConfigFile {
-	using EntryList = std::vector<ConfigEntry*>;
+	using EntryList = std::map<QString,ConfigEntry*>;
 	QString name;
 	EntryList entries;
 public:
 	ConfigFile() {};
 	ConfigFile(const char* name);
+	ConfigFile(QFile* f);
+	~ConfigFile() {for (auto& val : entries) delete val.second;}
 	inline bool isLoaded() const {return !entries.empty();}
+	inline ConfigFile& setName(const QString& name) {this->name = name; return *this;}
 	inline const QString& getName() const {return name;}
 
 	inline EntryList::iterator begin() {return entries.begin();}
 	inline EntryList::iterator end() {return entries.begin();}
-	inline EntryList::reverse_iterator rbegin() {return entries.rbegin();}
-	inline EntryList::reverse_iterator rend() {return entries.rend();}
 
 	inline EntryList::const_iterator cbegin() const {return entries.cbegin();}
 	inline EntryList::const_iterator cend() const {return entries.cend();}
-	inline EntryList::const_reverse_iterator crbegin() const {return entries.crbegin();}
-	inline EntryList::const_reverse_iterator crend() const {return entries.crend();}
 
 	inline size_t size() const {return entries.size();}
-	ConfigEntry* at(size_t index) const {return index>=entries.size()?nullptr:entries[index];}
 	ConfigEntry* at(const QString& name) const;
+
+	bool insert(ConfigEntry* ce);
+	ConfigEntry* remove(const QString& name);
+	void erase(const QString& name);
 };
 
 void makeConfigDirs();
-bool runScript(const char* name);
+bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
 ConfigEntry* getConfigEntry(QFile* ptr);
 QFile* getUtilityFileRead(const char* name);
 QFile* getUtilityFileWrite(const char* name);
+std::set<QString> getConfigDirs(const char* name); //Gets unique subdirectories of a provided config directory, across both config folders.
 
 #endif // CONFIGLOADER_H

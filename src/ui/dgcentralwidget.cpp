@@ -30,7 +30,7 @@ DGCentralWidget::DGCentralWidget(DGController* ctrl, QWidget *parent) :
 }
 
 QPushButton* DGCentralWidget::makeButton(const QString& txt, int width, int height) {
-	auto* retval = new QPushButton(txt);
+	auto* retval = new QPushButton(tr(txt.toLocal8Bit()));
 	retval->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	retval->setMinimumSize(width, height);
 	retval->setMaximumSize(width, height);
@@ -72,22 +72,27 @@ void DGCentralWidget::createWidgets()
 
 	// Text Editor
 	textEditor = new CodeEditorWidget;
-	textEditor->setPlainText("#include <stdio.h>\n\n"
-							 "int main(int argc, char** argv) {\n"
-							 "    printf(\"dtscode is a nim cohort\\n\");\n"
-							 "    return 0;\n"
-							 "}");
 
 	// Bottom Push Button
 	bottomButton = makeButton("CMD", 48, 32);
 
 	// Bottom Bar
 	bottomBar = new QHBoxLayout();
-	bottomBar->addWidget(makeButton("Regen", 48, 32));
-	bottomBar->addWidget(makeButton("Build", 48, 32));
-	bottomBar->addWidget(makeButton("Clean", 48, 32));
-	bottomBar->addWidget(makeButton("Run", 48, 32));
-	bottomBar->addWidget(makeButton("Setup", 48, 32));
+	buttonsLower.reserve(BUTTON_LOWER_COUNT);
+	buttonsLower.push_back(makeButton("Setup", 64, 32));
+	buttonsLower.push_back(makeButton("Regen", 64, 32));
+	buttonsLower.push_back(makeButton("Build", 64, 32));
+	buttonsLower.push_back(makeButton("Rebuild", 64, 32));
+	buttonsLower.push_back(makeButton("Run", 72, 32));
+	buttonsLower.push_back(makeButton("Run File", 72, 32));
+	buttonsLower.push_back(makeButton("Debug", 64, 32));
+	buttonsLower.push_back(makeButton("Analyze", 64, 32));
+	buttonsLower.push_back(makeButton("Setup", 64, 32));
+	for(QPushButton* butt : buttonsLower) {
+		bottomBar->addWidget(butt);
+		butt->setHidden(true);
+	}
+	buttonsLower.front()->setHidden(false);
 	bottomBar->setSpacing(4);
 	bottomBar->addStretch();
 	bottomBar->addWidget(bottomButton);
@@ -189,6 +194,10 @@ void DGCentralWidget::changeFile(const QModelIndex& val) {
 	if(projectDirModel->isDir(val))
 		return;
 	ctrl->getFile(projectDirModel->filePath(val));
+	QString title = QString(DG_NAME) + " - " + projectComboBox->currentText();
+	if(this->ctrl->getActiveProjectModel())
+		title += " - " + projectDirModel->fileName(val);
+	static_cast<QWidget*>(this->parent())->setWindowTitle(title);
 }
 
 void DGCentralWidget::updateProjectList() {
@@ -214,7 +223,7 @@ void DGCentralWidget::updateProjectList() {
 }
 
 void DGCentralWidget::setHiddenLeft(bool hide) {
-	mainLayout->setStretch(0,hide?0:3);
+	mainLayout->setStretch(0,hide?0:5);
 }
 
 

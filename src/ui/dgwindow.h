@@ -8,6 +8,9 @@
 class DGCentralWidget;
 class ConfigFile;
 
+/**
+ * @brief The main window. Contains no widgets.
+ */
 class DGWindow : public QMainWindow {
 	Q_OBJECT
 
@@ -35,7 +38,7 @@ private:
 
 	QMenuBar* bar;
 	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
-	QMenu *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
+	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildInit, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
 
 	DGCentralWidget* centralWidget;
 };

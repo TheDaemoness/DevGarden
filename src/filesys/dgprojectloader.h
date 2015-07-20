@@ -11,6 +11,9 @@
 class QString;
 class QStringList;
 
+/**
+ * @brief Loads, stores, and manages all projects' metadata.
+ */
 class DGProjectLoader {
 public: using ProjectListType = std::vector<DGProjectInfo*>;
 private:
@@ -29,6 +32,7 @@ public:
 	inline ProjectListType::const_iterator cbegin() const {return projs.cbegin();}
 	inline ProjectListType::const_iterator cend()   const {return projs.cend();}
 	QStringList getProjectNames() const;
+	inline size_t count() {return projs.size();}
 };
 
 #endif // DGPROJECTLOADER_H

@@ -4,12 +4,15 @@
 #include <QObject>
 #include <QPlainTextEdit>
 
-class SyntaxHighlighter;
+class OldSyntaxHighlighter;
 class QKeyEvent;
 
 class ConfigFile;
 class ConfigEntry;
 
+/**
+ * @brief The central code editor widget.
+ */
 class CodeEditorWidget : public QPlainTextEdit
 {
 	Q_OBJECT
@@ -21,6 +24,7 @@ class CodeEditorWidget : public QPlainTextEdit
 		int lineNumberAreaWidth();
 
 		void configure(ConfigFile& cfg);
+		void setContents(const QString & text);
 
 	public slots:
 		void fontSizeInc();
@@ -45,7 +49,7 @@ class CodeEditorWidget : public QPlainTextEdit
 	private:
 		QFont textFont;
 		QWidget* lineNumberArea;
-		SyntaxHighlighter* syntaxHighlighter;
+		//OldSyntaxHighlighter* syntaxHighlighter;
 		uint8_t indent_primary, indent_secondary, tab_width;
 		bool spaced, tabbed;
 };

@@ -9,12 +9,17 @@
 
 #include "dgprojectloader.h"
 
+/**
+ * @brief Prototype reference-counting file loader.
+ * @deprecated INCOMPLETE, DO NOT USE!
+ */
 class DGFileLoader { //TODO: Implement and connect.
 public:
 	struct FileRef {
 		QString path;
 		QTextDocument* doc;
 		bool saved;
+		QString lang;
 	};
 private:
 	struct FileData {

@@ -10,11 +10,17 @@ class QString;
 class QTextDocument;
 class DGProjectLoader;
 class DGWindow;
+class LangRegistry;
 
+/**
+ * @brief A file loader QObject interface.
+ * Provides a QObject to control DevGarden's file, project, and configuration loaders.
+ * It additionally emits signals to alert UI components/other QObjects of updates.
+ */
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -24,6 +30,7 @@ public:
 	QString changeProject(size_t index);
 	QStringList getProjects();
 	QString getPath();
+	QString getDir();
 
 	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
 
@@ -43,24 +50,34 @@ signals:
 
 public slots:
 	void getFile(const QString& path);
+
 	void openFolder();
 	void openFiles();
+
+	void reloadFile();
 	void saveFileCopy();
 	void saveFile();
+
 	void closeFile();
-	void closeCurrent();
-	void closeOthers();
-	void closeAll();
+	void closeProjCurrent();
+	void closeProjOthers();
+	void closeProjAll();
+
 	void fileEdited();
+
+	void newFile();
+	void newTemplateFile();
+	void newTemplateProject();
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.
-	DGFileLoader::FileRef current;
+	DGFileLoader::FileRef curr_file;
 
 	DGWindow* dgw;
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* pl;
 	DGFileLoader* fl;
+	LangRegistry* lr;
 };
 
 #endif // DGCONTROLLER_H
