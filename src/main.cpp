@@ -36,17 +36,17 @@ int main(int argc, char **argv) {
 	std::cout << "Initializing..." << std::endl;
 	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader);
-	DGController ctrl(pl.get(), fl.get());
+	std::unique_ptr<LangRegistry> lr(new LangRegistry);
+
+	//Would normally assure correct pluralization here, but these are console status messages.
+	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
+	std::cout << "Loaded " << lr->countFileexts() << " file extension associations" << std::endl;
+
+	DGController ctrl(pl.get(), fl.get(), lr.get());
 	DGWindow w(&ctrl);
 	ctrl.setView(&w);
 
 	w.configure(f);
-
-	LangRegistry lr;
-
-	//Would normally assure correct pluralization here, but these are console status messages.
-	std::cout << "Loaded " << lr.countLanguages() << " languages" << std::endl;
-	std::cout << "Loaded " << lr.countFileexts() << " file extension associations" << std::endl;
 
 	DGStyle::applyStyle(&a);
 

@@ -4,10 +4,17 @@
 #include <map>
 #include <QString>
 
+/**
+ * @brief Loads and reference counts language information.
+ */
 class LangRegistry {
 	static const QString DIR;
 	static const QString EMPTY;
-	struct Entry {Entry() {refs = 0;} size_t refs;};
+	struct Entry {
+		Entry() {refs = 0;}
+		size_t refs;
+		QString default_interpreter;
+	};
 	std::map<QString,QString> fileexts;
 	std::map<QString,Entry> langs;
 public:
@@ -16,6 +23,11 @@ public:
 	//Tests for known mappings.
 	inline bool knowsExt(const QString& fileext) const {return fileexts.count(fileext);}
 	inline bool knowsLang(const QString& lang) const {return langs.count(lang);}
+
+	/**
+	 * @brief Get the corresponding language for a file extension
+	 */
+	const QString& getLang(const QString& fileext) const;
 
 	/**
 	 * @brief Test if the registry has loaded a language for a certain file extension.

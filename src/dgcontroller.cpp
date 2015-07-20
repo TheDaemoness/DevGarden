@@ -8,16 +8,18 @@
 #include "ui/editor/codeeditorwidget.h"
 
 #include "configloader.h"
+#include "langregistry.h"
 
 #include <QFileDialog>
 #include <QFileSystemModel>
 #include <QTextDocument>
 
-DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
 	this->pl = pl;
 	this->fl = fl;
+	this->lr = lr;
 }
 
 void DGController::openFolder() {
@@ -89,11 +91,12 @@ void DGController::getFile(const QString& path) {
 	curr_file.path = path;
 	CodeEditorWidget* w = dgw->centralWidget->getEditor();
 	w->blockSignals(true);
-	w->setPlainText(f.readAll());
+	w->setContents(f.readAll());
 	w->blockSignals(false);
 	f.close();
 	curr_file.doc = w->document();
 	curr_file.saved = true;
+	curr_file.lang = lr->getLang(path.section('.',-1));
 }
 
 void DGController::fileEdited() {

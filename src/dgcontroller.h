@@ -10,6 +10,7 @@ class QString;
 class QTextDocument;
 class DGProjectLoader;
 class DGWindow;
+class LangRegistry;
 
 /**
  * @brief A file loader QObject interface.
@@ -19,7 +20,7 @@ class DGWindow;
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -76,6 +77,7 @@ private:
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* pl;
 	DGFileLoader* fl;
+	LangRegistry* lr;
 };
 
 #endif // DGCONTROLLER_H

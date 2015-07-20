@@ -27,9 +27,23 @@ LangRegistry::LangRegistry() {
 						fileexts.insert(std::make_pair(*ext,lang));
 				}
 			}
+			if((fe = cf.at("interpreter"))) {
+				if(fe->split() >= 2)
+					langs.at(lang).default_interpreter = '@'+*fe->getData(1);
+			}
+			else if((fe = cf.at("interpreter-integrated"))) {
+				if(fe->split() >= 2)
+					langs.at(lang).default_interpreter = '%'+*fe->getData(1);
+			}
 			delete f;
 		}
 	}
+}
+
+const QString& LangRegistry::getLang(const QString& fileext) const {
+	if(knowsExt(fileext))
+		return fileexts.at(fileext);
+	return EMPTY;
 }
 
 bool LangRegistry::ready(const QString& fileext) const {
