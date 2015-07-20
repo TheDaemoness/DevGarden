@@ -25,22 +25,23 @@
 class QFile;
 class QDir;
 
-#include <QSet>
-#include <QMap>
 #include <QString>
+
+#include <set>
+#include <map>
 
 /**
  * @brief Stores one file worth of configuration entires.
  */
 class ConfigFile {
-	using EntryList = QMap<QString,ConfigEntry*>;
+	using EntryList = std::map<QString,ConfigEntry*>;
 	QString name;
 	EntryList entries;
 public:
 	ConfigFile() {};
 	ConfigFile(const char* name);
 	ConfigFile(QFile* f);
-	~ConfigFile() {for (ConfigEntry* mem : entries.values()) delete mem;}
+	~ConfigFile() {for (auto& val : entries) delete val.second;}
 	inline bool isLoaded() const {return !entries.empty();}
 	inline ConfigFile& setName(const QString& name) {this->name = name; return *this;}
 	inline const QString& getName() const {return name;}
@@ -64,6 +65,6 @@ bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out =
 ConfigEntry* getConfigEntry(QFile* ptr);
 QFile* getUtilityFileRead(const char* name);
 QFile* getUtilityFileWrite(const char* name);
-QSet<QString> getConfigDirs(const char* name); //Gets unique subdirectories of a provided config directory, across both config folders.
+std::set<QString> getConfigDirs(const char* name); //Gets unique subdirectories of a provided config directory, across both config folders.
 
 #endif // CONFIGLOADER_H

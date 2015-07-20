@@ -44,10 +44,11 @@
 
 ## Qt
 * Prefer QString over std::string (listed here for emphasis).
-* Prefer QHash for associative structures where the key is a QString, unless alphabetization is important.
-* In general, prefer C++'s containers over Qt's.
+* Prefer Qt's signals/slots over callbacks.
+* Do not use the QTL (QMap, QVector, etc) except where necessary. Prefer the C++ STL.
 
 ## Git
 * Never ever push to master.
 * Do not push to devel, if avoidable (especially TheRabbitologist).
 * Each contributor should create their own personal branch to push to, and send pull requests into devel when their code is ready.
+* Rebasing is discouraged.

@@ -10,7 +10,7 @@
 
 ConfigFile::ConfigFile(QFile* f) {
 	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
-		entries.insert(e->firstWord(),e);
+		entries.insert(std::make_pair(e->firstWord(),e));
 }
 
 ConfigFile::ConfigFile(const char* name) {
@@ -19,21 +19,21 @@ ConfigFile::ConfigFile(const char* name) {
 		return;
 	this->name = name;
 	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
-		entries.insert(e->firstWord(),e);
+		entries.insert(std::make_pair(e->firstWord(),e));
 	ptr->close();
 	delete ptr;
 }
 
 ConfigEntry* ConfigFile::at(const QString& name) const {
-	for(const QString& key : entries.keys()) {
-		if(key == name)
-			return entries.value(key);
+	for(const auto& keyval : entries) {
+		if(keyval.first == name)
+			return keyval.second;
 	}
 	return nullptr;
 }
 
 bool ConfigFile::insert(ConfigEntry* ce) {
-	entries.insert(ce->firstWord(),ce);
+	entries.insert(std::make_pair(ce->firstWord(),ce));
 }
 
 void ConfigFile::erase(const QString& name) {
@@ -43,7 +43,7 @@ void ConfigFile::erase(const QString& name) {
 
 ConfigEntry* ConfigFile::remove(const QString& name) {
 	ConfigEntry* temp = at(name);
-	entries.remove(name);
+	entries.erase(name);
 	return temp;
 }
 
@@ -161,8 +161,8 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 	return true;
 }
 
-QSet<QString> getConfigDirs(const char* name) {
-	QSet<QString> retval;
+std::set<QString> getConfigDirs(const char* name) {
+	std::set<QString> retval;
 	QDir local = QDir(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	QDir global = QDir(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
 	QStringList v;

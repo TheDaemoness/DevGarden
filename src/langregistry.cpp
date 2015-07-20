@@ -8,7 +8,7 @@ const QString LangRegistry::DIR = "config/lang";
 const QString LangRegistry::EMPTY = "";
 
 LangRegistry::LangRegistry() {
-	QSet<QString> langset = getConfigDirs(LangRegistry::DIR.toStdString().c_str());
+	std::set<QString> langset = getConfigDirs(LangRegistry::DIR.toStdString().c_str());
 	for(const QString& lang : langset) {
 		QFile* f = getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
