@@ -30,7 +30,7 @@ DGCentralWidget::DGCentralWidget(DGController* ctrl, QWidget *parent) :
 }
 
 QPushButton* DGCentralWidget::makeButton(const QString& txt, int width, int height) {
-	auto* retval = new QPushButton(txt);
+	auto* retval = new QPushButton(tr(txt.toLocal8Bit()));
 	retval->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	retval->setMinimumSize(width, height);
 	retval->setMaximumSize(width, height);
@@ -78,12 +78,21 @@ void DGCentralWidget::createWidgets()
 
 	// Bottom Bar
 	bottomBar = new QHBoxLayout();
-	bottomBar->addWidget(makeButton("Regen", 64, 32));
-	bottomBar->addWidget(makeButton("Build", 64, 32));
-	bottomBar->addWidget(makeButton("Clean", 64, 32));
-	bottomBar->addWidget(makeButton("Run", 64, 32));
-	bottomBar->addWidget(makeButton("Install", 64, 32));
-	bottomBar->addWidget(makeButton("Setup", 64, 32));
+	buttonsLower.reserve(BUTTON_LOWER_COUNT);
+	buttonsLower.push_back(makeButton("Setup", 64, 32));
+	buttonsLower.push_back(makeButton("Regen", 64, 32));
+	buttonsLower.push_back(makeButton("Build", 64, 32));
+	buttonsLower.push_back(makeButton("Rebuild", 64, 32));
+	buttonsLower.push_back(makeButton("Run", 72, 32));
+	buttonsLower.push_back(makeButton("Run File", 72, 32));
+	buttonsLower.push_back(makeButton("Debug", 64, 32));
+	buttonsLower.push_back(makeButton("Analyze", 64, 32));
+	buttonsLower.push_back(makeButton("Setup", 64, 32));
+	for(QPushButton* butt : buttonsLower) {
+		bottomBar->addWidget(butt);
+		butt->setHidden(true);
+	}
+	buttonsLower.front()->setHidden(false);
 	bottomBar->setSpacing(4);
 	bottomBar->addStretch();
 	bottomBar->addWidget(bottomButton);

@@ -74,8 +74,12 @@ void DGWindow::createMenuActions() {
 	menuEdit->addAction(tr("Comment Selection"));
 
 	menuBuild = menuBar()->addMenu(tr("&Build"));
-	menuBuild->addAction(tr("Cancel Build"));
+	menuBuildInit = menuBuild->addMenu(tr("Create Build System"));
+	menuBuildInit->addAction(tr("CMake..."));
+	menuBuildInit->addAction(tr("QMake..."));
+	menuBuildInit->addAction(tr("GNU Make..."));
 	menuBuild->addAction(tr("Regen Build Scripts"));
+	menuBuild->addAction(tr("Cancel Build"));
 	menuBuild->addAction(tr("Build Settings..."));
 	menuBuild->addSeparator();
 	menuBuildBuild = menuBuild->addMenu(tr("Build"));
@@ -173,18 +177,10 @@ void DGWindow::toggleFullscreen() {
 	this->isFullScreen()?this->showNormal():this->showFullScreen();
 }
 
-void DGWindow::zoomOut() {
-	this->centralWidget->getEditor()->fontSizeDec();
-
-}
-void DGWindow::zoomIn() {
-	this->centralWidget->getEditor()->fontSizeInc();
-}
-void DGWindow::zoomReset() {
-	this->centralWidget->getEditor()->fontSizeRes();
-}
+void DGWindow::zoomOut()    {this->centralWidget->getEditor()->fontSizeDec();}
+void DGWindow::zoomIn()     {this->centralWidget->getEditor()->fontSizeInc();}
+void DGWindow::zoomReset()  {this->centralWidget->getEditor()->fontSizeRes();}
 
 void DGWindow::nullSlot() {}
 
-DGWindow::~DGWindow() {
-}
+DGWindow::~DGWindow() {}
