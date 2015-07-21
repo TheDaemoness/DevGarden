@@ -147,6 +147,7 @@ void DGCentralWidget::setupConnections() {
 	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
 	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
 
+	connect(buttonsLower.at(RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
 	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
 

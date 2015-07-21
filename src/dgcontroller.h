@@ -50,6 +50,7 @@ signals:
 
 public slots:
 	void getFile(const QString& path);
+	void runFile();
 
 	void openFolder();
 	void openFiles();

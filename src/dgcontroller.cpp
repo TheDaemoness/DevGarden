@@ -102,6 +102,14 @@ void DGController::getFile(const QString& path) {
 	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->setHidden(!curr_file.exe);
 }
 
+void DGController::runFile() {
+	if(curr_file.exe) {
+		QStringList sl;
+		sl.append(curr_file.path);
+		runTool("scripts/terminal.rb",&sl);
+	}
+}
+
 void DGController::fileEdited() {
 	curr_file.saved = false;
 }
