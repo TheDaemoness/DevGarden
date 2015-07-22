@@ -30,9 +30,20 @@ public:
 	const QString& getLang(const QString& fileext) const;
 
 	/**
+	 * @brief Check if an interpreter exists for a given language.
+	 */
+	inline bool hasInterpreter(const QString& lang) const {return !langs.at(lang).default_interpreter.isEmpty();}
+
+	/**
 	 * @brief Test if the registry has loaded a language for a certain file extension.
 	 */
 	bool ready(const QString& fileext) const;
+
+	/**
+	 * @brief getInterpreter Get the interpreter for a certain language.\
+	 * @return A name or path to an executable that can interpret the file, or an empty string if none is known.
+	 */
+	QString getInterpreter(const QString& lang) const;
 
 	/**
 	 * Loads a language by file extension, increments the reference count for it, and returns the language name.

@@ -99,15 +99,16 @@ void DGController::getFile(const QString& path) {
 	curr_file.doc = w->document();
 	curr_file.saved = true;
 	curr_file.lang = lr->getLang(path.section('.',-1));
-	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->setHidden(!curr_file.exe);
+	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
+		setHidden(!(curr_file.exe || lr->hasInterpreter(curr_file.lang)));
 }
 
 void DGController::runFile() {
-	if(curr_file.exe) {
-		QStringList sl;
-		sl.append(curr_file.path);
-		runTool("scripts/terminal.rb",&sl);
-	}
+	QStringList sl;
+	if(!curr_file.exe)
+		sl.append(lr->getInterpreter(curr_file.lang));
+	sl.append(curr_file.path);
+	runTool("scripts/terminal.rb",&sl);
 }
 
 void DGController::fileEdited() {
@@ -230,7 +231,3 @@ void DGController::reloadFile() {
 
 void DGController::newTemplateFile() {}
 void DGController::newTemplateProject() {}
-
-QFileSystemModel* DGController::getActiveProjectModel() {
-	return fsm;
-}

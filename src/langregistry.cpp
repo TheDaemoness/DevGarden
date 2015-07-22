@@ -2,6 +2,7 @@
 #include "configloader.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <iostream>
 
 const QString LangRegistry::DIR = "config/lang";
@@ -27,7 +28,7 @@ LangRegistry::LangRegistry() {
 						fileexts.insert(std::make_pair(*ext,lang));
 				}
 			}
-			if((fe = cf.at("interpreter"))) {
+			if((fe = cf.at("interpreter-external"))) {
 				if(fe->split() >= 2)
 					langs.at(lang).default_interpreter = '@'+*fe->getData(1);
 			}
@@ -85,4 +86,20 @@ bool LangRegistry::rem(const QStringList& langs) {
 		}
 	}
 	return deloaded;
+}
+
+QString LangRegistry::getInterpreter(const QString& lang) const {
+	if(!hasInterpreter(lang))
+		return LangRegistry::EMPTY;
+	LangRegistry::Entry langinfo = langs.at(lang);
+	if(langinfo.default_interpreter.at(0) == '@')
+		return langinfo.default_interpreter.mid(1);
+	else if(langinfo.default_interpreter.at(0) == '%') {
+		QFileInfo* f = getUtilityFile(langinfo.default_interpreter.mid(1).toLocal8Bit());
+		if(f) {
+			if(f->isExecutable())
+				return f->absolutePath();
+		}
+	}
+	return LangRegistry::EMPTY;
 }
