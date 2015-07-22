@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 require 'rbconfig'
-require 'FileUtils'
+require 'fileutils'
 require 'etc'
 include RbConfig
 
