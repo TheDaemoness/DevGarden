@@ -47,6 +47,19 @@ ConfigEntry* ConfigFile::remove(const QString& name) {
 	return temp;
 }
 
+QFileInfo* getUtilityFile(const char* name) {
+	QFileInfo* f = new QFileInfo();
+	f->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	if(!f->exists()) {
+		f->setFile(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+		if(!f->exists()) {
+			delete f;
+			return nullptr;
+		}
+	}
+	return f;
+}
+
 QFile* getUtilityFileRead(const char* name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);

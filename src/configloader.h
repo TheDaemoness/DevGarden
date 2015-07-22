@@ -23,6 +23,7 @@
 #endif
 
 class QFile;
+class QFileInfo;
 class QDir;
 
 #include <QString>
@@ -63,6 +64,7 @@ public:
 void makeConfigDirs();
 bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
 ConfigEntry* getConfigEntry(QFile* ptr);
+QFileInfo* getUtilityFile(const char* name);
 QFile* getUtilityFileRead(const char* name);
 QFile* getUtilityFileWrite(const char* name);
 std::set<QString> getConfigDirs(const char* name); //Gets unique subdirectories of a provided config directory, across both config folders.
