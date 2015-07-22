@@ -10,7 +10,7 @@
 
 ConfigFile::ConfigFile(QFile* f) {
 	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
-		entries.insert(std::make_pair(e->firstWord(),e));
+		insert(e);
 }
 
 ConfigFile::ConfigFile(const char* name) {
@@ -19,30 +19,40 @@ ConfigFile::ConfigFile(const char* name) {
 		return;
 	this->name = name;
 	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
-		entries.insert(std::make_pair(e->firstWord(),e));
+		insert(e);
 	ptr->close();
 	delete ptr;
 }
 
-ConfigEntry* ConfigFile::at(const QString& name) const {
+ConfigEntry* ConfigFile::at(const QString& name, size_t index) const {
 	for(const auto& keyval : entries) {
 		if(keyval.first == name)
-			return keyval.second;
+			return keyval.second[index>=keyval.second.size()?keyval.second.size()-1:index];
 	}
 	return nullptr;
 }
 
+size_t ConfigFile::count(const QString& name) const {
+	auto it = entries.find(name);
+	return (it != entries.end())?it->second.size():0;
+}
+
 bool ConfigFile::insert(ConfigEntry* ce) {
-	entries.insert(std::make_pair(ce->firstWord(),ce));
+	auto it = entries.find(ce->firstWord());
+	if(it != entries.end())
+		it->second.push_back(ce);
+	else
+		entries.insert(std::make_pair(ce->firstWord(),Values(1,ce)));
 }
 
 void ConfigFile::erase(const QString& name) {
-	if(ConfigEntry* e = remove(name))
+	for(ConfigEntry* e : entries.at(name))
 		delete e;
+	entries.erase(name);
 }
 
-ConfigEntry* ConfigFile::remove(const QString& name) {
-	ConfigEntry* temp = at(name);
+ConfigFile::Values ConfigFile::remove(const QString& name) {
+	Values temp = entries.at(name);
 	entries.erase(name);
 	return temp;
 }

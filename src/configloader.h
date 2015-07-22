@@ -35,14 +35,17 @@ class QDir;
  * @brief Stores one file worth of configuration entires.
  */
 class ConfigFile {
-	using EntryList = std::map<QString,ConfigEntry*>;
+public:
+	using Values = std::vector<ConfigEntry*>;
+private:
+	using EntryList = std::map<QString,Values>;
 	QString name;
 	EntryList entries;
 public:
 	ConfigFile() {};
 	ConfigFile(const char* name);
 	ConfigFile(QFile* f);
-	~ConfigFile() {for (auto& val : entries) delete val.second;}
+	~ConfigFile() {for (auto& val : entries) {for (auto& ent : val.second) delete ent;}}
 	inline bool isLoaded() const {return !entries.empty();}
 	inline ConfigFile& setName(const QString& name) {this->name = name; return *this;}
 	inline const QString& getName() const {return name;}
@@ -54,10 +57,11 @@ public:
 	inline EntryList::const_iterator cend() const {return entries.cend();}
 
 	inline size_t size() const {return entries.size();}
-	ConfigEntry* at(const QString& name) const;
+	size_t count(const QString& name) const;
+	ConfigEntry* at(const QString& name, size_t index = 0) const;
 
 	bool insert(ConfigEntry* ce);
-	ConfigEntry* remove(const QString& name);
+	Values remove(const QString& name);
 	void erase(const QString& name);
 };
 
