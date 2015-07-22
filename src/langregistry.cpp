@@ -14,18 +14,18 @@ LangRegistry::LangRegistry() {
 		QFile* f = getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
 			ConfigFile cf(f);
-			langs.insert(std::make_pair(lang,Entry()));
+			langs.insert(std::make_pair(lang,LangEntry()));
 			ConfigEntry* fe = cf.at("file-exts");
 			if(fe) {
 				size_t e = fe->split();
 				for(size_t i = 1; i < e; ++i) {
 					const QString* ext = fe->getData(i);
 					if(fileexts.count(*ext))
-						std::cout << "Languages '" << fileexts.at(*ext).toStdString()
+						std::cout << "Languages '" << fileexts.at(*ext).lang.toStdString()
 								  << "' and '" << lang.toStdString() << "' use file extension '"
 								  << ext->toStdString() << "'. Preferring the former." << std::endl;
 					else
-						fileexts.insert(std::make_pair(*ext,lang));
+						fileexts.insert(std::make_pair(*ext,ExtEntry(lang)));
 				}
 			}
 			if((fe = cf.at("interpreter-external"))) {
@@ -43,19 +43,19 @@ LangRegistry::LangRegistry() {
 
 const QString& LangRegistry::getLang(const QString& fileext) const {
 	if(knowsExt(fileext))
-		return fileexts.at(fileext);
+		return fileexts.at(fileext).lang;
 	return EMPTY;
 }
 
 bool LangRegistry::ready(const QString& fileext) const {
 	if(knowsExt(fileext))
-		return langs.count(fileexts.at(fileext));
+		return langs.count(fileexts.at(fileext).lang);
 	return false;
 }
 
 const QString& LangRegistry::load(const QString& fileext) {
 	if(knowsExt(fileext)) {
-		const QString& lang = fileexts.at(fileext);
+		const QString& lang = fileexts.at(fileext).lang;
 		add(QStringList(lang));
 		return lang;
 	}
@@ -91,7 +91,7 @@ bool LangRegistry::rem(const QStringList& langs) {
 QString LangRegistry::getInterpreter(const QString& lang) const {
 	if(!hasInterpreter(lang))
 		return LangRegistry::EMPTY;
-	LangRegistry::Entry langinfo = langs.at(lang);
+	LangRegistry::LangEntry langinfo = langs.at(lang);
 	if(langinfo.default_interpreter.at(0) == '@')
 		return langinfo.default_interpreter.mid(1);
 	else if(langinfo.default_interpreter.at(0) == '%') {

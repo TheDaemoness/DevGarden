@@ -10,13 +10,19 @@
 class LangRegistry {
 	static const QString DIR;
 	static const QString EMPTY;
-	struct Entry {
-		Entry() {refs = 0;}
+	struct LangEntry {
+		LangEntry() {refs = 0;}
 		size_t refs;
 		QString default_interpreter;
 	};
-	std::map<QString,QString> fileexts;
-	std::map<QString,Entry> langs;
+	struct ExtEntry {
+		explicit ExtEntry(const QString& lang) {this->lang = lang;}
+		QString lang;
+		QString interpreter;
+	};
+
+	std::map<QString,ExtEntry> fileexts;
+	std::map<QString,LangEntry> langs;
 public:
 	LangRegistry();
 
