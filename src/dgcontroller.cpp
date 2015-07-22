@@ -106,8 +106,9 @@ void DGController::getFile(const QString& path) {
 void DGController::runFile() {
 	QStringList sl;
 	if(!curr_file.exe)
-		sl.append(lr->getInterpreter(curr_file.lang));
-	sl.append(curr_file.path);
+		sl.append(lr->getInterpreter(curr_file.lang) + ' ' + curr_file.path);
+	else
+		sl.append(curr_file.path);
 	runTool("scripts/terminal.rb",&sl);
 }
 
