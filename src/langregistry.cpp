@@ -18,23 +18,28 @@ LangRegistry::LangRegistry() {
 			ConfigEntry* fe = cf.at("file-exts");
 			if(fe) {
 				size_t e = fe->split();
+				ConfigEntry* ie;
+				QString interpreter;
+				if((ie = cf.at("interpreter-external"))) {
+					if(ie->split() >= 2)
+						interpreter = '@'+*ie->getData(1);
+				}
+				else if((ie = cf.at("interpreter-integrated"))) {
+					if(ie->split() >= 2)
+						interpreter = '%'+*ie->getData(1);
+				}
 				for(size_t i = 1; i < e; ++i) {
 					const QString* ext = fe->getData(i);
 					if(fileexts.count(*ext))
 						std::cout << "Languages '" << fileexts.at(*ext).lang.toStdString()
 								  << "' and '" << lang.toStdString() << "' use file extension '"
 								  << ext->toStdString() << "'. Preferring the former." << std::endl;
-					else
-						fileexts.insert(std::make_pair(*ext,ExtEntry(lang)));
+					else {
+						ExtEntry ee(lang);
+						ee.interpreter = interpreter;
+						fileexts.insert(std::make_pair(*ext,ee));
+					}
 				}
-			}
-			if((fe = cf.at("interpreter-external"))) {
-				if(fe->split() >= 2)
-					langs.at(lang).default_interpreter = '@'+*fe->getData(1);
-			}
-			else if((fe = cf.at("interpreter-integrated"))) {
-				if(fe->split() >= 2)
-					langs.at(lang).default_interpreter = '%'+*fe->getData(1);
 			}
 			delete f;
 		}
@@ -88,14 +93,14 @@ bool LangRegistry::rem(const QStringList& langs) {
 	return deloaded;
 }
 
-QString LangRegistry::getInterpreter(const QString& lang) const {
-	if(!hasInterpreter(lang))
+QString LangRegistry::getInterpreter(const QString& ext) const {
+	if(!hasInterpreter(ext))
 		return LangRegistry::EMPTY;
-	LangRegistry::LangEntry langinfo = langs.at(lang);
-	if(langinfo.default_interpreter.at(0) == '@')
-		return langinfo.default_interpreter.mid(1);
-	else if(langinfo.default_interpreter.at(0) == '%') {
-		QFileInfo* f = getUtilityFile(langinfo.default_interpreter.mid(1).toLocal8Bit());
+	LangRegistry::ExtEntry extinfo = fileexts.at(ext);
+	if(extinfo.interpreter.at(0) == '@')
+		return extinfo.interpreter.mid(1);
+	else if(extinfo.interpreter.at(0) == '%') {
+		QFileInfo* f = getUtilityFile(extinfo.interpreter.mid(1).toLocal8Bit());
 		if(f) {
 			if(f->isExecutable())
 				return f->absolutePath();

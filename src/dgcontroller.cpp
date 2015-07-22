@@ -98,15 +98,16 @@ void DGController::getFile(const QString& path) {
 	f.close();
 	curr_file.doc = w->document();
 	curr_file.saved = true;
-	curr_file.lang = lr->getLang(path.section('.',-1));
+	QString ext = path.section('.',-1);
+	curr_file.lang = lr->getLang(ext);
 	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
-		setHidden(!(curr_file.exe || lr->hasInterpreter(curr_file.lang)));
+		setHidden(!(curr_file.exe || (curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext))));
 }
 
 void DGController::runFile() {
 	QStringList sl;
 	if(!curr_file.exe)
-		sl.append(lr->getInterpreter(curr_file.lang) + ' ' + curr_file.path);
+		sl.append(lr->getInterpreter(curr_file.path.section('.',-1)) + ' ' + curr_file.path);
 	else
 		sl.append(curr_file.path);
 	runTool("scripts/terminal.rb",&sl);

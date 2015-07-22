@@ -13,7 +13,6 @@ class LangRegistry {
 	struct LangEntry {
 		LangEntry() {refs = 0;}
 		size_t refs;
-		QString default_interpreter;
 	};
 	struct ExtEntry {
 		explicit ExtEntry(const QString& lang) {this->lang = lang;}
@@ -38,7 +37,7 @@ public:
 	/**
 	 * @brief Check if an interpreter exists for a given language.
 	 */
-	inline bool hasInterpreter(const QString& lang) const {return !langs.at(lang).default_interpreter.isEmpty();}
+	inline bool hasInterpreter(const QString& ext) const {return !fileexts.at(ext).interpreter.isEmpty();}
 
 	/**
 	 * @brief Test if the registry has loaded a language for a certain file extension.
@@ -46,10 +45,10 @@ public:
 	bool ready(const QString& fileext) const;
 
 	/**
-	 * @brief getInterpreter Get the interpreter for a certain language.\
+	 * @brief getInterpreter Get the interpreter for a certain language.
 	 * @return A name or path to an executable that can interpret the file, or an empty string if none is known.
 	 */
-	QString getInterpreter(const QString& lang) const;
+	QString getInterpreter(const QString& ext) const;
 
 	/**
 	 * Loads a language by file extension, increments the reference count for it, and returns the language name.
