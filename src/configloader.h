@@ -58,7 +58,8 @@ public:
 
 	inline size_t size() const {return entries.size();}
 	size_t count(const QString& name) const;
-	ConfigEntry* at(const QString& name, size_t index = 0) const;
+	Values* get(const QString& name); //Do not call on DGFamily.
+	ConfigEntry* at(const QString& name, size_t index = 0);
 
 	bool insert(ConfigEntry* ce);
 	Values remove(const QString& name);

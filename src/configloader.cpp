@@ -24,11 +24,17 @@ ConfigFile::ConfigFile(const char* name) {
 	delete ptr;
 }
 
-ConfigEntry* ConfigFile::at(const QString& name, size_t index) const {
-	for(const auto& keyval : entries) {
-		if(keyval.first == name)
-			return keyval.second[index>=keyval.second.size()?keyval.second.size()-1:index];
-	}
+ConfigEntry* ConfigFile::at(const QString& name, size_t index) {
+	auto it = entries.find(name);
+	if(it != entries.end())
+		return it->second[index>=it->second.size()?it->second.size()-1:index];
+	return nullptr;
+}
+
+ConfigFile::Values* ConfigFile::get(const QString& name) {
+	auto it = entries.find(name);
+	if(it != entries.end())
+		return &(it->second);
 	return nullptr;
 }
 
@@ -39,10 +45,14 @@ size_t ConfigFile::count(const QString& name) const {
 
 bool ConfigFile::insert(ConfigEntry* ce) {
 	auto it = entries.find(ce->firstWord());
-	if(it != entries.end())
+	if(it != entries.end()) {
 		it->second.push_back(ce);
-	else
+		return true;
+	}
+	else {
 		entries.insert(std::make_pair(ce->firstWord(),Values(1,ce)));
+		return false;
+	}
 }
 
 void ConfigFile::erase(const QString& name) {
