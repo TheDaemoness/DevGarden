@@ -15,9 +15,8 @@ LangRegistry::LangRegistry() {
 		if(f != nullptr) {
 			ConfigFile cf(f);
 			langs.insert(std::make_pair(lang,LangEntry()));
-			ConfigEntry* fe = cf.at("file-exts");
+			ConfigFile::Values* fe = cf.get("file-exts");
 			if(fe) {
-				size_t e = fe->split();
 				ConfigEntry* ie;
 				QString interpreter;
 				if((ie = cf.at("interpreter-external"))) {
@@ -28,16 +27,19 @@ LangRegistry::LangRegistry() {
 					if(ie->split() >= 2)
 						interpreter = '%'+*ie->getData(1);
 				}
-				for(size_t i = 1; i < e; ++i) {
-					const QString* ext = fe->getData(i);
-					if(fileexts.count(*ext))
-						std::cout << "Languages '" << fileexts.at(*ext).lang.toStdString()
-								  << "' and '" << lang.toStdString() << "' use file extension '"
-								  << ext->toStdString() << "'. Preferring the former." << std::endl;
-					else {
-						ExtEntry ee(lang);
-						ee.interpreter = interpreter;
-						fileexts.insert(std::make_pair(*ext,ee));
+				for(ConfigEntry* ce : *fe) {
+					size_t e = ce->split();
+					for(size_t i = 1; i < e; ++i) {
+						const QString* ext = ce->getData(i);
+						if(fileexts.count(*ext))
+							std::cout << "Languages '" << fileexts.at(*ext).lang.toStdString()
+									  << "' and '" << lang.toStdString() << "' use file extension '"
+									  << ext->toStdString() << "'. Preferring the former." << std::endl;
+						else {
+							ExtEntry ee(lang);
+							ee.interpreter = interpreter;
+							fileexts.insert(std::make_pair(*ext,ee));
+						}
 					}
 				}
 			}
