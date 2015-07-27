@@ -21,7 +21,7 @@ LangRegistry::LangRegistry() {
 				if(ie->split() >= 2)
 					interpreter = '@'+*ie->getData(1);
 			}
-			else if((ie = cf.at("interpreter-integrated"))) {
+			else if((ie = cf.at("interpreter-internal"))) {
 				if(ie->split() >= 2)
 					interpreter = '%'+*ie->getData(1);
 			}
@@ -99,7 +99,7 @@ QString LangRegistry::getInterpreter(const QString& name, bool isext) const {
 		QFileInfo* f = getUtilityFile(extinfo.interpreter.mid(1).toLocal8Bit());
 		if(f) {
 			if(f->isExecutable())
-				return f->absolutePath();
+				return f->absoluteFilePath();
 		}
 	}
 	return LangRegistry::EMPTY;

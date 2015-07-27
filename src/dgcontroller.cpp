@@ -75,7 +75,7 @@ void DGController::saveFile() {
 	}
 	if(curr_file.saved)
 		return;
-	QFile f(curr_file.path);
+	QFile f(curr_file.info.absoluteFilePath());
 	if(!f.open(QFile::WriteOnly))
 		return;
 	f.write(curr_file.doc->toPlainText().toLocal8Bit());
@@ -89,27 +89,34 @@ void DGController::getFile(const QString& path) {
 		return;
 	if(curr_file.doc)
 		closeFile();
-	curr_file.path = path;
+	curr_file.info = QFileInfo(path);
 	CodeEditorWidget* w = dgw->centralWidget->getEditor();
 	w->blockSignals(true);
 	w->setContents(f.readAll());
 	w->blockSignals(false);
-	curr_file.exe = QFileInfo(path).isExecutable();
 	f.close();
 	curr_file.doc = w->document();
 	curr_file.saved = true;
-	QString ext = path.section('.',-1);
-	curr_file.lang = lr->getLang(ext);
+	const QString fn = curr_file.info.fileName();
+	const QString ext = fn.section('.',-1);
+	const bool isext = fn != ext;
+	curr_file.lang = lr->getLang(ext, isext);
 	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
-		setHidden(!(curr_file.exe || (curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext))));
+		setHidden(!(curr_file.info.isExecutable() ||
+					(curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext, isext))));
 }
 
 void DGController::runFile() {
 	QStringList sl;
-	if(!curr_file.exe)
-		sl.append(lr->getInterpreter(curr_file.path.section('.',-1)) + ' ' + curr_file.path);
-	else
-		sl.append(curr_file.path);
+	if(!curr_file.info.isExecutable()) {
+		const QString fn = curr_file.info.fileName();
+		const QString ext = fn.section('.',-1);
+		const QString& intrp = lr->getInterpreter(ext, fn != ext);
+		if(intrp.isEmpty())
+			return;
+		sl.append(intrp + ' ' + curr_file.info.absoluteFilePath());
+	} else
+		sl.append(curr_file.info.absoluteFilePath());
 	runTool("scripts/terminal.rb",&sl);
 }
 
@@ -228,7 +235,7 @@ void DGController::newFile() {
 
 void DGController::reloadFile() {
 	this->curr_file.saved = true;
-	this->getFile(this->curr_file.path);
+	this->getFile(this->curr_file.info.absoluteFilePath());
 }
 
 void DGController::newTemplateFile() {}
