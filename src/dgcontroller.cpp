@@ -114,9 +114,9 @@ void DGController::runFile() {
 		const QString& intrp = lr->getInterpreter(ext, fn != ext);
 		if(intrp.isEmpty())
 			return;
-		sl.append(intrp + ' ' + curr_file.info.absoluteFilePath());
-	} else
-		sl.append(curr_file.info.absoluteFilePath());
+		sl.append(intrp);
+	}
+	sl.append(curr_file.info.absoluteFilePath());
 	runTool("scripts/terminal.rb",&sl);
 }
 
