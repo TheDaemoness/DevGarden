@@ -61,7 +61,7 @@ public:
 
 	inline size_t countRefs(const QString& lang) const {return langs.at(lang).refs;}
 	inline size_t countLanguages() const {return langs.size();}
-	inline size_t countBindings() const {return fileexts.size(); + filenames.size();}
+	inline size_t countBindings() const {return fileexts.size() + filenames.size();}
 
 };
 
