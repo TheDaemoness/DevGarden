@@ -19,11 +19,10 @@ public:
 	bool operator<(const DGProjectInfo& cmp) const;
 
 	QString getName() const;
-	inline bool isSingleFile() const {return !isdir;}
+	inline bool isSingleFile() const {return !dir;}
 	inline QFileInfo* getFile() const {return file;}
-	inline QDir* getDir() const {return (isdir?dir:nullptr);}
+	inline QDir* getDir() const {return dir;}
 private:
-	const bool isdir;
 	QFileInfo* file;
 	QDir* dir;
 };

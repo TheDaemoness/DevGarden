@@ -5,28 +5,27 @@
 #include <QString>
 
 bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
-	if(this->isdir != b.isdir)
-		return this->isdir;
+	if(!dir != !b.dir)
+		return !dir;
 	return this->getName() < b.getName();
 }
 
-DGProjectInfo::DGProjectInfo(QFileInfo* f) : isdir(false) {
+DGProjectInfo::DGProjectInfo(QFileInfo* f) {
 	file = f;
 	dir = nullptr;
 }
 
-DGProjectInfo::DGProjectInfo(QDir* f) : isdir(true) {
+DGProjectInfo::DGProjectInfo(QDir* f) {
 	dir = f;
-	file = nullptr;
+	file = new QFileInfo(f->absoluteFilePath(".dgproject"));
 }
 
 DGProjectInfo::~DGProjectInfo() {
-	if(isdir)
+	if(dir)
 		delete dir;
-	else
-		delete file;
+	delete file;
 }
 
 QString DGProjectInfo::getName() const {
-	return isdir?dir->dirName():file->fileName();
+	return dir?dir->dirName():file->fileName();
 }
