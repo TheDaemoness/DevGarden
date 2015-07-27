@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
-	std::cout << "Loaded " << lr->countFileexts() << " file extension associations" << std::endl;
+	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
 	DGController ctrl(pl.get(), fl.get(), lr.get());
 	DGWindow w(&ctrl);

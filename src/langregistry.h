@@ -11,50 +11,49 @@ class LangRegistry {
 	static const QString DIR;
 	static const QString EMPTY;
 	struct LangEntry {
-		LangEntry() {refs = 0;}
+		LangEntry() {refs = 0; buildsys = false;}
 		size_t refs;
+		bool buildsys;
 	};
-	struct ExtEntry {
-		explicit ExtEntry(const QString& lang) {this->lang = lang;}
+	struct FileEntry {
+		explicit FileEntry(const QString& lang) {this->lang = lang;}
 		QString lang;
 		QString interpreter;
 	};
 
-	std::map<QString,ExtEntry> fileexts;
+	std::map<QString,FileEntry> fileexts;
+	std::map<QString,FileEntry> filenames;
 	std::map<QString,LangEntry> langs;
+
+	inline std::map<QString,FileEntry>&        getBindMap      (bool isext)        {return isext?fileexts:filenames;}
+	inline const std::map<QString,FileEntry>&  getBindMapConst (bool isext) const  {return isext?fileexts:filenames;}
 public:
 	LangRegistry();
 
 	//Tests for known mappings.
-	inline bool knowsExt(const QString& fileext) const {return fileexts.count(fileext);}
+	inline bool knowsFile(const QString& name, bool isext = true) const {return getBindMapConst(isext).count(name);}
 	inline bool knowsLang(const QString& lang) const {return langs.count(lang);}
 
 	/**
-	 * @brief Get the corresponding language for a file extension
+	 * @brief Get the corresponding language for a file extension or name
 	 */
-	const QString& getLang(const QString& fileext) const;
+	const QString& getLang(const QString& name, bool isext = true) const; //Default true for teenagers.
 
 	/**
 	 * @brief Check if an interpreter exists for a given language.
 	 */
-	inline bool hasInterpreter(const QString& ext) const {return !fileexts.at(ext).interpreter.isEmpty();}
+	bool hasInterpreter(const QString& name, bool isext = true) const {return !getBindMapConst(isext).at(name).interpreter.isEmpty();}
 
 	/**
-	 * @brief Test if the registry has loaded a language for a certain file extension.
+	 * @brief Test if the registry has loaded a language for a certain file type.
 	 */
-	bool ready(const QString& fileext) const;
+	bool ready(const QString& name, bool isext = true) const;
 
 	/**
 	 * @brief getInterpreter Get the interpreter for a certain language.
 	 * @return A name or path to an executable that can interpret the file, or an empty string if none is known.
 	 */
-	QString getInterpreter(const QString& ext) const;
-
-	/**
-	 * Loads a language by file extension, increments the reference count for it, and returns the language name.
-	 * To be used when a project needs to open a file of an unexpected language.
-	 */
-	const QString& load(const QString& fileext);
+	QString getInterpreter(const QString& name, bool isext = true) const;
 
 	//Reference counting, to be incremented per PROJECT, not PER FILE!
 	bool add(const QStringList& langs);
@@ -62,7 +61,7 @@ public:
 
 	inline size_t countRefs(const QString& lang) const {return langs.at(lang).refs;}
 	inline size_t countLanguages() const {return langs.size();}
-	inline size_t countFileexts() const {return fileexts.size();}
+	inline size_t countBindings() const {return fileexts.size(); + filenames.size();}
 
 };
 
