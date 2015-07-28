@@ -15,7 +15,9 @@ LangRegistry::LangRegistry() {
 		QFile* f = getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
 			ConfigFile cf(f);
-			langs.insert(std::make_pair(lang,LangEntry()));
+			LangEntry le;
+			le.buildsys = cf.count("build-sys");
+			langs.insert(std::make_pair(lang,le));
 			QString interpreter;
 			if((ie = cf.at("interpreter-external"))) {
 				if(ie->split() >= 2)
@@ -49,6 +51,12 @@ LangRegistry::LangRegistry() {
 			delete f;
 		}
 	}
+}
+
+bool LangRegistry::isBuildSys(const QString& lang) const {
+	if(knowsLang(lang))
+		return langs.at(lang).buildsys;
+	return false;
 }
 
 const QString& LangRegistry::getLang(const QString& name, bool isext) const {

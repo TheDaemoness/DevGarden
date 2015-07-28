@@ -50,6 +50,11 @@ public:
 	bool ready(const QString& name, bool isext = true) const;
 
 	/**
+	 * @brief Return whether or not a language describes files for a build system.
+	 */
+	bool isBuildSys(const QString& lang) const;
+
+	/**
 	 * @brief getInterpreter Get the interpreter for a certain language.
 	 * @return A name or path to an executable that can interpret the file, or an empty string if none is known.
 	 */
