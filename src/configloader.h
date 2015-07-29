@@ -43,7 +43,7 @@ private:
 	EntryList entries;
 public:
 	ConfigFile() {};
-	ConfigFile(const char* name);
+	ConfigFile(const QString& name);
 	ConfigFile(QFile* f);
 	~ConfigFile() {for (auto& val : entries) {for (auto& ent : val.second) delete ent;}}
 	inline bool isLoaded() const {return !entries.empty();}
@@ -69,9 +69,9 @@ public:
 void makeConfigDirs();
 bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
 ConfigEntry* getConfigEntry(QFile* ptr);
-QFileInfo* getUtilityFile(const char* name);
-QFile* getUtilityFileRead(const char* name);
-QFile* getUtilityFileWrite(const char* name);
-std::set<QString> getConfigDirs(const char* name); //Gets unique subdirectories of a provided config directory, across both config folders.
+QFileInfo* getUtilityFile(const QString& name);
+QFile* getUtilityFileRead(const QString& name);
+QFile* getUtilityFileWrite(const QString& name);
+std::set<QString> getConfigDirs(const QString& name); //Gets unique subdirectories of a provided config directory, across both config folders.
 
 #endif // CONFIGLOADER_H

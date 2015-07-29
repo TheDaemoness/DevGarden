@@ -13,7 +13,7 @@ ConfigFile::ConfigFile(QFile* f) {
 		insert(e);
 }
 
-ConfigFile::ConfigFile(const char* name) {
+ConfigFile::ConfigFile(const QString& name) {
 	QFile* ptr = getUtilityFileRead(name);
 	if(!ptr)
 		return;
@@ -67,7 +67,7 @@ ConfigFile::Values ConfigFile::remove(const QString& name) {
 	return temp;
 }
 
-QFileInfo* getUtilityFile(const char* name) {
+QFileInfo* getUtilityFile(const QString& name) {
 	QFileInfo* f = new QFileInfo();
 	f->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	if(!f->exists()) {
@@ -80,7 +80,7 @@ QFileInfo* getUtilityFile(const char* name) {
 	return f;
 }
 
-QFile* getUtilityFileRead(const char* name) {
+QFile* getUtilityFileRead(const QString& name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	retval->open(QFile::ReadOnly);
@@ -94,7 +94,7 @@ QFile* getUtilityFileRead(const char* name) {
 	return nullptr;
 }
 
-QFile* getUtilityFileWrite(const char* name) {
+QFile* getUtilityFileWrite(const QString& name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+"/"+name);
 	retval->open(QFile::WriteOnly);
@@ -194,7 +194,7 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 	return true;
 }
 
-std::set<QString> getConfigDirs(const char* name) {
+std::set<QString> getConfigDirs(const QString& name) {
 	std::set<QString> retval;
 	QDir local = QDir(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	QDir global = QDir(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
