@@ -14,7 +14,7 @@ LangRegistry::LangRegistry() {
 	for(const QString& lang : langset) {
 		QFile* f = getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
-			ConfigFile cf(f);
+			ConfigFile cf(*f);
 			LangEntry le;
 			le.buildsys = cf.count("build-sys");
 			langs.insert(std::make_pair(lang,le));

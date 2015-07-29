@@ -8,7 +8,7 @@
 #include <QStringList>
 #include <algorithm>
 
-ConfigFile::ConfigFile(QFile* f) {
+ConfigFile::ConfigFile(QFile& f) {
 	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
 		insert(e);
 }
@@ -18,7 +18,7 @@ ConfigFile::ConfigFile(const QString& name) {
 	if(!ptr)
 		return;
 	this->name = name;
-	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
+	for(ConfigEntry* e = getConfigEntry(*ptr); e != nullptr; e = getConfigEntry(*ptr))
 		insert(e);
 	ptr->close();
 	delete ptr;
@@ -125,47 +125,47 @@ void makeConfigDirs() {
 #endif
 }
 
-static ConfigEntry* recurseGetConfigEntry(QFile* ptr, ConfigEntry* parent, size_t depth = 0) {
+static ConfigEntry* recurseGetConfigEntry(QFile& file, ConfigEntry* parent, size_t depth = 0) {
 	size_t ws_count = depth;
 	do {
-		if(!ptr->atEnd()) {
+		if(!file.atEnd()) {
 			ConfigEntry* child = nullptr;
 			if(ws_count == depth)
-				child = new ConfigEntry(ptr->readLine());
+				child = new ConfigEntry(file.readLine());
 			else if(ws_count > depth)
-				child = recurseGetConfigEntry(ptr, parent->back(), ws_count);
+				child = recurseGetConfigEntry(file, parent->back(), ws_count);
 			if(child)
 				parent->push_back(child);
 		}
 		ws_count = 0;
-		char val = ptr->peek(1)[0];
+		char val = file.peek(1)[0];
 		while(val == '\t' || val == ' ' || val == '\n' || val == '\r') {
-			ptr->read(1);
+			file.read(1);
 			if(val == '\n' || val == '\r')
 				ws_count = 0;
 			else
 				++ws_count;
-			val = ptr->peek(1)[0];
+			val = file.peek(1)[0];
 		}
-	} while(ws_count >= depth && !ptr->atEnd());
+	} while(ws_count >= depth && !file.atEnd());
 	return parent;
 }
 
-ConfigEntry* getConfigEntry(QFile* ptr) {
-	if(!ptr->isOpen() || ptr->atEnd())
+ConfigEntry* getConfigEntry(QFile& file) {
+	if(!file.isOpen() || file.atEnd())
 		return nullptr;
 	ConfigEntry* retval = new ConfigEntry;
 	size_t ws_count;
 	ws_count = 0;
-	retval->setData(ptr->readLine());
-	char val = ptr->peek(1)[0];
+	retval->setData(file.readLine());
+	char val = file.peek(1)[0];
 	while(val == '\t' || val == ' ') {
-		ptr->read(1);
+		file.read(1);
 		++ws_count;
-		val = ptr->peek(1)[0];
+		val = file.peek(1)[0];
 	}
 	if(ws_count)
-		return recurseGetConfigEntry(ptr, retval, ws_count);
+		return recurseGetConfigEntry(file, retval, ws_count);
 	return retval;
 }
 

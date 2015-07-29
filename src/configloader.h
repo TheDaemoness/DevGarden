@@ -44,7 +44,7 @@ private:
 public:
 	ConfigFile() {};
 	ConfigFile(const QString& name);
-	ConfigFile(QFile* f);
+	ConfigFile(QFile& f);
 	~ConfigFile() {for (auto& val : entries) {for (auto& ent : val.second) delete ent;}}
 	inline bool isLoaded() const {return !entries.empty();}
 	inline ConfigFile& setName(const QString& name) {this->name = name; return *this;}
@@ -68,7 +68,7 @@ public:
 
 void makeConfigDirs();
 bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
-ConfigEntry* getConfigEntry(QFile* ptr);
+ConfigEntry* getConfigEntry(QFile& file);
 QFileInfo* getUtilityFile(const QString& name);
 QFile* getUtilityFileRead(const QString& name);
 QFile* getUtilityFileWrite(const QString& name);
