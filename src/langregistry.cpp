@@ -16,10 +16,12 @@ LangRegistry::LangRegistry() {
 		if(f != nullptr) {
 			ConfigFile cf(*f);
 			LangEntry le;
-			le.buildsys = cf.count("build-sys");
-			langs.insert(std::make_pair(lang,le));
 			QString interpreter;
-			if((ie = cf.at("interpreter-external"))) {
+			if((ie = cf.at("build-sys"))) {
+				le.buildsys = true;
+				interpreter = "%scripts/build/"+lang+"/run.rb";
+			}
+			else if((ie = cf.at("interpreter-external"))) {
 				if(ie->split() >= 2)
 					interpreter = '@'+*ie->getData(1);
 			}
@@ -27,6 +29,7 @@ LangRegistry::LangRegistry() {
 				if(ie->split() >= 2)
 					interpreter = '%'+*ie->getData(1);
 			}
+			langs.insert(std::make_pair(lang,le));
 			ConfigFile::Values* fe;
 			static const QString table[] = {"file-names", "file-exts", ""};
 			for(size_t n = 0; !table[n].isEmpty(); ++n) {
