@@ -15,6 +15,8 @@
 #include <QTextDocument>
 #include <QPushButton>
 
+const QRegExp DGController::FILEEXT_PATTERN = QRegExp("[a-zA-Z0-9_]\\.");
+
 DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
@@ -98,7 +100,7 @@ void DGController::getFile(const QString& path) {
 	curr_file.doc = w->document();
 	curr_file.saved = true;
 	const QString fn = curr_file.info.fileName();
-	const QString ext = fn.section('.',-1);
+	const QString ext = fn.section(FILEEXT_PATTERN,-1);
 	const bool isext = fn != ext;
 	curr_file.lang = lr->getLang(ext, isext);
 	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
@@ -110,7 +112,7 @@ void DGController::runFile() {
 	QStringList sl;
 	if(!curr_file.info.isExecutable()) {
 		const QString fn = curr_file.info.fileName();
-		const QString ext = fn.section('.',-1);
+		const QString ext = fn.section(FILEEXT_PATTERN,-1);
 		const QString& intrp = lr->getInterpreter(ext, fn != ext);
 		if(intrp.isEmpty())
 			return;
@@ -213,9 +215,7 @@ void DGController::newFile() {
 	QString filetype = "";
 
 	bool ran;
-
-	ran = runTool("scripts/defaultfiles/"+exact_name,&args,&data);
-	if(!ran)
+	if(!(ran = runTool("scripts/defaultfiles/"+exact_name,&args,&data)))
 		ran = runTool("scripts/defaultfiles/"+path_name,&args,&data);
 	if(ran) {
 		filetext = data;
