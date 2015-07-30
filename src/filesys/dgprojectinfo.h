@@ -26,6 +26,7 @@ public:
 	inline bool isSingleFile() const {return !dir;}
 	inline QFileInfo* getFile() const {return file;}
 	inline QDir* getDir() const {return dir;}
+	inline bool hasBuildSys() const {return bsys_choice || bsys_custom;}
 protected:
 	void catalog(const LangRegistry& lr, const QDir& dir, bool recursive = true);
 	inline void catalog(const LangRegistry& lr, bool recursive = true);

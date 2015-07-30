@@ -7,8 +7,6 @@
 #include <QDir>
 #include <QString>
 
-#include "../dgdebug.hpp"
-
 bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 	if(!dir != !b.dir)
 		return !dir;
@@ -59,12 +57,14 @@ void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recurs
 		else {
 			if(!recursive) {
 				bool bs = false;
-				if(lr.knowsFile(entry.fileName()))
+				if(lr.knowsFile(entry.fileName(),false))
 					bs = lr.isBuildSys(lr.getLang(entry.fileName(),false));
-				if(lr.knowsFile(entry.fileName()))
-					bs = lr.isBuildSys(lr.getLang(entry.fileName(),false));
-				if(bs)
+				if(lr.knowsFile(LangRegistry::getFileExt(entry.fileName()),true))
+					bs = lr.isBuildSys(lr.getLang(entry.fileName(),true));
+				if(bs) {
 					this->bsys_opts.push_back(entry);
+					bsys_choice = &bsys_opts.back();
+				}
 				//May do other searching of the root directory.
 			}
 		}
