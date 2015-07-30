@@ -11,7 +11,7 @@
 #include <memory>
 #include <iostream>
 
-#include "configloader.h"
+#include "configfile.h"
 #include "envmacros.h"
 #include "langregistry.h"
 
@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
 
 	std::cout << "Initializing..." << std::endl;
 	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
-	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader);
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
+	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;

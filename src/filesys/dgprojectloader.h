@@ -19,8 +19,9 @@ public: using ProjectListType = std::vector<DGProjectInfo*>;
 private:
 	ProjectListType projs;
 	ProjectListType::iterator current;
+	const LangRegistry& langreg;
 public:
-	DGProjectLoader() {projs.reserve(1);}
+	DGProjectLoader(const LangRegistry& lr) : langreg(lr) {projs.reserve(1);}
 	inline bool empty() const {return projs.empty();}
 	bool changeCurrent(size_t index);
 	bool closeCurrent();

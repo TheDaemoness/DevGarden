@@ -1,11 +1,13 @@
 #include "dgprojectinfo.h"
 
-#include "../configloader.h"
+#include "../langregistry.h"
 
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 #include <QString>
+
+#include "../dgdebug.hpp"
 
 bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 	if(!dir != !b.dir)
@@ -18,11 +20,11 @@ DGProjectInfo::DGProjectInfo(QFileInfo* f) {
 	dir = nullptr;
 }
 
-DGProjectInfo::DGProjectInfo(QDir* f) {
+DGProjectInfo::DGProjectInfo(QDir* f, const LangRegistry& lr) {
 	dir = f;
 	bsys_choice = nullptr;
 	bsys_custom = nullptr;
-	catalog(false);
+	catalog(lr, false);
 	QFileInfo* info = new QFileInfo(f->absoluteFilePath(".dgproject"));
 	if(!info->isReadable()) {
 		delete info;
@@ -31,8 +33,9 @@ DGProjectInfo::DGProjectInfo(QDir* f) {
 	file = info;
 	QFile pjf(file->absoluteFilePath());
 	pjf.open(QFile::ReadOnly);
-	ConfigFile cf(pjf);
+	//ConfigFile cf(pjf);
 	//TODO: Put something in those config files.
+	pjf.close();
 }
 
 DGProjectInfo::~DGProjectInfo() {
@@ -45,16 +48,25 @@ QString DGProjectInfo::getName() const {
 	return dir?dir->dirName():file->fileName();
 }
 
-inline void DGProjectInfo::catalog(bool recursive) {
-	catalog(*dir,recursive);
+inline void DGProjectInfo::catalog(const LangRegistry& lr, bool recursive) {
+	catalog(lr,*dir,recursive);
 }
 
-void DGProjectInfo::catalog(const QDir& dir, bool recursive) {
+void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recursive) {
 	for(const QFileInfo& entry : dir.entryInfoList()) {
 		if(recursive && entry.isDir())
-			catalog(entry.absoluteDir(),true);
+			catalog(lr,entry.absoluteDir(),true);
 		else {
-			//Process file.
+			if(!recursive) {
+				bool bs = false;
+				if(lr.knowsFile(entry.fileName()))
+					bs = lr.isBuildSys(lr.getLang(entry.fileName(),false));
+				if(lr.knowsFile(entry.fileName()))
+					bs = lr.isBuildSys(lr.getLang(entry.fileName(),false));
+				if(bs)
+					this->bsys_opts.push_back(entry);
+				//May do other searching of the root directory.
+			}
 		}
 	}
 }
