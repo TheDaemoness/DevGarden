@@ -1,8 +1,11 @@
 #include "langregistry.h"
+
+#include "configfile.h"
 #include "configloader.h"
 
 #include <QFile>
 #include <QFileInfo>
+
 #include <iostream>
 
 const QString LangRegistry::DIR = "config/lang";

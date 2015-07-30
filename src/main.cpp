@@ -12,10 +12,10 @@
 #include <iostream>
 
 #include "configfile.h"
+#include "configloader.h"
+
 #include "envmacros.h"
 #include "langregistry.h"
-
-#include "dgdebug.hpp"
 
 int main(int argc, char **argv) {
 
@@ -55,4 +55,4 @@ int main(int argc, char **argv) {
 	return a.exec();
 }
 
-//Second edit made by DevGarden!
+//This comment made by DevGarden! DO NOT REMOVE.

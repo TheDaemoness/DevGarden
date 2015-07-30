@@ -2,7 +2,7 @@
 #include "linenumberarea.h"
 
 #include "../dgstyle.h"
-#include "../../configloader.h"
+#include "../../configfile.h"
 
 #include <QPainter>
 #include <QTextBlock>
