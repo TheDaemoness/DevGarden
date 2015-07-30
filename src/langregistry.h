@@ -10,6 +10,8 @@
 class LangRegistry {
 	static const QString DIR;
 	static const QString EMPTY;
+	static const QRegExp FILEEXT_PATTERN;
+
 	struct LangEntry {
 		LangEntry() {refs = 0; buildsys = false;}
 		size_t refs;
@@ -28,6 +30,8 @@ class LangRegistry {
 	inline std::map<QString,FileEntry>&        getBindMap      (bool isext)        {return isext?fileexts:filenames;}
 	inline const std::map<QString,FileEntry>&  getBindMapConst (bool isext) const  {return isext?fileexts:filenames;}
 public:
+	static QString getFileExt(const QString& filename);
+
 	LangRegistry();
 
 	//Tests for known mappings.

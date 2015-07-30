@@ -20,7 +20,6 @@ class LangRegistry;
  */
 class DGController : public QObject {
 	Q_OBJECT
-	static const QRegExp FILEEXT_PATTERN;
 public:
 	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent = 0);
 

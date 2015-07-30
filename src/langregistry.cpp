@@ -8,6 +8,12 @@
 const QString LangRegistry::DIR = "config/lang";
 const QString LangRegistry::EMPTY = "";
 
+const QRegExp LangRegistry::FILEEXT_PATTERN = QRegExp("[a-zA-Z0-9_]\\.");
+
+QString LangRegistry::getFileExt(const QString& filename) {
+	return filename.section(FILEEXT_PATTERN,-1);
+}
+
 LangRegistry::LangRegistry() {
 	std::set<QString> langset = getConfigDirs(LangRegistry::DIR.toStdString().c_str());
 	ConfigEntry* ie;
