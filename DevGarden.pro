@@ -36,11 +36,11 @@ SOURCES += \
     src/filesys/dgfileloader.cpp \
     src/ui/dgstyle.cpp \
     src/configentry.cpp \
-    src/filesys/projectfile.cpp \
     src/ui/editor/oldsynhighlighter.cpp \
     src/ui/editor/syntaxhighlighter.cpp \
     src/textmatcher.cpp \
-    src/langregistry.cpp
+    src/langregistry.cpp \
+    src/configfile.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -57,11 +57,11 @@ HEADERS  += \
     src/ui/editor/codestyle.h \
     src/ui/dgstyle.h \
     src/configentry.h \
-    src/filesys/projectfile.h \
     src/ui/editor/oldsynhighlighter.h \
     src/ui/editor/syntaxhighlighter.h \
     src/textmatcher.h \
-    src/langregistry.h
+    src/langregistry.h \
+    src/configfile.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

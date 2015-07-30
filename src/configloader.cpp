@@ -6,48 +6,21 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStringList>
-#include <algorithm>
 
-ConfigFile::ConfigFile(QFile* f) {
-	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
-		entries.insert(std::make_pair(e->firstWord(),e));
-}
-
-ConfigFile::ConfigFile(const char* name) {
-	QFile* ptr = getUtilityFileRead(name);
-	if(!ptr)
-		return;
-	this->name = name;
-	for(ConfigEntry* e = getConfigEntry(ptr); e != nullptr; e = getConfigEntry(ptr))
-		entries.insert(std::make_pair(e->firstWord(),e));
-	ptr->close();
-	delete ptr;
-}
-
-ConfigEntry* ConfigFile::at(const QString& name) const {
-	for(const auto& keyval : entries) {
-		if(keyval.first == name)
-			return keyval.second;
+QFileInfo* getUtilityFile(const QString& name) {
+	QFileInfo* f = new QFileInfo();
+	f->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
+	if(!f->exists()) {
+		f->setFile(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);
+		if(!f->exists()) {
+			delete f;
+			return nullptr;
+		}
 	}
-	return nullptr;
+	return f;
 }
 
-bool ConfigFile::insert(ConfigEntry* ce) {
-	entries.insert(std::make_pair(ce->firstWord(),ce));
-}
-
-void ConfigFile::erase(const QString& name) {
-	if(ConfigEntry* e = remove(name))
-		delete e;
-}
-
-ConfigEntry* ConfigFile::remove(const QString& name) {
-	ConfigEntry* temp = at(name);
-	entries.erase(name);
-	return temp;
-}
-
-QFile* getUtilityFileRead(const char* name) {
+QFile* getUtilityFileRead(const QString& name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	retval->open(QFile::ReadOnly);
@@ -61,7 +34,7 @@ QFile* getUtilityFileRead(const char* name) {
 	return nullptr;
 }
 
-QFile* getUtilityFileWrite(const char* name) {
+QFile* getUtilityFileWrite(const QString& name) {
 	QFile* retval = new QFile;
 	retval->setFileName(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+"/"+name);
 	retval->open(QFile::WriteOnly);
@@ -92,47 +65,47 @@ void makeConfigDirs() {
 #endif
 }
 
-static ConfigEntry* recurseGetConfigEntry(QFile* ptr, ConfigEntry* parent, size_t depth = 0) {
+static ConfigEntry* recurseGetConfigEntry(QFile& file, ConfigEntry* parent, size_t depth = 0) {
 	size_t ws_count = depth;
 	do {
-		if(!ptr->atEnd()) {
+		if(!file.atEnd()) {
 			ConfigEntry* child = nullptr;
 			if(ws_count == depth)
-				child = new ConfigEntry(ptr->readLine());
+				child = new ConfigEntry(file.readLine());
 			else if(ws_count > depth)
-				child = recurseGetConfigEntry(ptr, parent->back(), ws_count);
+				child = recurseGetConfigEntry(file, parent->back(), ws_count);
 			if(child)
 				parent->push_back(child);
 		}
 		ws_count = 0;
-		char val = ptr->peek(1)[0];
+		char val = file.peek(1)[0];
 		while(val == '\t' || val == ' ' || val == '\n' || val == '\r') {
-			ptr->read(1);
+			file.read(1);
 			if(val == '\n' || val == '\r')
 				ws_count = 0;
 			else
 				++ws_count;
-			val = ptr->peek(1)[0];
+			val = file.peek(1)[0];
 		}
-	} while(ws_count >= depth && !ptr->atEnd());
+	} while(ws_count >= depth && !file.atEnd());
 	return parent;
 }
 
-ConfigEntry* getConfigEntry(QFile* ptr) {
-	if(!ptr->isOpen() || ptr->atEnd())
+ConfigEntry* getConfigEntry(QFile& file) {
+	if(!file.isOpen() || file.atEnd())
 		return nullptr;
 	ConfigEntry* retval = new ConfigEntry;
 	size_t ws_count;
 	ws_count = 0;
-	retval->setData(ptr->readLine());
-	char val = ptr->peek(1)[0];
+	retval->setData(file.readLine());
+	char val = file.peek(1)[0];
 	while(val == '\t' || val == ' ') {
-		ptr->read(1);
+		file.read(1);
 		++ws_count;
-		val = ptr->peek(1)[0];
+		val = file.peek(1)[0];
 	}
 	if(ws_count)
-		return recurseGetConfigEntry(ptr, retval, ws_count);
+		return recurseGetConfigEntry(file, retval, ws_count);
 	return retval;
 }
 
@@ -161,7 +134,7 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 	return true;
 }
 
-std::set<QString> getConfigDirs(const char* name) {
+std::set<QString> getConfigDirs(const QString& name) {
 	std::set<QString> retval;
 	QDir local = QDir(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	QDir global = QDir(QString(DG_CONFIG_PREFIX_GLOBAL)+DG_NAME+"/"+name);

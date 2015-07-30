@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 require 'rbconfig'
-require 'FileUtils'
+require 'fileutils'
 require 'etc'
 include RbConfig
 
@@ -31,7 +31,7 @@ if !Dir.exist? _dir_global
 end
 
 if !Dir.exist? _dir_local
-    println "Making local directory...\n"
+    print "Making local directory...\n"
     Dir.mkdir _dir_local
 end
 

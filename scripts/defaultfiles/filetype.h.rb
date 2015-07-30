@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'Digest'
+require 'digest'
 
 print "header\n";
 _filename = ARGV[0].gsub(/\..+?$/,'');

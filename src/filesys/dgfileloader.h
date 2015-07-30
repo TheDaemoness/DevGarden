@@ -16,7 +16,7 @@
 class DGFileLoader { //TODO: Implement and connect.
 public:
 	struct FileRef {
-		QString path;
+		QFileInfo info;
 		QTextDocument* doc;
 		bool saved;
 		QString lang;

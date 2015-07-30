@@ -11,11 +11,11 @@
 #include <memory>
 #include <iostream>
 
+#include "configfile.h"
 #include "configloader.h"
+
 #include "envmacros.h"
 #include "langregistry.h"
-
-#include "dgdebug.hpp"
 
 int main(int argc, char **argv) {
 
@@ -35,12 +35,12 @@ int main(int argc, char **argv) {
 
 	std::cout << "Initializing..." << std::endl;
 	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
-	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader);
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
+	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
-	std::cout << "Loaded " << lr->countFileexts() << " file extension associations" << std::endl;
+	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
 	DGController ctrl(pl.get(), fl.get(), lr.get());
 	DGWindow w(&ctrl);
@@ -55,4 +55,4 @@ int main(int argc, char **argv) {
 	return a.exec();
 }
 
-//Second edit made by DevGarden!
+//This comment made by DevGarden! DO NOT REMOVE.

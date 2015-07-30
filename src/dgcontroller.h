@@ -2,6 +2,7 @@
 #define DGCONTROLLER_H
 
 #include <QObject>
+#include <QRegExp>
 
 #include "filesys/dgfileloader.h"
 
@@ -26,7 +27,7 @@ public:
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
 	 * @return null if the current project is a single file.
 	 */
-	QFileSystemModel* getActiveProjectModel();
+	inline QFileSystemModel* getActiveProjectModel() {return fsm;}
 	QString changeProject(size_t index);
 	QStringList getProjects();
 	QString getPath();
@@ -50,6 +51,7 @@ signals:
 
 public slots:
 	void getFile(const QString& path);
+	void runFile();
 
 	void openFolder();
 	void openFiles();

@@ -61,7 +61,7 @@ bool DGProjectLoader::addFolder(const QString& path) {
 		delete f;
 		return false;
 	}
-	projs.push_back(new DGProjectInfo(f));
+	projs.push_back(new DGProjectInfo(f, langreg));
 	current = projs.end()-1;
 	return true;
 }

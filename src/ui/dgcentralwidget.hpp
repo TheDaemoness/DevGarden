@@ -32,7 +32,7 @@ public:
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
 
-	enum class ButtonIdLower: size_t {
+	enum ButtonIdLower {
 		SETUP = 0,
 		REGEN,
 		BUILD,
@@ -72,10 +72,11 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QHBoxLayout *bottomBar, *mainLayout; // Placeholder
-	QVBoxLayout *splitViewPane, *leftSideLayout; // Placeholder
+	QHBoxLayout *bottomBar, *mainLayout;
+	QVBoxLayout *splitViewPane, *leftSideLayout;
 	QPushButton* bottomButton;
 
+	//WARNING: Arrangement of elements in this array is CRITICAL!
 	std::vector<QPushButton*> buttonsLower;
 	std::map<QString,QPushButton*> buttonsSide;
 
