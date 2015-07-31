@@ -26,6 +26,8 @@ LangRegistry::LangRegistry() {
 			ConfigFile cf(*f);
 			LangEntry le;
 			QString interpreter;
+			if((ie = cf.at("name")))
+				le.name = ie->getData(0)->mid(5);
 			if((ie = cf.at("build-sys"))) {
 				le.buildsys = true;
 				interpreter = "%scripts/build/"+lang+"/run.rb";
@@ -63,6 +65,16 @@ LangRegistry::LangRegistry() {
 			delete f;
 		}
 	}
+}
+
+const QString& LangRegistry::getHumanName(const QString& lang) {
+	auto it = langs.find(lang);
+	if(it != langs.end()) {
+		if(it->second.name.isEmpty())
+			return it->first;
+		return it->second.name;
+	}
+	return LangRegistry::EMPTY;
 }
 
 bool LangRegistry::isBuildSys(const QString& lang) const {

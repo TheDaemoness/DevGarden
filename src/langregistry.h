@@ -16,6 +16,7 @@ class LangRegistry {
 		LangEntry() {refs = 0; buildsys = false;}
 		size_t refs;
 		bool buildsys;
+		QString name;
 	};
 	struct FileEntry {
 		explicit FileEntry(const QString& lang) {this->lang = lang;}
@@ -37,6 +38,11 @@ public:
 	//Tests for known mappings.
 	inline bool knowsFile(const QString& name, bool isext = true) const {return getBindMapConst(isext).count(name);}
 	inline bool knowsLang(const QString& lang) const {return langs.count(lang);}
+
+	/**
+	 * @brief Gets the untranslated name of a language for use in any UI elements.
+	 */
+	const QString& getHumanName(const QString& lang);
 
 	/**
 	 * @brief Get the corresponding language for a file extension or name
