@@ -193,6 +193,8 @@ QString DGController::changeProject(size_t index) {
 			fsm = new QFileSystemModel();
 		const QString& retval = pl->getCurrent()->getDir()->absolutePath();
 		fsm->setRootPath(retval);
+		dgw->centralWidget->buttonsLower.at(DGCentralWidget::BUILD)->
+			setHidden(!pl->getCurrent()->hasBuildSys());
 		emit sigProjectChanged();
 		return retval;
 	}
