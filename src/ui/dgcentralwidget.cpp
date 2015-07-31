@@ -79,15 +79,15 @@ void DGCentralWidget::createWidgets()
 	// Bottom Bar
 	bottomBar = new QHBoxLayout();
 	buttonsLower.reserve(BUTTON_LOWER_COUNT);
-	buttonsLower.push_back(makeButton("Setup", 64, 32));
-	buttonsLower.push_back(makeButton("Regen", 64, 32));
-	buttonsLower.push_back(makeButton("Build", 64, 32));
+	buttonsLower.push_back(makeButton("Setup", 56, 32));
+	buttonsLower.push_back(makeButton("Regen", 56, 32));
+	buttonsLower.push_back(makeButton("Build", 56, 32));
 	buttonsLower.push_back(makeButton("Rebuild", 72, 32));
 	buttonsLower.push_back(makeButton("Run", 56, 32));
 	buttonsLower.push_back(makeButton("Run File", 72, 32));
-	buttonsLower.push_back(makeButton("Debug", 64, 32));
+	buttonsLower.push_back(makeButton("Test", 56, 32));
+	buttonsLower.push_back(makeButton("Debug", 56, 32));
 	buttonsLower.push_back(makeButton("Analyze", 72, 32));
-	buttonsLower.push_back(makeButton("Deploy", 64, 32));
 	for(QPushButton* butt : buttonsLower) {
 		bottomBar->addWidget(butt);
 		butt->setHidden(true);

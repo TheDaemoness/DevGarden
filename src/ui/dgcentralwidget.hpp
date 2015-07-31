@@ -39,9 +39,9 @@ public:
 		REBULD,
 		RUN,
 		RUNFILE,
+		TEST,
 		DEBUG,
-		ANALYZE,
-		RELEASE
+		ANALYZE
 	};
 	const static size_t BUTTON_LOWER_COUNT = 9;
 
