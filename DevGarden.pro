@@ -40,7 +40,8 @@ SOURCES += \
     src/ui/editor/syntaxhighlighter.cpp \
     src/textmatcher.cpp \
     src/langregistry.cpp \
-    src/configfile.cpp
+    src/configfile.cpp \
+    src/ui/dgmenu.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -61,7 +62,8 @@ HEADERS  += \
     src/ui/editor/syntaxhighlighter.h \
     src/textmatcher.h \
     src/langregistry.h \
-    src/configfile.h
+    src/configfile.h \
+    src/ui/dgmenu.h
 
 TRANSLATIONS = DevGarden_fr.ts
 
