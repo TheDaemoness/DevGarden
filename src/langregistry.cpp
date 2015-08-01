@@ -67,7 +67,16 @@ LangRegistry::LangRegistry() {
 	}
 }
 
-const QString& LangRegistry::getHumanName(const QString& lang) {
+std::set<QString> LangRegistry::getBuildSysSet() const {
+	std::set<QString> retval;
+	for(auto& pair : langs) {
+		if(pair.second.buildsys)
+			retval.insert(pair.first);
+	}
+	return retval;
+}
+
+const QString& LangRegistry::getHumanName(const QString& lang) const {
 	auto it = langs.find(lang);
 	if(it != langs.end()) {
 		if(it->second.name.isEmpty())
