@@ -17,7 +17,7 @@ public:
 	explicit DGMenu(QMenu* menu) {this->menu = menu;}
 	inline QMenu& getMenu() {return *menu;}
 
-	DGMenu* addAction(const QString& id, const QString& text);
+	DGMenu* addAction(const QString& id, const QString& text, bool enabled = false);
 	DGMenu* addMenu(const QString& text); //Uses new, remember to free the DGMenu returned by this.
 	DGMenu* addSeparator();
 

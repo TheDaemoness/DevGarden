@@ -1,7 +1,9 @@
 #include "dgmenu.h"
 
-DGMenu* DGMenu::addAction(const QString& id, const QString& text) {
-	items.insert(std::make_pair(id,menu->addAction(tr(text.toLocal8Bit()))));
+DGMenu* DGMenu::addAction(const QString& id, const QString& text, bool enabled) {
+	QAction* act = menu->addAction(tr(text.toLocal8Bit()));
+	act->setEnabled(enabled);
+	items.insert(std::make_pair(id,act));
 	return this;
 }
 
