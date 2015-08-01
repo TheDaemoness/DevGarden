@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 
-#include "../dgcontroller.h"
+#include "dgmenu.h"
 
 class DGCentralWidget;
 class ConfigFile;
+class DGController;
 
 /**
  * @brief The main window. Contains no widgets.
@@ -38,7 +39,9 @@ private:
 
 	QMenuBar* bar;
 	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
-	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildInit, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
+	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
+
+	DGMenu *menuBuildInit;
 
 	DGCentralWidget* centralWidget;
 };

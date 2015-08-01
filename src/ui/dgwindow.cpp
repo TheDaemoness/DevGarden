@@ -7,11 +7,12 @@
 #include <QMenuBar>
 
 #include "../configloader.h"
+#include "../dgcontroller.h"
 
 DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMainWindow(parent)
 {
-	this->setWindowTitle("DevGarden");
+	this->setWindowTitle(DG_NAME);
 	this->resize(1080,640);
 	this->setMinimumSize(560,240);
 	ctrl = dgc;
@@ -74,19 +75,14 @@ void DGWindow::createMenuActions() {
 	menuEdit->addAction(tr("Comment Selection"));
 
 	menuBuild = menuBar()->addMenu(tr("&Build"));
-	menuBuildInit = menuBuild->addMenu(tr("Create Build System"));
-	menuBuildInit->addAction(tr("CMake..."));
-	menuBuildInit->addAction(tr("QMake..."));
-	menuBuildInit->addAction(tr("GNU Make..."));
+	menuBuildInit = new DGMenu(menuBuild->addMenu(tr("Create Build System")));
+	menuBuildInit->addAction("GMake","GNU Make...");
+
 	menuBuild->addAction(tr("Regen Build Scripts"));
 	menuBuild->addAction(tr("Cancel Build"));
 	menuBuild->addAction(tr("Build Settings..."));
 	menuBuild->addSeparator();
-	menuBuildBuild = menuBuild->addMenu(tr("Build"));
-	menuBuildBuild->addAction(tr("Last Target"));
-	menuBuildBuild->addAction(tr("Debug"));
-	menuBuildBuild->addAction(tr("Release"));
-	menuBuildBuild->addAction(tr("Custom..."));
+	menuBuild->addAction(tr("Build"));
 	menuBuild->addAction(tr("Rebuild"));
 	menuBuild->addAction(tr("Clean"));
 	menuBuild->addAction(tr("Deploy"));
@@ -102,7 +98,11 @@ void DGWindow::createMenuActions() {
 
 	menuDebug = menuBar()->addMenu(tr("&Run/Debug"));
 	menuDebug->addAction(tr("Run"));
+	menuDebug->addAction(tr("Set ARGV..."));
 	menuDebug->addAction(tr("Run Settings..."));
+	menuDebug->addSeparator();
+	menuDebug->addAction(tr("Run Test"));
+	menuDebug->addAction(tr("Test Settings..."));
 	menuDebug->addSeparator();
 	menuDebug->addAction(tr("Debug"));
 	menuDebug->addAction(tr("Debug External Application..."));
@@ -183,4 +183,6 @@ void DGWindow::zoomReset()  {this->centralWidget->getEditor()->fontSizeRes();}
 
 void DGWindow::nullSlot() {}
 
-DGWindow::~DGWindow() {}
+DGWindow::~DGWindow() {
+	delete menuBuildInit;
+}

@@ -16,6 +16,7 @@
 
 #include "envmacros.h"
 #include "langregistry.h"
+#include "dgcontroller.h"
 
 int main(int argc, char **argv) {
 
