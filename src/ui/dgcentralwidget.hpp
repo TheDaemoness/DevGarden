@@ -27,6 +27,7 @@ class DGCentralWidget : public QWidget
 	Q_OBJECT
 
 	friend class DGController;
+	friend class DGWindow;
 public:
 	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
@@ -36,7 +37,7 @@ public:
 		SETUP = 0,
 		REGEN,
 		BUILD,
-		REBULD,
+		REBUILD,
 		RUN,
 		RUNFILE,
 		TEST,

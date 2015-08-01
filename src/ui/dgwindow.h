@@ -23,6 +23,9 @@ public:
 	~DGWindow();
 	void configure(ConfigFile& f);
 
+public slots:
+	void setControlsBuildEnabled(bool enabled);
+
 private:
 	void createMenuActions(const LangRegistry& lr);
 
@@ -40,9 +43,10 @@ private:
 	DGController* ctrl;
 
 	QMenuBar* bar;
-	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
+	QMenu *menuFile, *menuEdit, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
 	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
 
+	DGMenu *menuBuild;
 	DGMenu *menuBuildInit;
 
 	DGCentralWidget* centralWidget;

@@ -5,6 +5,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMenuBar>
+#include <QPushButton>
 
 #include "../configloader.h"
 #include "../dgcontroller.h"
@@ -29,6 +30,14 @@ DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
 
 void DGWindow::configure(ConfigFile& f) {
 	this->centralWidget->getEditor()->configure(f);
+}
+
+void DGWindow::setControlsBuildEnabled(bool enabled) {
+	this->centralWidget->buttonsLower[DGCentralWidget::BUILD]->setHidden(!enabled);
+	this->centralWidget->buttonsLower[DGCentralWidget::REBUILD]->setHidden(!enabled);
+	this->menuBuild->getAction("Build")->setEnabled(enabled);
+	this->menuBuild->getAction("Rebuild")->setEnabled(enabled);
+	this->menuBuild->getAction("Clean")->setEnabled(enabled);
 }
 
 void DGWindow::createMenuActions(const LangRegistry& lr) {
@@ -75,8 +84,8 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuEdit->addAction(tr("Format Selection"));
 	menuEdit->addAction(tr("Comment Selection"));
 
-	menuBuild = menuBar()->addMenu(tr("&Build"));
-	menuBuildInit = new DGMenu(menuBuild->addMenu(tr("Create Build System")));
+	menuBuild = new DGMenu(menuBar()->addMenu(tr("&Build")));
+	menuBuildInit = menuBuild->addMenu(tr("Create Build System"));
 	std::set<QString> bses = lr.getBuildSysSet();
 	if(!bses.empty()) {
 		for(const QString& bs : bses)
@@ -85,22 +94,18 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 		menuBuildInit->getMenu().setDisabled(true);
 
 	menuBuild->addAction(tr("Regen Build Scripts"));
-	menuBuild->addAction(tr("Cancel Build"));
+	menuBuild->addAction(tr("Set Target..."));
 	menuBuild->addAction(tr("Build Settings..."));
 	menuBuild->addSeparator();
-	menuBuild->addAction(tr("Build"));
-	menuBuild->addAction(tr("Rebuild"));
+	menuBuild->addAction(tr("Build"), QKeySequence(tr("Ctrl+B")));
+	menuBuild->addAction(tr("Rebuild"), QKeySequence(tr("Shift+Ctrl+B")));
 	menuBuild->addAction(tr("Clean"));
-	menuBuild->addAction(tr("Deploy"));
+	menuBuild->addAction(tr("Cancel Build"), QKeySequence(tr("Alt+B")));
 	menuBuild->addSeparator();
-	menuBuildBuildAll = menuBuild->addMenu(tr("Build All"));
-	menuBuildBuildAll->addAction(tr("Last Target"));
-	menuBuildBuildAll->addAction(tr("Debug"));
-	menuBuildBuildAll->addAction(tr("Release"));
-	menuBuildBuildAll->addAction(tr("Custom..."));
-	menuBuild->addAction(tr("Rebuild All"));
-	menuBuild->addAction(tr("Clean All"));
-	menuBuild->addAction(tr("Deploy All"));
+	menuBuild->addAction(tr("Make Release"));
+	menuBuild->addAction(tr("Install Release"));
+	menuBuild->addAction(tr("Deploy Release"));
+	menuBuild->addAction(tr("Release Settings..."));
 
 	menuDebug = menuBar()->addMenu(tr("&Run/Debug"));
 	menuDebug->addAction(tr("Run"));
@@ -108,6 +113,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuDebug->addAction(tr("Run Settings..."));
 	menuDebug->addSeparator();
 	menuDebug->addAction(tr("Run Test"));
+	menuDebug->addAction(tr("Set Test ARGV..."));
 	menuDebug->addAction(tr("Test Settings..."));
 	menuDebug->addSeparator();
 	menuDebug->addAction(tr("Debug"));
