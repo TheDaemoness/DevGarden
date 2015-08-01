@@ -15,10 +15,10 @@ case CONFIG['host_os']
 when /mswin|windows|cygwin/i
 
 when /darwin/i
-    _runcmd = ["osascript", "-e", "tell application \"Terminal\"\n\tactivate\n\tdo script \"" <<
-        _torun.sub!('\\','\\\\\\\\') << "; exit\"\nend tell"]
+    _runcmd = ["osascript", "-e", "tell application \"Terminal\"\n\tactivate\n\tdo script \"" +
+        _torun.sub('\\','\\\\\\\\') + "; exit\"\nend tell"]
 when /linux/i
-    _runcmd = [`sh -c 'echo $TERM'`, "-e", _torun.sub!('\\','\\\\') << "; exit"]
+    _runcmd = [`sh -c 'echo $TERM'`, "-e", _torun.sub('\\','\\\\') + "; exit"]
 end
 
 exec *_runcmd;
