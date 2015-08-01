@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
 	DGController ctrl(pl.get(), fl.get(), lr.get());
-	DGWindow w(&ctrl);
+	DGWindow w(&ctrl, *lr);
 	ctrl.setView(&w);
 
 	w.configure(f);

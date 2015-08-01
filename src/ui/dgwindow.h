@@ -6,8 +6,10 @@
 #include "dgmenu.h"
 
 class DGCentralWidget;
-class ConfigFile;
 class DGController;
+
+class ConfigFile;
+class LangRegistry;
 
 /**
  * @brief The main window. Contains no widgets.
@@ -17,12 +19,12 @@ class DGWindow : public QMainWindow {
 
 	friend class DGController;
 public:
-	explicit DGWindow(DGController* dgc, QWidget *parent = 0);
+	explicit DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent = 0);
 	~DGWindow();
 	void configure(ConfigFile& f);
 
 private:
-	void createMenuActions();
+	void createMenuActions(const LangRegistry& lr);
 
 private slots:
 	void openProjectPage();

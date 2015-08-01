@@ -8,8 +8,9 @@
 
 #include "../configloader.h"
 #include "../dgcontroller.h"
+#include "../langregistry.h"
 
-DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
+DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
 	QMainWindow(parent)
 {
 	this->setWindowTitle(DG_NAME);
@@ -20,7 +21,7 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
 
-	createMenuActions();
+	createMenuActions(lr);
 
 	centralWidget = new DGCentralWidget(dgc, this);
 	setCentralWidget(centralWidget);
@@ -30,7 +31,7 @@ void DGWindow::configure(ConfigFile& f) {
 	this->centralWidget->getEditor()->configure(f);
 }
 
-void DGWindow::createMenuActions() {
+void DGWindow::createMenuActions(const LangRegistry& lr) {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
 	QMenu* newMenu = menuFile->addMenu(tr("New"));
@@ -76,7 +77,12 @@ void DGWindow::createMenuActions() {
 
 	menuBuild = menuBar()->addMenu(tr("&Build"));
 	menuBuildInit = new DGMenu(menuBuild->addMenu(tr("Create Build System")));
-	menuBuildInit->addAction("GMake","GNU Make...");
+	std::set<QString> bses = lr.getBuildSysSet();
+	if(!bses.empty()) {
+		for(const QString& bs : bses)
+			menuBuildInit->addAction(bs,lr.getHumanName(bs)+"...");
+	} else
+		menuBuildInit->getMenu().setDisabled(true);
 
 	menuBuild->addAction(tr("Regen Build Scripts"));
 	menuBuild->addAction(tr("Cancel Build"));
