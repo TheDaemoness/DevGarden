@@ -43,11 +43,11 @@ private:
 	DGController* ctrl;
 
 	QMenuBar* bar;
-	QMenu *menuFile, *menuEdit, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
-	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
+	QMenu *menuFile, *menuEdit, *menuVersion, *menuWindow, *menuHelp;
+	QMenu *menuFileNew, *menuVersionInit;
 
-	DGMenu *menuBuild;
-	DGMenu *menuBuildInit;
+	std::unique_ptr<DGMenu> menuBuild, menuRun;
+	std::unique_ptr<DGMenu> menuBuildInit, menuRunDebug, menuRunAnalyze;
 
 	DGCentralWidget* centralWidget;
 };

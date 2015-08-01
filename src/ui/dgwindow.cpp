@@ -84,8 +84,8 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuEdit->addAction(tr("Format Selection"));
 	menuEdit->addAction(tr("Comment Selection"));
 
-	menuBuild = new DGMenu(menuBar()->addMenu(tr("&Build")));
-	menuBuildInit = menuBuild->addMenu(tr("Create Build System"));
+	menuBuild.reset(new DGMenu(menuBar()->addMenu(tr("&Build"))));
+	menuBuildInit.reset(menuBuild->addMenu(tr("Create Build System")));
 	std::set<QString> bses = lr.getBuildSysSet();
 	if(!bses.empty()) {
 		for(const QString& bs : bses)
@@ -107,38 +107,36 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuBuild->addAction(tr("Deploy Release"));
 	menuBuild->addAction(tr("Release Settings..."));
 
-	menuDebug = menuBar()->addMenu(tr("&Run/Debug"));
-	menuDebug->addAction(tr("Run"));
-	menuDebug->addAction(tr("Set ARGV..."));
-	menuDebug->addAction(tr("Run Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Run Test"));
-	menuDebug->addAction(tr("Set Test ARGV..."));
-	menuDebug->addAction(tr("Test Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Debug"));
-	menuDebug->addAction(tr("Debug External Application..."));
-	menuDebug->addAction(tr("Load Core File..."));
-	menuDebug->addAction(tr("Show Debug Window"));
-	menuDebug->addAction(tr("Debugger Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Interrupt"));
-	menuDebug->addAction(tr("Continue"));
-	menuDebug->addAction(tr("Toggle Breakpoint"));
-	menuDebug->addAction(tr("Step Over"));
-	menuDebug->addAction(tr("Step Into"));
-	menuDebug->addSeparator();
-	menuDebugAnalyze = menuDebug->addMenu(tr("Analyze"));
-	menuDebugAnalyze->addAction(tr("Memory Checker"));
-	menuDebugAnalyze->addAction(tr("Thread Checker"));
-	menuDebugAnalyze->addAction(tr("Call Graph"));
-	menuDebugAnalyze->addAction(tr("Cache Profiler"));
-	menuDebugAnalyze->addAction(tr("Heap Profiler"));
-	menuDebug->addAction(tr("Analyze External Application..."));
-	menuDebug->addAction(tr("Analysis Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Test"));
-	menuDebug->addAction(tr("Test Settings..."));
+	menuRun.reset(new DGMenu(menuBar()->addMenu(tr("&Run/Debug"))));
+	menuRun->addAction(tr("Run"));
+	menuRun->addAction(tr("Set ARGV..."));
+	menuRun->addAction(tr("Run Settings..."));
+	menuRun->addSeparator();
+	menuRun->addAction(tr("Run Test"));
+	menuRun->addAction(tr("Set Test ARGV..."));
+	menuRun->addAction(tr("Test Settings..."));
+	menuRun->addSeparator();
+	menuRunDebug.reset(menuRun->addMenu("Debugging"));
+	menuRunDebug->addAction(tr("Debug"));
+	menuRunDebug->addAction(tr("Load Core File..."));
+	menuRunDebug->addAction(tr("Show Debug Window"));
+	menuRunDebug->addSeparator();
+	menuRunDebug->addAction(tr("Interrupt"));
+	menuRunDebug->addAction(tr("Continue"));
+	menuRunDebug->addAction(tr("Toggle Breakpoint"));
+	menuRunDebug->addAction(tr("Step Over"));
+	menuRunDebug->addAction(tr("Step Into"));
+	menuRun->addAction(tr("Debug External Application..."));
+	menuRun->addAction(tr("Debugger Settings..."));
+	menuRun->addSeparator();
+	menuRunAnalyze.reset(menuRun->addMenu("Analysis"));
+	menuRunAnalyze->addAction(tr("Memory Checker"));
+	menuRunAnalyze->addAction(tr("Thread Checker"));
+	menuRunAnalyze->addAction(tr("Call Graph"));
+	menuRunAnalyze->addAction(tr("Cache Profiler"));
+	menuRunAnalyze->addAction(tr("Heap Profiler"));
+	menuRun->addAction(tr("Analyze External Application..."));
+	menuRun->addAction(tr("Analysis Settings..."));
 
 	menuVersion = menuBar()->addMenu(tr("&VCS"));
 	menuVersionInit = menuVersion->addMenu(tr("Create Repository"));
@@ -195,6 +193,4 @@ void DGWindow::zoomReset()  {this->centralWidget->getEditor()->fontSizeRes();}
 
 void DGWindow::nullSlot() {}
 
-DGWindow::~DGWindow() {
-	delete menuBuildInit;
-}
+DGWindow::~DGWindow() {}
