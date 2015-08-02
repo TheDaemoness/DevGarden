@@ -85,7 +85,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuEdit->addAction(tr("Comment Selection"));
 
 	menuBuild.reset(new DGMenu(menuBar()->addMenu(tr("&Build"))));
-	menuBuildInit.reset(menuBuild->addMenu(tr("Create Build System")));
+	menuBuildInit.reset(menuBuild->addMenu("Create Build System"));
 	std::set<QString> bses = lr.getBuildSysSet();
 	if(!bses.empty()) {
 		for(const QString& bs : bses)
@@ -93,50 +93,50 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	} else
 		menuBuildInit->getMenu().setDisabled(true);
 
-	menuBuild->addAction(tr("Regen Build Scripts"));
-	menuBuild->addAction(tr("Set Target..."));
-	menuBuild->addAction(tr("Build Settings..."));
+	menuBuild->addAction("Regen Build Scripts");
+	menuBuild->addAction("Set Target...");
+	menuBuild->addAction("Build Settings...");
 	menuBuild->addSeparator();
-	menuBuild->addAction(tr("Build"), QKeySequence(tr("Ctrl+B")));
-	menuBuild->addAction(tr("Rebuild"), QKeySequence(tr("Shift+Ctrl+B")));
-	menuBuild->addAction(tr("Clean"));
-	menuBuild->addAction(tr("Cancel Build"), QKeySequence(tr("Alt+B")));
+	menuBuild->addAction("Build"), QKeySequence(tr("Ctrl+B"));
+	menuBuild->addAction("Rebuild"), QKeySequence(tr("Shift+Ctrl+B"));
+	menuBuild->addAction("Clean");
+	menuBuild->addAction("Cancel Build"), QKeySequence(tr("Alt+B"));
 	menuBuild->addSeparator();
-	menuBuild->addAction(tr("Make Release"));
-	menuBuild->addAction(tr("Install Release"));
-	menuBuild->addAction(tr("Deploy Release"));
-	menuBuild->addAction(tr("Release Settings..."));
+	menuBuild->addAction("Make Release");
+	menuBuild->addAction("Install Release");
+	menuBuild->addAction("Deploy Release");
+	menuBuild->addAction("Release Settings...");
 
 	menuRun.reset(new DGMenu(menuBar()->addMenu(tr("&Run/Debug"))));
-	menuRun->addAction(tr("Run"));
-	menuRun->addAction(tr("Set ARGV..."));
-	menuRun->addAction(tr("Run Settings..."));
+	menuRun->addAction("Run");
+	menuRun->addAction("Set ARGV...");
+	menuRun->addAction("Run Settings...");
 	menuRun->addSeparator();
-	menuRun->addAction(tr("Run Test"));
-	menuRun->addAction(tr("Set Test ARGV..."));
-	menuRun->addAction(tr("Test Settings..."));
+	menuRun->addAction("Run Test");
+	menuRun->addAction("Set Test ARGV...");
+	menuRun->addAction("Test Settings...");
 	menuRun->addSeparator();
 	menuRunDebug.reset(menuRun->addMenu("Debugging"));
-	menuRunDebug->addAction(tr("Debug"));
-	menuRunDebug->addAction(tr("Load Core File..."));
-	menuRunDebug->addAction(tr("Show Debug Window"));
+	menuRunDebug->addAction("Debug");
+	menuRunDebug->addAction("Load Core File...");
+	menuRunDebug->addAction("Show Debug Window");
 	menuRunDebug->addSeparator();
-	menuRunDebug->addAction(tr("Interrupt"));
-	menuRunDebug->addAction(tr("Continue"));
-	menuRunDebug->addAction(tr("Toggle Breakpoint"));
-	menuRunDebug->addAction(tr("Step Over"));
-	menuRunDebug->addAction(tr("Step Into"));
-	menuRun->addAction(tr("Debug External Application..."));
-	menuRun->addAction(tr("Debugger Settings..."));
+	menuRunDebug->addAction("Interrupt");
+	menuRunDebug->addAction("Continue");
+	menuRunDebug->addAction("Toggle Breakpoint");
+	menuRunDebug->addAction("Step Over");
+	menuRunDebug->addAction("Step Into");
+	menuRun->addAction("Debug External Application...");
+	menuRun->addAction("Debugger Settings...");
 	menuRun->addSeparator();
 	menuRunAnalyze.reset(menuRun->addMenu("Analysis"));
-	menuRunAnalyze->addAction(tr("Memory Checker"));
-	menuRunAnalyze->addAction(tr("Thread Checker"));
-	menuRunAnalyze->addAction(tr("Call Graph"));
-	menuRunAnalyze->addAction(tr("Cache Profiler"));
-	menuRunAnalyze->addAction(tr("Heap Profiler"));
-	menuRun->addAction(tr("Analyze External Application..."));
-	menuRun->addAction(tr("Analysis Settings..."));
+	menuRunAnalyze->addAction("Memory Checker");
+	menuRunAnalyze->addAction("Thread Checker");
+	menuRunAnalyze->addAction("Call Graph");
+	menuRunAnalyze->addAction("Cache Profiler");
+	menuRunAnalyze->addAction("Heap Profiler");
+	menuRun->addAction("Analyze External Application...");
+	menuRun->addAction("Analysis Settings...");
 
 	menuVersion = menuBar()->addMenu(tr("&VCS"));
 	menuVersionInit = menuVersion->addMenu(tr("Create Repository"));
