@@ -1,7 +1,7 @@
-#include "dgfileloader.h"
+#include "dgfilecache.h"
 
 #include <QString>
 
-DGFileLoader::DGFileLoader() {
+DGFileCache::DGFileCache() {
 	current.push_back({QFileInfo(""),nullptr,true});
 }

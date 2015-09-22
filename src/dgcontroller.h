@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QRegExp>
 
-#include "filesys/dgfileloader.h"
+#include "filesys/dgfilecache.h"
 
 class QFileSystemModel;
 class QString;
@@ -21,7 +21,7 @@ class LangRegistry;
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -77,12 +77,12 @@ public slots:
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.
-	DGFileLoader::FileRef curr_file;
+	DGFileCache::FileRef curr_file;
 
 	DGWindow* dgw;
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* pl;
-	DGFileLoader* fl;
+	DGFileCache* fl;
 	LangRegistry* lr;
 };
 

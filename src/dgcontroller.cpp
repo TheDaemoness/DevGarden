@@ -1,13 +1,13 @@
 #include "dgcontroller.h"
 
 #include "filesys/dgprojectloader.h"
-#include "filesys/dgfileloader.h"
+#include "filesys/dgfilecache.h"
 
 #include "ui/dgwindow.h"
 #include "ui/dgcentralwidget.hpp"
 #include "ui/editor/codeeditorwidget.h"
 
-#include "configloader.h"
+#include "utils.h"
 #include "langregistry.h"
 
 #include <QFileDialog>
@@ -15,7 +15,7 @@
 #include <QTextDocument>
 #include <QPushButton>
 
-DGController::DGController(DGProjectLoader* pl, DGFileLoader* fl, LangRegistry* lr, QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
 	this->pl = pl;

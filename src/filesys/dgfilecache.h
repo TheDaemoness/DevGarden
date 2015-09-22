@@ -13,7 +13,7 @@
  * @brief Prototype reference-counting file loader.
  * @deprecated INCOMPLETE, DO NOT USE!
  */
-class DGFileLoader { //TODO: Implement and connect.
+class DGFileCache { //TODO: Implement and connect.
 public:
 	struct FileRef {
 		QFileInfo info;
@@ -33,7 +33,7 @@ private:
 	bool isVisible(const FileData& dat) {return dat.refcount;}
 public:
 
-	DGFileLoader();
+	DGFileCache();
 	void fileEdited(size_t index = 0);
 	void saveCurrentAs(const QString& path);
 

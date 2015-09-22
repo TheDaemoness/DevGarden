@@ -1,7 +1,7 @@
 #include "langregistry.h"
 
 #include "configfile.h"
-#include "configloader.h"
+#include "utils.h"
 
 #include <QFile>
 #include <QFileInfo>

@@ -7,7 +7,7 @@
 #include <QMenuBar>
 #include <QPushButton>
 
-#include "../configloader.h"
+#include "../utils.h"
 #include "../dgcontroller.h"
 #include "../langregistry.h"
 
@@ -49,6 +49,8 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	newMenu->addAction(tr("Project..."), this, SLOT(nullSlot()));
 	menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
 	menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
+	menuFile->addAction(tr("Open Remote Folder/Project..."));
+	menuFile->addAction(tr("Open Remote Files..."));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
 	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
@@ -93,6 +95,8 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	} else
 		menuBuildInit->getMenu().setDisabled(true);
 
+	menuBuild->addAction("Set Build System...");
+	menuBuild->addAction("Update Build Scripts");
 	menuBuild->addAction("Regen Build Scripts");
 	menuBuild->addAction("Set Target...");
 	menuBuild->addAction("Build Settings...");

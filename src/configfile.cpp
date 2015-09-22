@@ -1,6 +1,6 @@
 #include "configfile.h"
 
-#include "configloader.h"
+#include "utils.h"
 
 #include <QFile>
 
