@@ -71,6 +71,10 @@ public slots:
 	void newTemplateFile();
 	void newTemplateProject();
 
+	void build();
+	void clean();
+	void rebuild() {clean(); build();}
+
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.
 	DGFileLoader::FileRef curr_file;

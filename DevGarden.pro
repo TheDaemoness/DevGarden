@@ -41,7 +41,8 @@ SOURCES += \
     src/textmatcher.cpp \
     src/langregistry.cpp \
     src/configfile.cpp \
-    src/ui/dgmenu.cpp
+    src/ui/dgmenu.cpp \
+    src/buildcontroller.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -63,7 +64,8 @@ HEADERS  += \
     src/textmatcher.h \
     src/langregistry.h \
     src/configfile.h \
-    src/ui/dgmenu.h
+    src/ui/dgmenu.h \
+    src/buildcontroller.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

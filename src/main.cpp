@@ -13,6 +13,7 @@
 
 #include "configfile.h"
 #include "configloader.h"
+#include "buildcontroller.h"
 
 #include "envmacros.h"
 #include "langregistry.h"
@@ -38,6 +39,7 @@ int main(int argc, char **argv) {
 	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
+	std::unique_ptr<BuildController> bc(new BuildController(*pl));
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;

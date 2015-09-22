@@ -239,3 +239,11 @@ void DGController::reloadFile() {
 
 void DGController::newTemplateFile() {}
 void DGController::newTemplateProject() {}
+
+void DGController::build() {
+
+}
+
+void DGController::clean() {
+
+}
