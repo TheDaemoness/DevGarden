@@ -14,6 +14,7 @@
 #include <QFileSystemModel>
 #include <QTextDocument>
 #include <QPushButton>
+#include <QLabel>
 
 DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, QObject *parent) :
 	QObject(parent) {
@@ -101,6 +102,7 @@ void DGController::getFile(const QString& path) {
 	const QString ext = LangRegistry::getFileExt(fn);
 	const bool isext = fn != ext;
 	curr_file.lang = lr->getLang(ext, isext);
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
 		setHidden(!(curr_file.info.isExecutable() ||
 					(curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext, isext))));
@@ -121,7 +123,10 @@ void DGController::runFile() {
 }
 
 void DGController::fileEdited() {
+	if(!curr_file.doc)
+		curr_file.doc = dgw->centralWidget->getEditor()->document();
 	curr_file.saved = false;
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::closeFile() {
@@ -235,6 +240,21 @@ void DGController::newFile() {
 void DGController::reloadFile() {
 	this->curr_file.saved = true;
 	this->getFile(this->curr_file.info.absoluteFilePath());
+}
+
+QString DGController::getFormattedFileInfo() {
+	size_t lines = curr_file.doc?curr_file.doc->lineCount():1;
+	auto ptr = pl->getCurrent();
+	QString filename;
+	if(!ptr)
+		filename = "No File";
+	else if(ptr->isSingleFile())
+		filename = curr_file.info.exists()?curr_file.info.absoluteFilePath():"No File";
+	else
+		filename = curr_file.info.exists()?ptr->getDir()->relativeFilePath(curr_file.info.filePath()):"No File";
+	return filename + (!curr_file.lang.isEmpty()?" - "+curr_file.lang:"") + " - " +
+						QString::number(lines) + (lines==1?" line":" lines")
+						+ (!curr_file.saved?" - Unsaved":"");
 }
 
 void DGController::newTemplateFile() {}

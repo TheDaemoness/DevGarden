@@ -71,6 +71,8 @@ public slots:
 	void newTemplateFile();
 	void newTemplateProject();
 
+	QString getFormattedFileInfo();
+
 	void build();
 	void clean();
 	void rebuild() {clean(); build();}

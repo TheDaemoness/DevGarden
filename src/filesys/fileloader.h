@@ -10,14 +10,17 @@
 #include <QFile>
 #include <memory>
 
+class QTextDocument;
+
 class FileLoader {
 protected:
 	QFileInfo path;
 public:
 	explicit FileLoader(const QFileInfo& file) : path(file) {}
 	virtual ~FileLoader() {};
-	virtual bool load(QString& buffer) = 0;
-	virtual bool save(const QString& buffer) = 0;
+	inline const QFileInfo& info() {return this->path;}
+	virtual bool load(QTextDocument& buffer) = 0;
+	virtual bool save(const QTextDocument& buffer) = 0;
 };
 
 template <typename T>
@@ -38,8 +41,8 @@ protected:
 	QFile file;
 public:
 	virtual ~FileLoaderFS() {file.close();}
-	virtual bool load(QString& buffer);
-	virtual bool save(const QString& buffer);
+	virtual bool load(QTextDocument& buffer);
+	virtual bool save(const QTextDocument& buffer);
 protected:
 	bool do_reopen(const QFileInfo& file);
 };

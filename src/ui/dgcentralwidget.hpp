@@ -10,6 +10,7 @@ class QComboBox;
 class QPlainTextEdit;
 class QLineEdit;
 class QPushButton;
+class QLabel;
 class CodeEditorWidget;
 
 class QHBoxLayout;
@@ -90,6 +91,7 @@ private:
 	QHBoxLayout *bottomBar, *mainLayout;
 	QVBoxLayout *splitViewPane, *leftSideLayout, *editorLayout;
 	QPushButton* bottomButton;
+	QLabel* fileInfo;
 
 	//WARNING: Arrangement of elements in this array is CRITICAL!
 	std::unordered_map<ButtonIdLower,QPushButton*> buttonsLower;

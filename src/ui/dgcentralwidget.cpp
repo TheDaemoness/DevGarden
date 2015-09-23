@@ -13,6 +13,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QSpacerItem>
+#include <QLabel>
 
 #include <QHeaderView>
 #include <QScrollBar>
@@ -72,6 +73,10 @@ void DGCentralWidget::createWidgets()
 	// Text Editor
 	textEditor = new CodeEditorWidget;
 
+	//File Info Label
+	fileInfo = new QLabel(ctrl->getFormattedFileInfo());
+	fileInfo->setAlignment(Qt::AlignRight);
+
 	// Bottom Push Button
 	bottomButton = makeButton("CMD", 48, 32);
 
@@ -111,7 +116,8 @@ void DGCentralWidget::createLayout()
 	leftSideLayout->update();
 
 	editorLayout = new QVBoxLayout();
-	editorLayout->setSpacing(2);
+	editorLayout->setSpacing(4);
+	editorLayout->addWidget(fileInfo);
 	editorLayout->addWidget(textEditor);
 
 	// TextEditor, BottomBar
