@@ -14,7 +14,7 @@
 CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 	QPlainTextEdit(parent)
 {
-
+	this->setLineWrapMode(QPlainTextEdit::NoWrap);
 	lineNumberArea = new LineNumberArea(this);
 
 	// Modify editor color and font settings
