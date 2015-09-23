@@ -1,13 +1,14 @@
 #ifndef DGFILELOADER_H
 #define DGFILELOADER_H
 
-#include <QHash>
+#include <map>
 #include <vector>
 
 #include <QString>
 #include <QTextDocument>
 
 #include "dgprojectloader.h"
+#include "fileloader.h"
 
 /**
  * @brief Prototype reference-counting file loader.
@@ -15,7 +16,7 @@
  */
 class DGFileCache { //TODO: Implement and connect.
 public:
-	struct FileRef {
+	struct FileRef { //TODO: Remove.
 		QFileInfo info;
 		QTextDocument* doc;
 		bool saved;
@@ -23,12 +24,14 @@ public:
 	};
 private:
 	struct FileData {
-		QTextDocument* doc;
+		QString lang;
+		QTextDocument doc;
+		bool saved;
 		size_t refcount;
+		std::unique_ptr<FileLoader> fl;
 	};
-	QHash<QString, FileData> unsaved;
-	QHash<QString, FileData> saved;
-	std::vector<FileRef> current;
+	std::set<FileData> data;
+	std::vector<FileData*> current;
 	bool save(QTextDocument* tosave, const QString& path);
 	bool isVisible(const FileData& dat) {return dat.refcount;}
 public:
@@ -41,8 +44,7 @@ public:
 	size_t remView(size_t index = 1);
 
 	inline size_t getCountViews()    {return current.size();}
-	inline size_t getCountSaved()    {return saved.size();}
-	inline size_t getCountUnsaved()  {return unsaved.size();}
+	inline size_t getCountLoaded()    {return data.size();}
 
 	QTextDocument* set(const QString& path, size_t index = 0);
 	QTextDocument* get(size_t index = 0);

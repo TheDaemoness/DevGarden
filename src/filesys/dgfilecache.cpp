@@ -3,5 +3,5 @@
 #include <QString>
 
 DGFileCache::DGFileCache() {
-	current.push_back({QFileInfo(""),nullptr,true});
+	//current.push_back({QFileInfo(""),nullptr,true});
 }
