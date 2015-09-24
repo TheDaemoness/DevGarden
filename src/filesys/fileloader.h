@@ -16,11 +16,22 @@ class FileLoader {
 protected:
 	QFileInfo path;
 public:
+	enum FileLoaderType {
+		TYPE_DEFAULT = -1,
+		TYPE_FILE = 0,
+		TYPE_DEFERRED,
+		TYPE_SSH
+	};
+	static FileLoader* create(const QFileInfo& path, FileLoaderType type = TYPE_DEFAULT);
+
 	explicit FileLoader(const QFileInfo& file) : path(file) {}
 	virtual ~FileLoader() {};
-	inline const QFileInfo& info() {return this->path;}
+	inline const QFileInfo& info() const {return this->path;}
 	virtual bool load(QTextDocument& buffer) = 0;
 	virtual bool save(const QTextDocument& buffer) = 0;
+	virtual bool defaultAutoclose() {return true;}
+	virtual QString name() {return path.absoluteFilePath();}
+	virtual QString getLoaderName() const = 0;
 };
 
 template <typename T>
@@ -40,10 +51,27 @@ class FileLoaderFS : public BaseFileLoader<FileLoaderFS> {
 protected:
 	QFile file;
 public:
+	FileLoaderFS(const QFileInfo& p) : BaseFileLoader<FileLoaderFS>(p) {}
 	virtual ~FileLoaderFS() {file.close();}
 	virtual bool load(QTextDocument& buffer);
 	virtual bool save(const QTextDocument& buffer);
+	QString getLoaderName() const {return "Filesystem";}
 protected:
+	friend BaseFileLoader<FileLoaderFS>;
+	bool do_reopen(const QFileInfo& file);
+};
+
+class FileLoaderDeferred : public BaseFileLoader<FileLoaderDeferred> {
+protected:
+	QFile file;
+public:
+	FileLoaderDeferred(const QFileInfo& p) : BaseFileLoader<FileLoaderDeferred>(p) {}
+	virtual ~FileLoaderDeferred() {file.close();}
+	virtual bool load(QTextDocument& buffer);
+	virtual bool save(const QTextDocument& buffer);
+	QString getLoaderName() const {return "Deferred";}
+protected:
+	friend BaseFileLoader<FileLoaderDeferred>;
 	bool do_reopen(const QFileInfo& file);
 };
 

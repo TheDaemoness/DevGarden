@@ -2,6 +2,12 @@
 
 #include <QTextDocument>
 
+FileLoader* FileLoader::create(const QFileInfo& path, FileLoaderType type) {
+	return (type==TYPE_DEFERRED?
+				static_cast<FileLoader*>(new FileLoaderDeferred(path)):
+				static_cast<FileLoader*>(new FileLoaderFS(path)));
+}
+
 bool FileLoaderFS::do_reopen(const QFileInfo& file) {
 	this->file.setFileName(file.absoluteFilePath());
 	return true;
@@ -28,3 +34,15 @@ bool FileLoaderFS::save(const QTextDocument& buffer) {
 	return true;
 }
 
+bool FileLoaderDeferred::load(QTextDocument& buffer) {
+
+}
+
+bool FileLoaderDeferred::save(const QTextDocument& buffer) {
+
+}
+
+bool FileLoaderDeferred::do_reopen(const QFileInfo& file) {
+	this->file.setFileName(file.absoluteFilePath());
+	return true;
+}
