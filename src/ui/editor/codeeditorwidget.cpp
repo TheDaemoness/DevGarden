@@ -114,7 +114,7 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 		if (block.isVisible() && bottom >= event->rect().top())
 		{
 			QString number = QString::number(blockNumber + 1);
-			painter.setPen(QColor(188,188,188));
+			painter.setPen(DGStyle::COLOR_TEXT);
 			painter.setFont(textFont);
 			painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
 		}
