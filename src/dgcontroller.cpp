@@ -57,6 +57,7 @@ void DGController::saveFileCopy() {
 		f.write(dgw->centralWidget->getEditor()->document()->toPlainText().toLocal8Bit());
 	f.close();
 	curr_file.saved = true;
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::saveFile() {
@@ -82,6 +83,7 @@ void DGController::saveFile() {
 	f.write(curr_file.doc->toPlainText().toLocal8Bit());
 	f.close();
 	curr_file.saved = true;
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::getFile(const QString& path) {
@@ -254,7 +256,7 @@ QString DGController::getFormattedFileInfo() {
 		filename = curr_file.info.exists()?ptr->getDir()->relativeFilePath(curr_file.info.filePath()):"No File";
 	return filename + (!curr_file.lang.isEmpty()?" - "+curr_file.lang:"") + " - " +
 						QString::number(lines) + (lines==1?" line":" lines")
-						+ (!curr_file.saved?" - Unsaved":"");
+						+ (!curr_file.saved?" - Unsaved":"") + ' ';
 }
 
 void DGController::newTemplateFile() {}
