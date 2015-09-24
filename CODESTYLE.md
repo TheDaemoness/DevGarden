@@ -44,7 +44,7 @@
 
 ## Qt
 * Prefer QString over std::string (listed here for emphasis).
-* Prefer Qt's signals/slots over callbacks.
+* Prefer Qt's signals/slots over callbacks, except where moc is a POS.
 * Do not use the QTL (QMap, QVector, etc) except where necessary. Prefer the C++ STL.
 
 ## Git
@@ -52,3 +52,4 @@
 * Do not push to devel, if avoidable (especially TheRabbitologist).
 * Each contributor should create their own personal branch to push to, and send pull requests into devel when their code is ready.
 * Rebasing is discouraged.
+* Code in personal branches may not compile.

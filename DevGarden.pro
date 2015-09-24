@@ -43,7 +43,8 @@ SOURCES += \
     src/buildcontroller.cpp \
     src/utils.cpp \
     src/filesys/dgfilecache.cpp \
-    src/filesys/fileloader.cpp
+    src/filesys/fileloader.cpp \
+    src/filesys/filedata.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -67,7 +68,8 @@ HEADERS  += \
     src/buildcontroller.h \
     src/utils.h \
     src/filesys/dgfilecache.h \
-    src/filesys/fileloader.h
+    src/filesys/fileloader.h \
+    src/filesys/filedata.h
 
 TRANSLATIONS = DevGarden_fr.ts
 
