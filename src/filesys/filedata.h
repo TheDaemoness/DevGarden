@@ -11,7 +11,7 @@ class FileData {
 	bool autoclose;
 	QTextDocument doc;
 public:
-	inline bool shouldAutoClose() {return fl.get() != nullptr && autoclose && !lost;}
+	bool shouldAutoClose();
 	void setFileLoader(FileLoader* nu, bool save = true);
 	inline QTextDocument* getDocument() {return &doc;} //Don't you dare free this.
 	inline FileLoader* getLoader() {return fl.get();}

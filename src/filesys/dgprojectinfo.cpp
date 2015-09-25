@@ -7,6 +7,8 @@
 #include <QDir>
 #include <QString>
 
+#include "../dgdebug.hpp"
+
 bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 	if(!dir != !b.dir)
 		return !dir;
@@ -39,7 +41,8 @@ DGProjectInfo::DGProjectInfo(QDir* f, const LangRegistry& lr) {
 DGProjectInfo::~DGProjectInfo() {
 	if(dir)
 		delete dir;
-	delete file;
+	if(file)
+		delete file;
 }
 
 QString DGProjectInfo::getName() const {
@@ -58,10 +61,11 @@ void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recurs
 			if(!recursive) {
 				bool bs = false;
 				if(lr.knowsFile(entry.fileName(),false))
-					bs = lr.isBuildSys(lr.getLang(entry.fileName(),false));
-				if(lr.knowsFile(LangRegistry::getFileExt(entry.fileName()),true))
-					bs = lr.isBuildSys(lr.getLang(entry.fileName(),true));
+					bs |= lr.isBuildSys(lr.getLang(entry.fileName(),false));
+				if(lr.knowsFile(LangRegistry::getFileExt(entry.fileName())))
+					bs |= lr.isBuildSys(lr.getLang(LangRegistry::getFileExt(entry.fileName())));
 				if(bs) {
+					DEBUG_EMIT(entry.absoluteFilePath());
 					this->bsys_opts.push_back(entry);
 					bsys_choice = &bsys_opts.back();
 				}
