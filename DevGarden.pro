@@ -29,31 +29,33 @@ SOURCES += \
     src/ui/dgwindow.cpp \
     src/dgcontroller.cpp \
     src/ui/dgcentralwidget.cpp \
-	src/configloader.cpp \
     src/ui/editor/codeeditorwidget.cpp \
     src/filesys/dgprojectloader.cpp \
 	src/filesys/dgprojectinfo.cpp \
-    src/filesys/dgfileloader.cpp \
     src/ui/dgstyle.cpp \
     src/configentry.cpp \
     src/ui/editor/oldsynhighlighter.cpp \
     src/ui/editor/syntaxhighlighter.cpp \
     src/textmatcher.cpp \
     src/langregistry.cpp \
-    src/configfile.cpp
+    src/configfile.cpp \
+    src/ui/dgmenu.cpp \
+    src/buildcontroller.cpp \
+    src/utils.cpp \
+    src/filesys/dgfilecache.cpp \
+    src/filesys/fileloader.cpp \
+    src/filesys/filedata.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
     src/dgcontroller.h \
     src/ui/dgcentralwidget.hpp \
-    src/configloader.h \
 	src/envmacros.h \
     src/ui/editor/codeeditorwidget.h \
     src/ui/editor/linenumberarea.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h \
     src/dgdebug.hpp \
-    src/filesys/dgfileloader.h \
     src/ui/editor/codestyle.h \
     src/ui/dgstyle.h \
     src/configentry.h \
@@ -61,7 +63,13 @@ HEADERS  += \
     src/ui/editor/syntaxhighlighter.h \
     src/textmatcher.h \
     src/langregistry.h \
-    src/configfile.h
+    src/configfile.h \
+    src/ui/dgmenu.h \
+    src/buildcontroller.h \
+    src/utils.h \
+    src/filesys/dgfilecache.h \
+    src/filesys/fileloader.h \
+    src/filesys/filedata.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

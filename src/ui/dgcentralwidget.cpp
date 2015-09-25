@@ -9,11 +9,11 @@
 #include <QPlainTextEdit>
 #include <QLineEdit>
 #include <QPushButton>
-
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QSpacerItem>
+#include <QLabel>
 
 #include <QHeaderView>
 #include <QScrollBar>
@@ -73,26 +73,22 @@ void DGCentralWidget::createWidgets()
 	// Text Editor
 	textEditor = new CodeEditorWidget;
 
+	//File Info Label
+	fileInfo = new QLabel(ctrl->getFormattedFileInfo());
+	fileInfo->setAlignment(Qt::AlignRight);
+
 	// Bottom Push Button
 	bottomButton = makeButton("CMD", 48, 32);
 
 	// Bottom Bar
 	bottomBar = new QHBoxLayout();
-	buttonsLower.reserve(BUTTON_LOWER_COUNT);
-	buttonsLower.push_back(makeButton("Setup", 64, 32));
-	buttonsLower.push_back(makeButton("Regen", 64, 32));
-	buttonsLower.push_back(makeButton("Build", 64, 32));
-	buttonsLower.push_back(makeButton("Rebuild", 72, 32));
-	buttonsLower.push_back(makeButton("Run", 56, 32));
-	buttonsLower.push_back(makeButton("Run File", 72, 32));
-	buttonsLower.push_back(makeButton("Debug", 64, 32));
-	buttonsLower.push_back(makeButton("Analyze", 72, 32));
-	buttonsLower.push_back(makeButton("Deploy", 64, 32));
-	for(QPushButton* butt : buttonsLower) {
-		bottomBar->addWidget(butt);
-		butt->setHidden(true);
+	for(size_t i = 0; i < BUTTON_LOWER_NAMES.size(); ++i) {
+		auto* button = makeButton(BUTTON_LOWER_NAMES[i], 64, 32);
+		buttonsLower.emplace(static_cast<ButtonIdLower>(i), button);
+		bottomBar->addWidget(button);
+		button->setHidden(true);
 	}
-	buttonsLower.front()->setHidden(false);
+	buttonsLower[SETUP]->setHidden(false);
 	bottomBar->setSpacing(4);
 	bottomBar->addStretch();
 	bottomBar->addWidget(bottomButton);
@@ -119,10 +115,15 @@ void DGCentralWidget::createLayout()
 	leftSideLayout->addWidget(auxPane, 3);
 	leftSideLayout->update();
 
+	editorLayout = new QVBoxLayout();
+	editorLayout->setSpacing(4);
+	editorLayout->addWidget(fileInfo);
+	editorLayout->addWidget(textEditor);
+
 	// TextEditor, BottomBar
 	QHBoxLayout* centralLayout = new QHBoxLayout;
 	centralLayout->setSpacing(4);
-	centralLayout->addWidget(textEditor);
+	centralLayout->addItem(editorLayout);
 	centralLayout->addLayout(splitViewPane);
 
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
@@ -147,7 +148,7 @@ void DGCentralWidget::setupConnections() {
 	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
 	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
 
-	connect(buttonsLower.at(RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
+	connect(buttonsLower.at(DGCentralWidget::RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
 	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
 
@@ -226,5 +227,4 @@ void DGCentralWidget::updateProjectList() {
 void DGCentralWidget::setHiddenLeft(bool hide) {
 	mainLayout->setStretch(0,hide?0:5);
 }
-
 

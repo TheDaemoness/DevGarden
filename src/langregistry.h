@@ -2,6 +2,7 @@
 #define LANGREFCOUNT_H
 
 #include <map>
+#include <set>
 #include <QString>
 
 /**
@@ -16,6 +17,7 @@ class LangRegistry {
 		LangEntry() {refs = 0; buildsys = false;}
 		size_t refs;
 		bool buildsys;
+		QString name;
 	};
 	struct FileEntry {
 		explicit FileEntry(const QString& lang) {this->lang = lang;}
@@ -39,6 +41,14 @@ public:
 	inline bool knowsLang(const QString& lang) const {return langs.count(lang);}
 
 	/**
+	 * @brief Gets a human-friendly untranslated language name.
+	 * Returns a language name if specified in the language's properties.conf. Otherwise, defaults to the programmer name.
+	 * This name is meant to be human-friendlier, and should be used in GUI elements or messages.
+	 * It should also be passed through tr() first.
+	 */
+	const QString& getHumanName(const QString& lang) const;
+
+	/**
 	 * @brief Get the corresponding language for a file extension or name
 	 */
 	const QString& getLang(const QString& name, bool isext = true) const; //Default true for teenagers.
@@ -57,6 +67,11 @@ public:
 	 * @brief Return whether or not a language describes files for a build system.
 	 */
 	bool isBuildSys(const QString& lang) const;
+
+	/**
+	 * @brief Gets the set of build systems that LangRegistry recognizes.
+	 */
+	std::set<QString> getBuildSysSet() const;
 
 	/**
 	 * @brief getInterpreter Get the interpreter for a certain language.

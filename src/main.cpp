@@ -2,20 +2,23 @@
 #include "ui/dgstyle.h"
 
 #include "filesys/dgprojectloader.h"
-#include "filesys/dgfileloader.h"
+#include "filesys/dgfilecache.h"
 
 #include <QApplication>
 #include <QTranslator>
 #include <QStyleFactory>
+#include <QLocale>
 
 #include <memory>
 #include <iostream>
 
 #include "configfile.h"
-#include "configloader.h"
+#include "utils.h"
+#include "buildcontroller.h"
 
 #include "envmacros.h"
 #include "langregistry.h"
+#include "dgcontroller.h"
 
 int main(int argc, char **argv) {
 
@@ -34,16 +37,17 @@ int main(int argc, char **argv) {
 	ConfigFile f("config/editor.conf");
 
 	std::cout << "Initializing..." << std::endl;
-	std::unique_ptr<DGFileLoader> fl(new DGFileLoader);
+	std::unique_ptr<DGFileCache> fl(new DGFileCache);
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
+	std::unique_ptr<BuildController> bc(new BuildController(*pl));
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
 	DGController ctrl(pl.get(), fl.get(), lr.get());
-	DGWindow w(&ctrl);
+	DGWindow w(&ctrl, *lr);
 	ctrl.setView(&w);
 
 	w.configure(f);

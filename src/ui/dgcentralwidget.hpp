@@ -10,6 +10,7 @@ class QComboBox;
 class QPlainTextEdit;
 class QLineEdit;
 class QPushButton;
+class QLabel;
 class CodeEditorWidget;
 
 class QHBoxLayout;
@@ -18,32 +19,47 @@ class QVBoxLayout;
 class DGController;
 
 #include <map>
+#include <unordered_map>
+#include <array>
 
 /**
  * @brief The actual widgets of the main window.
+ * @warning Does not free any of the memory it allocates itself. DO NOT FREE OR ALLOCATE MULTIPLE INSTANCES!
  */
 class DGCentralWidget : public QWidget
 {
 	Q_OBJECT
 
 	friend class DGController;
+	friend class DGWindow;
 public:
 	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
-
+	const std::array<const char*,10> BUTTON_LOWER_NAMES = {
+		"Setup",
+		"Update",
+		"Build",
+		"Rebuild",
+		"Run",
+		"Run File",
+		"Test",
+		"Debug",
+		"Analyze",
+		"Deploy"
+	};
 	enum ButtonIdLower {
 		SETUP = 0,
-		REGEN,
+		UPDATE,
 		BUILD,
-		REBULD,
+		REBUILD,
 		RUN,
 		RUNFILE,
+		TEST,
 		DEBUG,
 		ANALYZE,
-		RELEASE
+		DEPLOY
 	};
-	const static size_t BUTTON_LOWER_COUNT = 9;
 
 public slots:
 	void updateProjectList();
@@ -73,11 +89,12 @@ private:
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
 	QHBoxLayout *bottomBar, *mainLayout;
-	QVBoxLayout *splitViewPane, *leftSideLayout;
+	QVBoxLayout *splitViewPane, *leftSideLayout, *editorLayout;
 	QPushButton* bottomButton;
+	QLabel* fileInfo;
 
 	//WARNING: Arrangement of elements in this array is CRITICAL!
-	std::vector<QPushButton*> buttonsLower;
+	std::unordered_map<ButtonIdLower,QPushButton*> buttonsLower;
 	std::map<QString,QPushButton*> buttonsSide;
 
 	//Controller ptr (NO OWNERSHIP)

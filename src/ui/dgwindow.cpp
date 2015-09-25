@@ -5,13 +5,16 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QMenuBar>
+#include <QPushButton>
 
-#include "../configloader.h"
+#include "../utils.h"
+#include "../dgcontroller.h"
+#include "../langregistry.h"
 
-DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
+DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
 	QMainWindow(parent)
 {
-	this->setWindowTitle("DevGarden");
+	this->setWindowTitle(DG_NAME);
 	this->resize(1080,640);
 	this->setMinimumSize(560,240);
 	ctrl = dgc;
@@ -19,7 +22,7 @@ DGWindow::DGWindow(DGController* dgc, QWidget *parent) :
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
 
-	createMenuActions();
+	createMenuActions(lr);
 
 	centralWidget = new DGCentralWidget(dgc, this);
 	setCentralWidget(centralWidget);
@@ -29,7 +32,15 @@ void DGWindow::configure(ConfigFile& f) {
 	this->centralWidget->getEditor()->configure(f);
 }
 
-void DGWindow::createMenuActions() {
+void DGWindow::setControlsBuildEnabled(bool enabled) {
+	this->centralWidget->buttonsLower[DGCentralWidget::BUILD]->setHidden(!enabled);
+	this->centralWidget->buttonsLower[DGCentralWidget::REBUILD]->setHidden(!enabled);
+	this->menuBuild->getAction("Build")->setEnabled(enabled);
+	this->menuBuild->getAction("Rebuild")->setEnabled(enabled);
+	this->menuBuild->getAction("Clean")->setEnabled(enabled);
+}
+
+void DGWindow::createMenuActions(const LangRegistry& lr) {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
 	QMenu* newMenu = menuFile->addMenu(tr("New"));
@@ -38,6 +49,8 @@ void DGWindow::createMenuActions() {
 	newMenu->addAction(tr("Project..."), this, SLOT(nullSlot()));
 	menuFile->addAction(tr("Open Folder/Project..."), ctrl, SLOT(openFolder()), QKeySequence::Open);
 	menuFile->addAction(tr("Open Files..."), ctrl, SLOT(openFiles()), QKeySequence(tr("Ctrl+Shift+O")));
+	menuFile->addAction(tr("Open Remote Folder/Project..."));
+	menuFile->addAction(tr("Open Remote Files..."));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
 	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
@@ -73,60 +86,61 @@ void DGWindow::createMenuActions() {
 	menuEdit->addAction(tr("Format Selection"));
 	menuEdit->addAction(tr("Comment Selection"));
 
-	menuBuild = menuBar()->addMenu(tr("&Build"));
-	menuBuildInit = menuBuild->addMenu(tr("Create Build System"));
-	menuBuildInit->addAction(tr("CMake..."));
-	menuBuildInit->addAction(tr("QMake..."));
-	menuBuildInit->addAction(tr("GNU Make..."));
-	menuBuild->addAction(tr("Regen Build Scripts"));
-	menuBuild->addAction(tr("Cancel Build"));
-	menuBuild->addAction(tr("Build Settings..."));
-	menuBuild->addSeparator();
-	menuBuildBuild = menuBuild->addMenu(tr("Build"));
-	menuBuildBuild->addAction(tr("Last Target"));
-	menuBuildBuild->addAction(tr("Debug"));
-	menuBuildBuild->addAction(tr("Release"));
-	menuBuildBuild->addAction(tr("Custom..."));
-	menuBuild->addAction(tr("Rebuild"));
-	menuBuild->addAction(tr("Clean"));
-	menuBuild->addAction(tr("Deploy"));
-	menuBuild->addSeparator();
-	menuBuildBuildAll = menuBuild->addMenu(tr("Build All"));
-	menuBuildBuildAll->addAction(tr("Last Target"));
-	menuBuildBuildAll->addAction(tr("Debug"));
-	menuBuildBuildAll->addAction(tr("Release"));
-	menuBuildBuildAll->addAction(tr("Custom..."));
-	menuBuild->addAction(tr("Rebuild All"));
-	menuBuild->addAction(tr("Clean All"));
-	menuBuild->addAction(tr("Deploy All"));
+	menuBuild.reset(new DGMenu(menuBar()->addMenu(tr("&Build"))));
+	menuBuildInit.reset(menuBuild->addMenu("Create Build System"));
+	std::set<QString> bses = lr.getBuildSysSet();
+	if(!bses.empty()) {
+		for(const QString& bs : bses)
+			menuBuildInit->addAction(bs,lr.getHumanName(bs)+"...");
+	} else
+		menuBuildInit->getMenu().setDisabled(true);
 
-	menuDebug = menuBar()->addMenu(tr("&Run/Debug"));
-	menuDebug->addAction(tr("Run"));
-	menuDebug->addAction(tr("Run Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Debug"));
-	menuDebug->addAction(tr("Debug External Application..."));
-	menuDebug->addAction(tr("Load Core File..."));
-	menuDebug->addAction(tr("Show Debug Window"));
-	menuDebug->addAction(tr("Debugger Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Interrupt"));
-	menuDebug->addAction(tr("Continue"));
-	menuDebug->addAction(tr("Toggle Breakpoint"));
-	menuDebug->addAction(tr("Step Over"));
-	menuDebug->addAction(tr("Step Into"));
-	menuDebug->addSeparator();
-	menuDebugAnalyze = menuDebug->addMenu(tr("Analyze"));
-	menuDebugAnalyze->addAction(tr("Memory Checker"));
-	menuDebugAnalyze->addAction(tr("Thread Checker"));
-	menuDebugAnalyze->addAction(tr("Call Graph"));
-	menuDebugAnalyze->addAction(tr("Cache Profiler"));
-	menuDebugAnalyze->addAction(tr("Heap Profiler"));
-	menuDebug->addAction(tr("Analyze External Application..."));
-	menuDebug->addAction(tr("Analysis Settings..."));
-	menuDebug->addSeparator();
-	menuDebug->addAction(tr("Test"));
-	menuDebug->addAction(tr("Test Settings..."));
+	menuBuild->addAction("Set Build System...");
+	menuBuild->addAction("Update Build Scripts");
+	menuBuild->addAction("Regen Build Scripts");
+	menuBuild->addAction("Set Target...");
+	menuBuild->addAction("Build Settings...");
+	menuBuild->addSeparator();
+	menuBuild->addAction("Build"), QKeySequence(tr("Ctrl+B"));
+	menuBuild->addAction("Rebuild"), QKeySequence(tr("Shift+Ctrl+B"));
+	menuBuild->addAction("Clean");
+	menuBuild->addAction("Cancel Build"), QKeySequence(tr("Alt+B"));
+	menuBuild->addSeparator();
+	menuBuild->addAction("Make Release");
+	menuBuild->addAction("Install Release");
+	menuBuild->addAction("Deploy Release");
+	menuBuild->addAction("Release Settings...");
+
+	menuRun.reset(new DGMenu(menuBar()->addMenu(tr("&Run/Debug"))));
+	menuRun->addAction("Run");
+	menuRun->addAction("Set ARGV...");
+	menuRun->addAction("Run Settings...");
+	menuRun->addSeparator();
+	menuRun->addAction("Run Test");
+	menuRun->addAction("Set Test ARGV...");
+	menuRun->addAction("Test Settings...");
+	menuRun->addSeparator();
+	menuRunDebug.reset(menuRun->addMenu("Debugging"));
+	menuRunDebug->addAction("Debug");
+	menuRunDebug->addAction("Load Core File...");
+	menuRunDebug->addAction("Show Debug Window");
+	menuRunDebug->addSeparator();
+	menuRunDebug->addAction("Interrupt");
+	menuRunDebug->addAction("Continue");
+	menuRunDebug->addAction("Toggle Breakpoint");
+	menuRunDebug->addAction("Step Over");
+	menuRunDebug->addAction("Step Into");
+	menuRun->addAction("Debug External Application...");
+	menuRun->addAction("Debugger Settings...");
+	menuRun->addSeparator();
+	menuRunAnalyze.reset(menuRun->addMenu("Analysis"));
+	menuRunAnalyze->addAction("Memory Checker");
+	menuRunAnalyze->addAction("Thread Checker");
+	menuRunAnalyze->addAction("Call Graph");
+	menuRunAnalyze->addAction("Cache Profiler");
+	menuRunAnalyze->addAction("Heap Profiler");
+	menuRun->addAction("Analyze External Application...");
+	menuRun->addAction("Analysis Settings...");
 
 	menuVersion = menuBar()->addMenu(tr("&VCS"));
 	menuVersionInit = menuVersion->addMenu(tr("Create Repository"));

@@ -3,10 +3,13 @@
 
 #include <QMainWindow>
 
-#include "../dgcontroller.h"
+#include "dgmenu.h"
 
 class DGCentralWidget;
+class DGController;
+
 class ConfigFile;
+class LangRegistry;
 
 /**
  * @brief The main window. Contains no widgets.
@@ -16,12 +19,15 @@ class DGWindow : public QMainWindow {
 
 	friend class DGController;
 public:
-	explicit DGWindow(DGController* dgc, QWidget *parent = 0);
+	explicit DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent = 0);
 	~DGWindow();
 	void configure(ConfigFile& f);
 
+public slots:
+	void setControlsBuildEnabled(bool enabled);
+
 private:
-	void createMenuActions();
+	void createMenuActions(const LangRegistry& lr);
 
 private slots:
 	void openProjectPage();
@@ -37,8 +43,11 @@ private:
 	DGController* ctrl;
 
 	QMenuBar* bar;
-	QMenu *menuFile, *menuEdit, *menuBuild, *menuDebug, *menuVersion, *menuWindow, *menuHelp;
-	QMenu *menuFileNew, *menuDebugAnalyze, *menuBuildInit, *menuBuildBuild, *menuBuildBuildAll, *menuVersionInit;
+	QMenu *menuFile, *menuEdit, *menuVersion, *menuWindow, *menuHelp;
+	QMenu *menuFileNew, *menuVersionInit;
+
+	std::unique_ptr<DGMenu> menuBuild, menuRun;
+	std::unique_ptr<DGMenu> menuBuildInit, menuRunDebug, menuRunAnalyze;
 
 	DGCentralWidget* centralWidget;
 };
