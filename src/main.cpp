@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QStyleFactory>
+#include <QLocale>
 
 #include <memory>
 #include <iostream>
