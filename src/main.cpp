@@ -14,7 +14,7 @@
 
 #include "configfile.h"
 #include "utils.h"
-#include "buildcontroller.h"
+#include "build/buildcontroller.h"
 
 #include "envmacros.h"
 #include "langregistry.h"
@@ -24,6 +24,14 @@ int main(int argc, char **argv) {
 
 	QApplication a(argc, argv);
 	a.setApplicationName(DG_NAME);
+
+	std::cout << DG_NAME << " v. " <<
+				 DG_VERSION_MAJOR << '.' <<
+				 DG_VERSION_MINOR << '.' <<
+				 DG_VERSION_PATCH << " on " <<
+				 DG_ENV << std::endl;
+
+
 	a.setWindowIcon(QIcon("://icon.png"));
 
 	// Translation
