@@ -10,7 +10,6 @@
  */
 class LangRegistry {
 	static const QString DIR;
-	static const QString EMPTY;
 	static const QRegExp FILEEXT_PATTERN;
 
 	struct LangEntry {

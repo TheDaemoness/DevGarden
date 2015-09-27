@@ -2,6 +2,7 @@
 
 #include "configfile.h"
 #include "utils.h"
+#include "consts.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -9,9 +10,10 @@
 #include <iostream>
 
 const QString LangRegistry::DIR = "config/lang";
-const QString LangRegistry::EMPTY = "";
 
 const QRegExp LangRegistry::FILEEXT_PATTERN = QRegExp("[a-zA-Z0-9_]\\.");
+
+using namespace dg_consts;
 
 QString LangRegistry::getFileExt(const QString& filename) {
 	return filename.section(FILEEXT_PATTERN,-1);
@@ -83,7 +85,7 @@ const QString& LangRegistry::getHumanName(const QString& lang) const {
 			return it->first;
 		return it->second.name;
 	}
-	return LangRegistry::EMPTY;
+	return STRING_EMPTY;
 }
 
 bool LangRegistry::isBuildSys(const QString& lang) const {
@@ -95,7 +97,7 @@ bool LangRegistry::isBuildSys(const QString& lang) const {
 const QString& LangRegistry::getLang(const QString& name, bool isext) const {
 	if(knowsFile(name,isext))
 		return getBindMapConst(isext).at(name).lang;
-	return EMPTY;
+	return STRING_EMPTY;
 }
 
 bool LangRegistry::ready(const QString& name, bool isext) const {
@@ -132,7 +134,7 @@ bool LangRegistry::rem(const QStringList& langs) {
 
 QString LangRegistry::getInterpreter(const QString& name, bool isext) const {
 	if(!hasInterpreter(name,isext))
-		return LangRegistry::EMPTY;
+		return STRING_EMPTY;
 	LangRegistry::FileEntry extinfo = getBindMapConst(isext).at(name);
 	if(extinfo.interpreter.at(0) == '@')
 		return extinfo.interpreter.mid(1);
@@ -143,5 +145,5 @@ QString LangRegistry::getInterpreter(const QString& name, bool isext) const {
 				return f->absoluteFilePath();
 		}
 	}
-	return LangRegistry::EMPTY;
+	return STRING_EMPTY;
 }

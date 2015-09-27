@@ -18,12 +18,14 @@ bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 DGProjectInfo::DGProjectInfo(QFileInfo* f) {
 	file = f;
 	dir = nullptr;
+	default_target = nullptr;
 }
 
 DGProjectInfo::DGProjectInfo(QDir* f, const LangRegistry& lr) {
 	dir = f;
 	bsys_choice = nullptr;
 	bsys_custom = nullptr;
+	default_target = nullptr; //TODO: Nope.
 	catalog(lr, false);
 	QFileInfo* info = new QFileInfo(f->absoluteFilePath(".dgproject"));
 	if(!info->isReadable()) {
