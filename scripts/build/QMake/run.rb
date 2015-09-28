@@ -5,7 +5,7 @@ require 'pathname'
 include RbConfig
 
 _path = Pathname.new(ARGV[0])
-_buildpath = _path.dirname.to_s+"/../build-"+(_path.dirname.basename.to_s);
+_buildpath = _path.dirname.to_s+"/../"+(_path.dirname.basename.to_s)+"-build";
 
 if !Dir.exist? _buildpath
 	Dir.mkdir _buildpath
