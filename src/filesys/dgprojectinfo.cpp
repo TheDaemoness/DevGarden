@@ -7,8 +7,6 @@
 #include <QDir>
 #include <QString>
 
-#include "../dgdebug.hpp"
-
 bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 	if(!dir != !b.dir)
 		return !dir;
@@ -23,8 +21,6 @@ DGProjectInfo::DGProjectInfo(QFileInfo* f) {
 
 DGProjectInfo::DGProjectInfo(QDir* f, const LangRegistry& lr) {
 	dir = f;
-	bsys_choice = nullptr;
-	bsys_custom = nullptr;
 	default_target = nullptr; //TODO: Nope.
 	catalog(lr, false);
 	QFileInfo* info = new QFileInfo(f->absoluteFilePath(".dgproject"));
@@ -67,9 +63,6 @@ void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recurs
 				if(lr.knowsFile(LangRegistry::getFileExt(entry.fileName())))
 					bs |= lr.isBuildSys(lr.getLang(LangRegistry::getFileExt(entry.fileName())));
 				if(bs) {
-					DEBUG_EMIT(entry.absoluteFilePath());
-					this->bsys_opts.push_back(entry);
-					bsys_choice = &bsys_opts.back();
 				}
 				//May do other searching of the root directory.
 			}
