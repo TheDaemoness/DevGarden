@@ -28,6 +28,8 @@ class QDir;
 
 #include <set>
 
+namespace dg_utils {
+
 void makeConfigDirs();
 bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
 ConfigEntry* getConfigEntry(QFile& file);
@@ -35,5 +37,7 @@ QFileInfo* getUtilityFile(const QString& name);
 QFile* getUtilityFileRead(const QString& name);
 QFile* getUtilityFileWrite(const QString& name);
 std::set<QString> getConfigDirs(const QString& name); //Gets unique subdirectories of a provided config directory, across both config folders.
+
+}
 
 #endif // CONFIGLOADER_H

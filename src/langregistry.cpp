@@ -19,11 +19,24 @@ QString LangRegistry::getFileExt(const QString& filename) {
 	return filename.section(FILEEXT_PATTERN,-1);
 }
 
+/**
+ * @brief Get the corresponding language for a file.
+ */
+const QString& LangRegistry::getLang(const QFileInfo& file) {
+	auto it = filenames.find(file.fileName());
+	if(it == filenames.end()) {
+		it = fileexts.find(getFileExt(file.fileName()));
+		if(it == filenames.end())
+			return dg_consts::STRING_EMPTY;
+	}
+	return it->second.lang;
+}
+
 LangRegistry::LangRegistry() {
-	std::set<QString> langset = getConfigDirs(LangRegistry::DIR.toStdString().c_str());
+	std::set<QString> langset = dg_utils::getConfigDirs(LangRegistry::DIR.toStdString().c_str());
 	ConfigEntry* ie;
 	for(const QString& lang : langset) {
-		QFile* f = getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
+		QFile* f = dg_utils::getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
 		if(f != nullptr) {
 			ConfigFile cf(*f);
 			LangEntry le;
@@ -32,7 +45,7 @@ LangRegistry::LangRegistry() {
 				le.name = ie->getData(0)->mid(5);
 			if((ie = cf.at("build-sys"))) {
 				le.buildsys = true;
-				interpreter = "%scripts/build/"+lang+"/run.rb";
+				interpreter = dg_consts::STRING_DIR_BUILD+lang+"/run.rb";
 			}
 			else if((ie = cf.at("interpreter-external"))) {
 				if(ie->split() >= 2)
@@ -139,7 +152,7 @@ QString LangRegistry::getInterpreter(const QString& name, bool isext) const {
 	if(extinfo.interpreter.at(0) == '@')
 		return extinfo.interpreter.mid(1);
 	else if(extinfo.interpreter.at(0) == '%') {
-		QFileInfo* f = getUtilityFile(extinfo.interpreter.mid(1).toLocal8Bit());
+		QFileInfo* f = dg_utils::getUtilityFile(extinfo.interpreter.mid(1).toLocal8Bit());
 		if(f) {
 			if(f->isExecutable())
 				return f->absoluteFilePath();

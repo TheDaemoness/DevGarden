@@ -121,7 +121,7 @@ void DGController::runFile() {
 		sl.append(intrp);
 	}
 	sl.append(curr_file.info.absoluteFilePath());
-	runTool("scripts/terminal.rb",&sl);
+	dg_utils::runTool("scripts/terminal.rb",&sl);
 }
 
 void DGController::fileEdited() {
@@ -221,8 +221,8 @@ void DGController::newFile() {
 	QString filetype = "";
 
 	bool ran;
-	if(!(ran = runTool("scripts/defaultfiles/"+exact_name,&args,&data)))
-		ran = runTool("scripts/defaultfiles/"+path_name,&args,&data);
+	if(!(ran = dg_utils::runTool("scripts/defaultfiles/"+exact_name,&args,&data)))
+		ran = dg_utils::runTool("scripts/defaultfiles/"+path_name,&args,&data);
 	if(ran) {
 		filetext = data;
 		filetype = filetext.section('\n',0);

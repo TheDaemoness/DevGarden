@@ -5,6 +5,8 @@
 #include <set>
 #include <QString>
 
+class QFileInfo;
+
 /**
  * @brief Loads and reference counts language information.
  */
@@ -46,6 +48,11 @@ public:
 	 * It should also be passed through tr() first.
 	 */
 	const QString& getHumanName(const QString& lang) const;
+
+	/**
+	 * @brief Get the corresponding language for a file.
+	 */
+	const QString& getLang(const QFileInfo& file);
 
 	/**
 	 * @brief Get the corresponding language for a file extension or name

@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 	a.installTranslator(&translator);
 
 	std::cout << "Loading configuration..." << std::endl;
-	makeConfigDirs();
+	dg_utils::makeConfigDirs();
 
 	ConfigFile f("config/editor.conf");
 

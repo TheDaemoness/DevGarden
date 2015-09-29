@@ -7,6 +7,8 @@
 #include <QProcess>
 #include <QStringList>
 
+namespace dg_utils {
+
 QFileInfo* getUtilityFile(const QString& name) {
 	QFileInfo* f = new QFileInfo();
 	f->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
@@ -146,4 +148,6 @@ std::set<QString> getConfigDirs(const QString& name) {
 	for(QString& s : v)
 		retval.insert(s);
 	return retval;
+}
+
 }
