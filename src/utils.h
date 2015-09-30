@@ -31,7 +31,7 @@ class QDir;
 namespace dg_utils {
 
 void makeConfigDirs();
-bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, QByteArray* in = nullptr);
+bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, const QByteArray* in = nullptr);
 ConfigEntry* getConfigEntry(QFile& file);
 QFileInfo* getUtilityFile(const QString& name);
 QFile* getUtilityFileRead(const QString& name);

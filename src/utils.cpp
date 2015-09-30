@@ -111,7 +111,7 @@ ConfigEntry* getConfigEntry(QFile& file) {
 	return retval;
 }
 
-bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in) {
+bool runTool(const QString& name, QStringList* args, QByteArray* out, const QByteArray* in) {
 	QFileInfo* retval = new QFileInfo;
 	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	if(!retval->isExecutable())
