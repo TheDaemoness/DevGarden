@@ -52,7 +52,7 @@ public:
 	/**
 	 * @brief Get the corresponding language for a file.
 	 */
-	const QString& getLang(const QFileInfo& file);
+	const QString& getLang(const QFileInfo& file) const;
 
 	/**
 	 * @brief Get the corresponding language for a file extension or name

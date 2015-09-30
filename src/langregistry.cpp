@@ -22,7 +22,7 @@ QString LangRegistry::getFileExt(const QString& filename) {
 /**
  * @brief Get the corresponding language for a file.
  */
-const QString& LangRegistry::getLang(const QFileInfo& file) {
+const QString& LangRegistry::getLang(const QFileInfo& file) const {
 	auto it = filenames.find(file.fileName());
 	if(it == filenames.end()) {
 		it = fileexts.find(getFileExt(file.fileName()));
