@@ -4,6 +4,9 @@
 #include <QFileInfo>
 #include <map>
 
+class LangRegistry;
+class QDir;
+
 class Target {
 	QFileInfo file;
 	QString target, buildsys;
@@ -14,7 +17,8 @@ public:
 	QString& set(const QString& key) {return vars[key];}
 	QString rm(const QString& key);
 
-	bool build() const;
+	bool build(const QDir& bd) const;
+	bool clean(const QDir& bd) const;
 };
 
 #endif // TARGET_H
