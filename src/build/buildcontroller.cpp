@@ -51,8 +51,10 @@ QDir BuildController::getBuildDir(const DGProjectInfo& info, bool make) const {
 		retval = *info.getDir();
 		retval.cdUp();
 	}
-	if(make && !retval.exists(getBuildDirName(info)))
-		retval.mkdir(getBuildDirName(info));
+	const QString dirname = getBuildDirName(info);
+	if(make && !retval.exists(dirname))
+		retval.mkdir(dirname);
+	retval.cd(dirname);
 	return retval;
 }
 

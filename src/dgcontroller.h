@@ -76,7 +76,7 @@ public slots:
 
 	void build();
 	void clean();
-	void rebuild() {clean(); build();}
+	void rebuild();
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.

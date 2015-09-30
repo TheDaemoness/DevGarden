@@ -268,9 +268,13 @@ void DGController::build() {
 		if(pl->getCurrent()->hasBuildSys())
 			bc->build(*pl->getCurrent());
 }
-
 void DGController::clean() {
 	if(pl->getCurrent())
 		if(pl->getCurrent()->hasBuildSys())
 			bc->clean(*pl->getCurrent());
+}
+void DGController::rebuild() {
+	if(pl->getCurrent())
+		if(pl->getCurrent()->hasBuildSys())
+			bc->rebuild(*pl->getCurrent());
 }
