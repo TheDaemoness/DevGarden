@@ -29,7 +29,6 @@ void BuildController::clean(DGProjectInfo& f) const {
 	}
 }
 
-
 void BuildController::rebuild(DGProjectInfo& f) const {
 	QDir bd = getBuildDir(f,false);
 	if(bd.exists()) {
@@ -46,7 +45,7 @@ void BuildController::rebuild(DGProjectInfo& f) const {
 
 QDir BuildController::getBuildDir(const DGProjectInfo& info, bool make) const {
 	QDir retval;
-	if(!info.isSingleFile())
+	if(info.isSingleFile())
 		retval = info.getFile()->dir();
 	else {
 		retval = *info.getDir();
