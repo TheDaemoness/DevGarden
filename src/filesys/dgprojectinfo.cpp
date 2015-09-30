@@ -55,14 +55,9 @@ void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recurs
 			catalog(lr,entry.absoluteDir(),true);
 		else {
 			if(!recursive) {
-				bool bs = false;
-				if(lr.knowsFile(entry.fileName(),false))
-					bs |= lr.isBuildSys(lr.getLang(entry.fileName(),false));
-				if(lr.knowsFile(LangRegistry::getFileExt(entry.fileName())))
-					bs |= lr.isBuildSys(lr.getLang(LangRegistry::getFileExt(entry.fileName())));
-				if(bs) {
-					targets.emplace(dir.filePath(entry.absoluteFilePath()), Target(lr, entry));
-				}
+				const QString& lang = lr.getLang(entry);
+				if(!lang.isEmpty() && lr.isBuildSys(lang))
+					targets.emplace("default-"+lang, Target(lr, entry));
 				//May do other searching of the root directory.
 			}
 		}
