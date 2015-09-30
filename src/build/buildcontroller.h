@@ -7,10 +7,9 @@
 class DGProjectLoader;
 class DGProjectInfo;
 
-class BuildController : public QObject {
-	Q_OBJECT
+class BuildController {
 public:
-	explicit BuildController(DGProjectLoader& pl, QObject *parent = 0);
+	explicit BuildController(DGProjectLoader& pl);
 	/**
 	 * @brief getBuildDir Gets the default directory for building a project.
 	 * @param info The project to build.
@@ -19,11 +18,10 @@ public:
 	 */
 	QString getBuildDirName(const DGProjectInfo& info) const;
 	QDir getBuildDir(const DGProjectInfo& info, bool make = true) const;
-signals:
 
-public slots:
-	void build(DGProjectInfo& info);
-	void clean(DGProjectInfo& info);
+	void build(DGProjectInfo& info) const;
+	void clean(DGProjectInfo& info) const;
+	void rebuild(DGProjectInfo& info) const;
 private:
 	DGProjectLoader* pl;
 };

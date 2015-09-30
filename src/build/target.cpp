@@ -5,10 +5,18 @@
 
 #include <QDir>
 
-Target::Target(const LangRegistry& lr, const QFileInfo& fi, const QString& tar) : file(fi), target(tar) {
-	buildsys = lr.getLang(fi.fileName(), false);
-	if(buildsys.isEmpty())
-		buildsys = lr.getLang(fi);
+Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : lr(langs), target(tar) {
+	changeFile(fi);
+}
+
+bool Target::changeFile(const QFileInfo& fi) {
+	file = fi;
+	buildsys = lr.getLang(file);
+	return sanityCheck();
+}
+
+bool Target::sanityCheck() const {
+	return file.exists() && lr.isBuildSys(buildsys);
 }
 
 QString Target::rm(const QString& key) {

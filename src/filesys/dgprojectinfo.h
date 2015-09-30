@@ -31,18 +31,17 @@ public:
 	inline QDir* getDir() const {return dir;}
 	inline bool hasBuildSys() const {return target.second;}
 
-	inline bool hasAltTargets() const {return !alt_targets.empty();}
+	inline bool hasAltTargets() const {return !targets.empty();}
 	inline const Target* getTarget() const {return target.second;}
-	inline const std::map<QString, Target>& getAltTargets() const {return alt_targets;}
+	inline const std::map<QString, Target>& getAltTargets() const {return targets;}
 	inline const QString& getTargetName() const {return target.first?*target.first:dg_consts::STRING_EMPTY;}
 protected:
 	void catalog(const LangRegistry& lr, const QDir& dir, bool recursive = true);
 	inline void catalog(const LangRegistry& lr, bool recursive = true);
 private:
 	//TODO: Make this shit work.
-	std::pair<QString*, Target*> target;
-	std::map<QString, Target> alt_targets;
-	Target* default_target;
+	std::pair<const QString*, Target*> target;
+	std::map<QString, Target> targets;
 
 	//std::map<QDir,QFileInfo> subprojects;
 	std::set<QString> langs;

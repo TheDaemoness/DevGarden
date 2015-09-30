@@ -5,6 +5,7 @@
 #include <QRegExp>
 
 #include "filesys/dgfilecache.h"
+#include "build/buildcontroller.h"
 
 class QFileSystemModel;
 class QString;
@@ -21,7 +22,7 @@ class LangRegistry;
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, BuildController* bc, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -82,6 +83,7 @@ private:
 	DGFileCache::FileRef curr_file;
 
 	DGWindow* dgw;
+	BuildController* bc;
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* pl;
 	DGFileCache* fl;

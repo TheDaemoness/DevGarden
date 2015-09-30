@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
-	DGController ctrl(pl.get(), fl.get(), lr.get());
+	DGController ctrl(pl.get(), fl.get(), lr.get(), bc.get());
 	DGWindow w(&ctrl, *lr);
 	ctrl.setView(&w);
 

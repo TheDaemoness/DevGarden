@@ -16,9 +16,10 @@
 #include <QPushButton>
 #include <QLabel>
 
-DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, BuildController* bc, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
+	this->bc = bc;
 	this->pl = pl;
 	this->fl = fl;
 	this->lr = lr;
@@ -263,7 +264,13 @@ void DGController::newTemplateFile() {}
 void DGController::newTemplateProject() {}
 
 void DGController::build() {
+	if(pl->getCurrent())
+		if(pl->getCurrent()->hasBuildSys())
+			bc->build(*pl->getCurrent());
 }
 
 void DGController::clean() {
+	if(pl->getCurrent())
+		if(pl->getCurrent()->hasBuildSys())
+			bc->clean(*pl->getCurrent());
 }

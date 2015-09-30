@@ -16,12 +16,10 @@ bool DGProjectInfo::operator<(const DGProjectInfo& b) const{
 DGProjectInfo::DGProjectInfo(QFileInfo* f) {
 	file = f;
 	dir = nullptr;
-	default_target = nullptr;
 }
 
 DGProjectInfo::DGProjectInfo(QDir* f, const LangRegistry& lr) {
 	dir = f;
-	default_target = nullptr; //TODO: Nope.
 	catalog(lr, false);
 	QFileInfo* info = new QFileInfo(f->absoluteFilePath(".dgproject"));
 	if(!info->isReadable()) {
@@ -63,9 +61,15 @@ void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recurs
 				if(lr.knowsFile(LangRegistry::getFileExt(entry.fileName())))
 					bs |= lr.isBuildSys(lr.getLang(LangRegistry::getFileExt(entry.fileName())));
 				if(bs) {
+					targets.emplace(dir.filePath(entry.absoluteFilePath()), Target(lr, entry));
 				}
 				//May do other searching of the root directory.
 			}
 		}
+	}
+	if(!targets.empty() && !target.second) {
+		auto first = targets.begin();
+		target.first = &first->first;
+		target.second = &first->second;
 	}
 }
