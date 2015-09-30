@@ -45,8 +45,7 @@ SOURCES += \
     src/filesys/fileloader.cpp \
     src/filesys/filedata.cpp \
     src/build/target.cpp \
-    src/build/buildcontroller.cpp \
-    src/consts.cpp
+    src/build/buildcontroller.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
