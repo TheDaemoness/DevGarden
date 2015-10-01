@@ -5,12 +5,14 @@
 
 #include "../consts.h"
 
+#include "../dgdebug.hpp"
+
 BuildController::BuildController(DGProjectLoader& pl) {
 	this->pl = &pl;
 }
 
 QString BuildController::getBuildDirName(const DGProjectInfo& info) const {
-	return info.getName()+"-build"+(info.hasAltTargets()?'-'+info.getTargetName():dg_consts::STRING_EMPTY); //TODO: Targets.
+	return info.getName()+"-build"+(info.hasAltTargets()?'-'+info.getTargetName():dg_consts::STRING_EMPTY);
 }
 
 void BuildController::build(DGProjectInfo& f) const {
@@ -24,20 +26,20 @@ void BuildController::clean(DGProjectInfo& f) const {
 	if(bd.exists()) {
 		if(f.getTarget())
 			f.getTarget()->clean(bd);
-		bd.cdUp();
-		bd.rmdir(getBuildDirName(f));
+		bd.rmdir(".");
 	}
 }
 
 void BuildController::rebuild(DGProjectInfo& f) const {
-	QDir bd = getBuildDir(f,false);
+	QDir bd = getBuildDir(f,true);
 	if(bd.exists()) {
 		if(f.getTarget()) {
 			f.getTarget()->clean(bd);
 			f.getTarget()->build(bd);
 		}
 	} else {
-		if(bd.mkdir(".") && f.getTarget())
+		QString name = getBuildDirName(f);
+		if(bd.mkdir(name) && bd.cd(name) && f.getTarget())
 			f.getTarget()->build(bd);
 	}
 }
@@ -54,7 +56,7 @@ QDir BuildController::getBuildDir(const DGProjectInfo& info, bool make) const {
 	const QString dirname = getBuildDirName(info);
 	if(make && !retval.exists(dirname))
 		retval.mkdir(dirname);
-	retval.cd(dirname);
+	retval.setPath(retval.path()+'/'+dirname);
 	return retval;
 }
 
