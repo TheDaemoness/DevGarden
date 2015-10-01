@@ -101,10 +101,10 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuBuild->addAction("Set Target...");
 	menuBuild->addAction("Build Settings...");
 	menuBuild->addSeparator();
-	menuBuild->addAction("Build"), QKeySequence(tr("Ctrl+B"));
-	menuBuild->addAction("Rebuild"), QKeySequence(tr("Shift+Ctrl+B"));
+	menuBuild->addAction("Build", QKeySequence(tr("Ctrl+B")), false);
+	menuBuild->addAction("Rebuild", QKeySequence(tr("Shift+Ctrl+B")), false);
 	menuBuild->addAction("Clean");
-	menuBuild->addAction("Cancel Build"), QKeySequence(tr("Alt+B"));
+	menuBuild->addAction("Cancel Build", QKeySequence(tr("Alt+B")), false);
 	menuBuild->addSeparator();
 	menuBuild->addAction("Make Release");
 	menuBuild->addAction("Install Release");
@@ -173,6 +173,11 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuHelp->addSeparator();
 	menuHelp->addAction(tr("Project Page"), this, SLOT(openProjectPage()));
 	menuHelp->addAction(tr("Report Bug..."), this, SLOT(openBugReportPage()));
+
+	//TODO: Cleanup DGMenu so that this isn't necessary.
+	connect(menuBuild->getAction("Build"),SIGNAL(triggered()),ctrl,SLOT(build()));
+	connect(menuBuild->getAction("Rebuild"),SIGNAL(triggered()),ctrl,SLOT(rebuild()));
+	connect(menuBuild->getAction("Clean"),SIGNAL(triggered()),ctrl,SLOT(clean()));
 }
 
 void DGWindow::openProjectPage() {

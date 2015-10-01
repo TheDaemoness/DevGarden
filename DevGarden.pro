@@ -40,11 +40,12 @@ SOURCES += \
     src/langregistry.cpp \
     src/configfile.cpp \
     src/ui/dgmenu.cpp \
-    src/buildcontroller.cpp \
     src/utils.cpp \
     src/filesys/dgfilecache.cpp \
     src/filesys/fileloader.cpp \
-    src/filesys/filedata.cpp
+    src/filesys/filedata.cpp \
+    src/build/target.cpp \
+    src/build/buildcontroller.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -65,11 +66,13 @@ HEADERS  += \
     src/langregistry.h \
     src/configfile.h \
     src/ui/dgmenu.h \
-    src/buildcontroller.h \
     src/utils.h \
     src/filesys/dgfilecache.h \
     src/filesys/fileloader.h \
-    src/filesys/filedata.h
+    src/filesys/filedata.h \
+    src/build/target.h \
+    src/build/buildcontroller.h \
+    src/consts.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

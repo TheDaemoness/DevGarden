@@ -14,7 +14,7 @@
 
 #include "configfile.h"
 #include "utils.h"
-#include "buildcontroller.h"
+#include "build/buildcontroller.h"
 
 #include "envmacros.h"
 #include "langregistry.h"
@@ -24,6 +24,14 @@ int main(int argc, char **argv) {
 
 	QApplication a(argc, argv);
 	a.setApplicationName(DG_NAME);
+
+	std::cout << DG_NAME << " v. " <<
+				 DG_VERSION_MAJOR << '.' <<
+				 DG_VERSION_MINOR << '.' <<
+				 DG_VERSION_PATCH << " on " <<
+				 DG_ENV << std::endl;
+
+
 	a.setWindowIcon(QIcon("://icon.png"));
 
 	// Translation
@@ -32,7 +40,7 @@ int main(int argc, char **argv) {
 	a.installTranslator(&translator);
 
 	std::cout << "Loading configuration..." << std::endl;
-	makeConfigDirs();
+	dg_utils::makeConfigDirs();
 
 	ConfigFile f("config/editor.conf");
 
@@ -46,7 +54,7 @@ int main(int argc, char **argv) {
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
-	DGController ctrl(pl.get(), fl.get(), lr.get());
+	DGController ctrl(pl.get(), fl.get(), lr.get(), bc.get());
 	DGWindow w(&ctrl, *lr);
 	ctrl.setView(&w);
 

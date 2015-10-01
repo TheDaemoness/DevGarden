@@ -5,12 +5,13 @@
 #include <set>
 #include <QString>
 
+class QFileInfo;
+
 /**
  * @brief Loads and reference counts language information.
  */
 class LangRegistry {
 	static const QString DIR;
-	static const QString EMPTY;
 	static const QRegExp FILEEXT_PATTERN;
 
 	struct LangEntry {
@@ -47,6 +48,11 @@ public:
 	 * It should also be passed through tr() first.
 	 */
 	const QString& getHumanName(const QString& lang) const;
+
+	/**
+	 * @brief Get the corresponding language for a file.
+	 */
+	const QString& getLang(const QFileInfo& file) const;
 
 	/**
 	 * @brief Get the corresponding language for a file extension or name

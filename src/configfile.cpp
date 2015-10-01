@@ -4,6 +4,8 @@
 
 #include <QFile>
 
+using namespace dg_utils;
+
 ConfigFile::ConfigFile(QFile& f) {
 	for(ConfigEntry* e = getConfigEntry(f); e != nullptr; e = getConfigEntry(f))
 		insert(e);

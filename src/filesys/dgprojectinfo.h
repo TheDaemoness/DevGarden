@@ -5,11 +5,14 @@
 #include <vector>
 #include <map>
 
+#include "../langregistry.h"
+#include "../build/target.h"
+
+#include "../consts.h"
+
 class QFileInfo;
 class QDir;
 class QString;
-
-class LangRegistry;
 
 /**
  * @brief Stores metadata about one project.
@@ -26,16 +29,22 @@ public:
 	inline bool isSingleFile() const {return !dir;}
 	inline QFileInfo* getFile() const {return file;}
 	inline QDir* getDir() const {return dir;}
-	inline bool hasBuildSys() const {return bsys_choice || bsys_custom;}
+	inline bool hasBuildSys() const {return target.second;}
+
+	inline bool hasAltTargets() const {return !targets.empty();}
+	inline const Target* getTarget() const {return target.second;}
+	inline const std::map<QString, Target>& getAltTargets() const {return targets;}
+	inline const QString& getTargetName() const {return target.first?*target.first:dg_consts::STRING_EMPTY;}
 protected:
 	void catalog(const LangRegistry& lr, const QDir& dir, bool recursive = true);
 	inline void catalog(const LangRegistry& lr, bool recursive = true);
 private:
-	std::set<QString> langs;
-	std::vector<QFileInfo> bsys_opts;
-	QFileInfo* bsys_choice; //Can be null for bsys_custom to take effect.
-	void* bsys_custom; //Type to be replaced.
+	//TODO: Make this shit work.
+	std::pair<const QString*, Target*> target;
+	std::map<QString, Target> targets;
+
 	//std::map<QDir,QFileInfo> subprojects;
+	std::set<QString> langs;
 	QFileInfo* file;
 	QDir* dir;
 };

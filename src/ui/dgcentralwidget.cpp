@@ -148,6 +148,8 @@ void DGCentralWidget::setupConnections() {
 	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
 	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
 
+	connect(buttonsLower.at(DGCentralWidget::BUILD), SIGNAL(pressed()), ctrl, SLOT(build()));
+	connect(buttonsLower.at(DGCentralWidget::REBUILD), SIGNAL(pressed()), ctrl, SLOT(rebuild()));
 	connect(buttonsLower.at(DGCentralWidget::RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
 	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
