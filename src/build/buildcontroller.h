@@ -7,6 +7,7 @@
 class DGProjectLoader;
 class DGProjectInfo;
 
+//TODO: Asynchronous building. This is fairly high priority. As in, equal with syntax highlighting.
 class BuildController {
 public:
 	explicit BuildController(DGProjectLoader& pl);
@@ -23,6 +24,7 @@ public:
 	void clean(DGProjectInfo& info) const;
 	void rebuild(DGProjectInfo& info) const;
 private:
+	static bool rmRF(const QDir& dir);
 	DGProjectLoader* pl;
 };
 

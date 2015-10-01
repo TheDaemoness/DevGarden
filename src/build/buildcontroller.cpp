@@ -26,7 +26,7 @@ void BuildController::clean(DGProjectInfo& f) const {
 	if(bd.exists()) {
 		if(f.getTarget())
 			f.getTarget()->clean(bd);
-		bd.rmdir(".");
+		BuildController::rmRF(bd);
 	}
 }
 
@@ -58,5 +58,16 @@ QDir BuildController::getBuildDir(const DGProjectInfo& info, bool make) const {
 		retval.mkdir(dirname);
 	retval.setPath(retval.path()+'/'+dirname);
 	return retval;
+}
+
+bool BuildController::rmRF(const QDir& dir) {
+	for(QFileInfo& entry : dir.entryInfoList(QDir::NoDotAndDotDot  | QDir::AllEntries | QDir::Hidden | QDir::System,
+			QDir::DirsFirst)) {
+		if(entry.isDir())
+			rmRF(QDir(entry.absoluteFilePath()));
+		else
+			QFile::remove(entry.absoluteFilePath());
+	}
+	return dir.rmdir(".");
 }
 
