@@ -29,28 +29,18 @@ QString Target::rm(const QString& key) {
 	return "";
 }
 
-bool Target::build(const QDir& bd) const {
-	const QString interpreter = dg_consts::STRING_DIR_BUILD+buildsys+"/run.rb";
+bool Target::build(const QDir& bd, const QString& target_override, const QString& script) const {
+	const QString interpreter = dg_consts::STRING_DIR_BUILD+buildsys+'/'+script;
 	QStringList args;
 	args.append(file.absoluteFilePath());
 	args.append(bd.absolutePath());
-	args.append(target);
+	if(target_override.isEmpty())
+		args.append(target);
+	else
+		args.append(target_override);
 	QString vars;
 	for(auto it : this->vars)
 		vars.append(it.first+'='+it.second+'\n');
 	QByteArray arr = vars.toLocal8Bit(); //Okay, this is getting problematic.
-	return dg_utils::runTool(interpreter.mid(1),&args,nullptr,&arr);
-}
-
-bool Target::clean(const QDir& bd) const {
-	const QString interpreter = dg_consts::STRING_DIR_BUILD+buildsys+"/clean.rb";
-	QStringList args;
-	args.append(file.absoluteFilePath());
-	args.append(bd.absolutePath());
-	args.append("clean");
-	QString vars;
-	for(auto it : this->vars)
-		vars.append(it.first+'='+it.second+'\n');
-	QByteArray arr = vars.toLocal8Bit(); //Okay, this is getting problematic too.
 	return dg_utils::runTool(interpreter.mid(1),&args,nullptr,&arr);
 }

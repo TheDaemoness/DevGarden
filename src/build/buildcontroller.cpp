@@ -25,7 +25,7 @@ void BuildController::clean(DGProjectInfo& f) const {
 	QDir bd = getBuildDir(f,false);
 	if(bd.exists()) {
 		if(f.getTarget())
-			f.getTarget()->clean(bd);
+			f.getTarget()->build(bd,"clean");
 		BuildController::rmRF(bd);
 	}
 }
@@ -34,7 +34,7 @@ void BuildController::rebuild(DGProjectInfo& f) const {
 	QDir bd = getBuildDir(f,true);
 	if(bd.exists()) {
 		if(f.getTarget()) {
-			f.getTarget()->clean(bd);
+			f.getTarget()->build(bd,"clean");
 			f.getTarget()->build(bd);
 		}
 	} else {

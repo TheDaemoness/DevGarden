@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <map>
 
+#include "../consts.h"
+
 class LangRegistry;
 class QDir;
 
@@ -30,8 +32,7 @@ public:
 	inline QString& at(const QString& key) {return vars[key];}
 	QString rm(const QString& key);
 
-	bool build(const QDir& bd) const;
-	bool clean(const QDir& bd) const;
+	bool build(const QDir& bd, const QString& target_override = dg_consts::STRING_EMPTY, const QString& script = "run.rb") const;
 };
 
 #endif // TARGET_H
