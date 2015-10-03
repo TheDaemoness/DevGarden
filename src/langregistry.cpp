@@ -45,9 +45,8 @@ LangRegistry::LangRegistry() {
 				le.name = ie->getData(0)->mid(5);
 			if((ie = cf.at("build-sys"))) {
 				le.buildsys = true;
-				interpreter = dg_consts::STRING_DIR_BUILD+lang+"/run.rb";
 			}
-			else if((ie = cf.at("interpreter-external"))) {
+			if((ie = cf.at("interpreter-external"))) {
 				if(ie->split() >= 2)
 					interpreter = '@'+*ie->getData(1);
 			}
