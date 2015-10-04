@@ -22,10 +22,10 @@ DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
 
-	createMenuActions(lr);
-
 	centralWidget = new DGCentralWidget(dgc, this);
 	setCentralWidget(centralWidget);
+
+	createMenuActions(lr);
 }
 
 void DGWindow::configure(ConfigFile& f) {
@@ -71,12 +71,12 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuFile->addAction(tr("Quit"), this, SLOT(quit()), QKeySequence::Quit);
 
 	menuEdit = menuBar()->addMenu(tr("&Edit"));
-	menuEdit->addAction(tr("Undo"), this, SLOT(nullSlot()), QKeySequence::Undo);
-	menuEdit->addAction(tr("Redo"), this, SLOT(nullSlot()), QKeySequence::Redo);
+	menuEdit->addAction(tr("Undo"), centralWidget->getEditor(), SLOT(undo()), QKeySequence::Undo);
+	menuEdit->addAction(tr("Redo"), centralWidget->getEditor(), SLOT(redo()), QKeySequence::Redo);
 	menuEdit->addSeparator();
-	menuEdit->addAction(tr("Cut"), this, SLOT(nullSlot()), QKeySequence::Cut);
-	menuEdit->addAction(tr("Copy"), this, SLOT(nullSlot()), QKeySequence::Copy);
-	menuEdit->addAction(tr("Paste"), this, SLOT(nullSlot()), QKeySequence::Paste);
+	menuEdit->addAction(tr("Cut"), centralWidget->getEditor(), SLOT(cut()), QKeySequence::Cut);
+	menuEdit->addAction(tr("Copy"), centralWidget->getEditor(), SLOT(copy()), QKeySequence::Copy);
+	menuEdit->addAction(tr("Paste"), centralWidget->getEditor(), SLOT(paste()), QKeySequence::Paste);
 	menuEdit->addAction(tr("Paste from Clipboard History"));
 	menuEdit->addSeparator();
 	menuEdit->addAction(tr("Select All"), this, SLOT(nullSlot()), QKeySequence::SelectAll);
