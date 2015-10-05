@@ -85,7 +85,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 
 	menuBuild.reset(new DGMenu(menuBar()->addMenu(tr("&Build"))));
 	menuBuildInit.reset(menuBuild->addMenu("Create Build System"));
-	std::set<QString> bses = lr.getBuildSysSet();
+	std::set<QString> bses = lr.makeBuildSysSet();
 	if(!bses.empty()) {
 		for(const QString& bs : bses)
 			menuBuildInit->addAction(bs,lr.getHumanName(bs)+"...");

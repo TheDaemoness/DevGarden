@@ -30,7 +30,6 @@ QString Target::rm(const QString& key) {
 }
 
 bool Target::build(const QDir& bd, const QString& target_override, const QString& script) const {
-	const QString interpreter = dg_consts::STRING_DIR_BUILD+buildsys+'/'+script;
 	QStringList args;
 	args.append(file.absoluteFilePath());
 	args.append(bd.absolutePath());
@@ -42,5 +41,5 @@ bool Target::build(const QDir& bd, const QString& target_override, const QString
 	for(auto it : this->vars)
 		vars.append(it.first+'='+it.second+'\n');
 	QByteArray arr = vars.toLocal8Bit(); //Okay, this is getting problematic.
-	return dg_utils::runTool(interpreter.mid(1),&args,nullptr,&arr);
+	return dg_utils::runTool(script,&args,nullptr,&arr);
 }

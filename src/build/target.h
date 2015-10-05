@@ -9,6 +9,8 @@
 class LangRegistry;
 class QDir;
 
+#include "../langregistry.h"
+
 /**
  * @brief This tin has a label that can be read.
  */
@@ -32,7 +34,14 @@ public:
 	inline QString& at(const QString& key) {return vars[key];}
 	QString rm(const QString& key);
 
-	bool build(const QDir& bd, const QString& target_override = dg_consts::STRING_EMPTY, const QString& script = "run.rb") const;
+	//Java-esque, I know, but unfortunately necessary.
+	bool build(const QDir& bd, const QString& target_override, const QString& script) const;
+	inline bool build(const QDir& bd, const QString& target_override) const  {
+		return build(bd, target_override, lr.getBuildSys(buildsys));
+	}
+	inline bool build(const QDir& bd) const {
+		return build(bd, dg_consts::STRING_EMPTY, lr.getBuildSys(buildsys));
+	}
 };
 
 #endif // TARGET_H
