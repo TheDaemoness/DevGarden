@@ -33,8 +33,8 @@ void DGWindow::configure(ConfigFile& f) {
 }
 
 void DGWindow::setControlsBuildEnabled(bool enabled) {
-	this->centralWidget->buttonsLower[DGCentralWidget::BUILD]->setHidden(!enabled);
-	this->centralWidget->buttonsLower[DGCentralWidget::REBUILD]->setHidden(!enabled);
+	this->centralWidget->buttonsSide[DGCentralWidget::BUILD]->setHidden(!enabled);
+	this->centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setHidden(!enabled);
 	this->menuBuild->getAction("Build")->setEnabled(enabled);
 	this->menuBuild->getAction("Rebuild")->setEnabled(enabled);
 	this->menuBuild->getAction("Clean")->setEnabled(enabled);
@@ -64,9 +64,6 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuFile->addAction(tr("Close Project"), ctrl, SLOT(closeProjCurrent()), QKeySequence::Close);
 	menuFile->addAction(tr("Close Other Projects"), ctrl, SLOT(closeProjOthers()));
 	menuFile->addAction(tr("Close All Projects"), ctrl, SLOT(closeProjAll()));
-	menuFile->addSeparator();
-	menuFile->addAction(tr("Import..."));
-	menuFile->addAction(tr("Export..."));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Quit"), this, SLOT(quit()), QKeySequence::Quit);
 

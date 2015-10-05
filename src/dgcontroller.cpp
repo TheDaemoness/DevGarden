@@ -106,7 +106,7 @@ void DGController::getFile(const QString& path) {
 	const bool isext = fn != ext;
 	curr_file.lang = lr->getLang(ext, isext);
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
-	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
+	dgw->centralWidget->buttonsSide.at(DGCentralWidget::RUNFILE)->
 		setHidden(!(curr_file.info.isExecutable() ||
 					(curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext, isext))));
 }

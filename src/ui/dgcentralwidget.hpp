@@ -12,6 +12,7 @@ class QLineEdit;
 class QPushButton;
 class QLabel;
 class CodeEditorWidget;
+class QLineEdit;
 
 class QHBoxLayout;
 class QVBoxLayout;
@@ -88,14 +89,12 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QHBoxLayout *bottomBar, *mainLayout;
-	QVBoxLayout *splitViewPane, *leftSideLayout, *editorLayout;
-	QPushButton* bottomButton;
+	QHBoxLayout *mainLayout;
+	QVBoxLayout *leftSideLayout, *editorLayout, *rightBarLayout;
 	QLabel* fileInfo;
+	QLineEdit* cmdLine;
 
-	//WARNING: Arrangement of elements in this array is CRITICAL!
-	std::unordered_map<ButtonIdLower,QPushButton*> buttonsLower;
-	std::map<QString,QPushButton*> buttonsSide;
+	std::unordered_map<ButtonIdLower,QPushButton*> buttonsSide;
 
 	//Controller ptr (NO OWNERSHIP)
 	DGController* ctrl;
