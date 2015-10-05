@@ -7,6 +7,8 @@
 #include <QProcess>
 #include <QStringList>
 
+#include <QTextStream>
+
 namespace dg_utils {
 
 QFileInfo* getUtilityFile(const QString& name) {
@@ -111,7 +113,16 @@ ConfigEntry* getConfigEntry(QFile& file) {
 	return retval;
 }
 
-bool runTool(const QString& name, QStringList* args, QByteArray* out, const QByteArray* in) {
+bool runTool(const QString& name, QStringList* args) {
+	return runTool(name,args,static_cast<QTextStream*>(nullptr),nullptr);
+}
+
+bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in) {
+	QTextStream input(in), output(out);
+	return runTool(name,args,out?&output:nullptr,in?&input:nullptr);
+}
+
+bool runTool(const QString& name, QStringList* args, QTextStream* out, QTextStream* in) {
 	QFileInfo* retval = new QFileInfo;
 	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	if(!retval->isExecutable())
@@ -125,14 +136,16 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, const QByt
 	if(args)
 		proc.setArguments(*args);
 	proc.start();
-	if(!proc.waitForStarted())
+	if(!proc.waitForStarted(10000))
 		return false;
-	if(in)
-		proc.write(*in);
-	if(!proc.waitForFinished())
-		return !out;
-	if(out)
-		*out = proc.readAllStandardOutput();
+	do {
+		if(in && !in->atEnd())
+			proc.write(in->string()->toLocal8Bit());
+		if(out && proc.waitForReadyRead(0))
+			*out << proc.readAllStandardOutput();
+	} while(!proc.waitForFinished(0));
+	if(out && proc.waitForReadyRead(0))
+		*out << proc.readAllStandardOutput();
 	return true;
 }
 

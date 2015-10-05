@@ -5,6 +5,7 @@
 #include "configentry.h"
 
 #include <vector>
+#include <future>
 
 #if defined(DG_ENV_MACOS)
 	#define DG_CONFIG_PREFIX_GLOBAL "/Library/Application Support/"
@@ -25,13 +26,16 @@
 class QFile;
 class QFileInfo;
 class QDir;
+class QTextStream;
 
 #include <set>
 
 namespace dg_utils {
 
 void makeConfigDirs();
-bool runTool(const QString& name, QStringList* args = nullptr, QByteArray* out = nullptr, const QByteArray* in = nullptr);
+bool runTool(const QString& name, QStringList* args = nullptr); //Disambiguation.
+bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in = nullptr);
+bool runTool(const QString& name, QStringList* args, QTextStream* out, QTextStream* in = nullptr);
 ConfigEntry* getConfigEntry(QFile& file);
 QFileInfo* getUtilityFile(const QString& name);
 QFile* getUtilityFileRead(const QString& name);
