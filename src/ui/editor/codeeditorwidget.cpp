@@ -102,7 +102,7 @@ void CodeEditorWidget::indent(const uint8_t& lvl) {
 void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 {
 	QPainter painter(lineNumberArea);
-	painter.fillRect(event->rect(), DGStyle::COLOR_LOLIGHT.lighter(128));
+	painter.fillRect(event->rect(), DGStyle::COLOR_BACKGROUND.lighter(128));
 
 	QTextBlock block = firstVisibleBlock();
 	int blockNumber = block.blockNumber();
@@ -113,7 +113,7 @@ void CodeEditorWidget::lineNumberPaintEvent(QPaintEvent *event)
 	{
 		if (block.isVisible() && bottom >= event->rect().top())
 		{
-			QString number = QString::number(blockNumber + 1);
+			QString number = QString::number(blockNumber + 1) + ' ';
 			painter.setPen(DGStyle::COLOR_TEXT);
 			painter.setFont(textFont);
 			painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
@@ -211,7 +211,7 @@ int CodeEditorWidget::lineNumberAreaWidth()
 		++digits;
 	}
 
-	int space = 5 + fontMetrics().width(QLatin1Char('9')) * digits;
+	int space = fontMetrics().width(QLatin1Char('9')) * digits + 2*fontMetrics().width(QLatin1Char(' '));
 
 	return space;
 }
