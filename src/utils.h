@@ -29,20 +29,41 @@ class QDir;
 class QTextStream;
 
 #include <set>
+#include <atomic>
 
 namespace dg_utils {
+
+class RunToolAsyncFlags;
 
 void makeConfigDirs();
 bool runTool(const QString& name, QStringList* args = nullptr); //Disambiguation.
 bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in = nullptr);
 bool runTool(const QString& name, QStringList* args,
 			 QTextStream* out, QTextStream* in = nullptr,
-			 std::mutex* m_out = nullptr, std::mutex* m_in = nullptr);
+			 RunToolAsyncFlags* async = nullptr);
 ConfigEntry* getConfigEntry(QFile& file);
 QFileInfo* getUtilityFile(const QString& name);
 QFile* getUtilityFileRead(const QString& name);
 QFile* getUtilityFileWrite(const QString& name);
 std::set<QString> getConfigDirs(const QString& name); //Gets unique subdirectories of a provided config directory, across both config folders.
+
+class RunToolAsyncFlags  {
+	std::atomic_bool stopped;
+	std::atomic_flag run;
+	friend bool runTool(const QString& name, QStringList* args,
+						QTextStream* out, QTextStream* in,
+						RunToolAsyncFlags* async);
+	inline void reset() {
+		stopped.store(false);
+		m_in.unlock();
+		m_out.unlock();
+		run.test_and_set();
+	}
+public:
+	std::mutex m_in, m_out;
+	inline void stop() {run.clear();}
+	inline bool isStopped() {return stopped.load();}
+};
 
 }
 

@@ -125,7 +125,7 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 
 bool runTool(const QString& name, QStringList* args,
 			 QTextStream* out, QTextStream* in,
-			 std::mutex* m_out, std::mutex* m_in) {
+			 RunToolAsyncFlags* async) {
 	QFileInfo* retval = new QFileInfo;
 	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	if(!retval->isExecutable())
@@ -138,23 +138,26 @@ bool runTool(const QString& name, QStringList* args,
 	proc.setProgram(retval->absoluteFilePath());
 	if(args)
 		proc.setArguments(*args);
+	RunToolAsyncFlags f;
+	if(!async)
+		async = &f;
+	async->reset();
 	proc.start();
 	if(!proc.waitForStarted(10000))
 		return false;
 	do {
 		if(in && !in->atEnd()) {
-			if(m_in) m_in->lock();
+			std::lock_guard<std::mutex> lg_in(async->m_in); //Not unused, genius compiler.
 			proc.write(in->string()->toLocal8Bit());
-			if(m_in) m_in->unlock();
 		}
 		if(out && proc.waitForReadyRead(0)) {
-			if(m_out) m_out->lock();
+			std::lock_guard<std::mutex> lg_out(async->m_out);
 			*out << proc.readAllStandardOutput();
-			if(m_out) m_out->unlock();
 		}
-	} while(!proc.waitForFinished(0));
+	} while(!proc.waitForFinished(0) && async->run.test_and_set());
 	if(out && proc.waitForReadyRead(0))
 		*out << proc.readAllStandardOutput();
+	async->stopped = true;
 	return true;
 }
 
