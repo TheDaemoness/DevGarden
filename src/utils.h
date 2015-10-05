@@ -5,7 +5,7 @@
 #include "configentry.h"
 
 #include <vector>
-#include <future>
+#include <mutex>
 
 #if defined(DG_ENV_MACOS)
 	#define DG_CONFIG_PREFIX_GLOBAL "/Library/Application Support/"
@@ -35,7 +35,9 @@ namespace dg_utils {
 void makeConfigDirs();
 bool runTool(const QString& name, QStringList* args = nullptr); //Disambiguation.
 bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in = nullptr);
-bool runTool(const QString& name, QStringList* args, QTextStream* out, QTextStream* in = nullptr);
+bool runTool(const QString& name, QStringList* args,
+			 QTextStream* out, QTextStream* in = nullptr,
+			 std::mutex* m_out = nullptr, std::mutex* m_in = nullptr);
 ConfigEntry* getConfigEntry(QFile& file);
 QFileInfo* getUtilityFile(const QString& name);
 QFile* getUtilityFileRead(const QString& name);

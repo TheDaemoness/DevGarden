@@ -6,8 +6,9 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStringList>
-
 #include <QTextStream>
+
+#include <mutex>
 
 namespace dg_utils {
 
@@ -114,7 +115,7 @@ ConfigEntry* getConfigEntry(QFile& file) {
 }
 
 bool runTool(const QString& name, QStringList* args) {
-	return runTool(name,args,static_cast<QTextStream*>(nullptr),nullptr);
+	return runTool(name,args,static_cast<QTextStream*>(nullptr));
 }
 
 bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in) {
@@ -122,7 +123,9 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray
 	return runTool(name,args,out?&output:nullptr,in?&input:nullptr);
 }
 
-bool runTool(const QString& name, QStringList* args, QTextStream* out, QTextStream* in) {
+bool runTool(const QString& name, QStringList* args,
+			 QTextStream* out, QTextStream* in,
+			 std::mutex* m_out, std::mutex* m_in) {
 	QFileInfo* retval = new QFileInfo;
 	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	if(!retval->isExecutable())
@@ -139,10 +142,16 @@ bool runTool(const QString& name, QStringList* args, QTextStream* out, QTextStre
 	if(!proc.waitForStarted(10000))
 		return false;
 	do {
-		if(in && !in->atEnd())
+		if(in && !in->atEnd()) {
+			if(m_in) m_in->lock();
 			proc.write(in->string()->toLocal8Bit());
-		if(out && proc.waitForReadyRead(0))
+			if(m_in) m_in->unlock();
+		}
+		if(out && proc.waitForReadyRead(0)) {
+			if(m_out) m_out->lock();
 			*out << proc.readAllStandardOutput();
+			if(m_out) m_out->unlock();
+		}
 	} while(!proc.waitForFinished(0));
 	if(out && proc.waitForReadyRead(0))
 		*out << proc.readAllStandardOutput();
