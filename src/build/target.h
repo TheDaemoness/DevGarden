@@ -9,6 +9,8 @@
 class LangRegistry;
 class QDir;
 
+namespace dg_utils {class RunToolAsyncFlags;}
+
 #include "../langregistry.h"
 
 /**
@@ -34,13 +36,9 @@ public:
 	inline QString& at(const QString& key) {return vars[key];}
 	QString rm(const QString& key);
 
-	//Java-esque, I know, but unfortunately necessary.
-	bool build(const QDir& bd, const QString& target_override, const QString& script) const;
-	inline bool build(const QDir& bd, const QString& target_override) const  {
-		return build(bd, target_override, lr.getBuildSys(buildsys));
-	}
-	inline bool build(const QDir& bd) const {
-		return build(bd, dg_consts::STRING_EMPTY, lr.getBuildSys(buildsys));
+	bool build(const QDir& bd, dg_utils::RunToolAsyncFlags* async, const QString& target_override = dg_consts::STRING_EMPTY) const;
+	inline bool build(const QDir& bd, const QString& target_override = dg_consts::STRING_EMPTY) const  {
+		return build(bd, nullptr, target_override);
 	}
 };
 

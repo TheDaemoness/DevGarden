@@ -15,13 +15,16 @@ QString BuildController::getBuildDirName(const DGProjectInfo& info) const {
 	return info.getName()+"-build"+(info.hasAltTargets()?'-'+info.getTargetName():dg_consts::STRING_EMPTY);
 }
 
-void BuildController::build(DGProjectInfo& f) const {
+bool BuildController::build(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
-	if(bd.exists() && f.getTarget())
-		f.getTarget()->build(bd);
+	if(bd.exists() && f.getTarget()) {
+		f.getTarget()->build(bd,"clean");
+		return true;
+	}
+	return false;
 }
 
-void BuildController::clean(DGProjectInfo& f) const {
+void BuildController::clean(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,false);
 	if(bd.exists()) {
 		if(f.getTarget())
@@ -30,7 +33,7 @@ void BuildController::clean(DGProjectInfo& f) const {
 	}
 }
 
-void BuildController::rebuild(DGProjectInfo& f) const {
+void BuildController::rebuild(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
 	if(bd.exists()) {
 		if(f.getTarget()) {

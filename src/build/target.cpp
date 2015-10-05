@@ -4,6 +4,7 @@
 #include "../utils.h"
 
 #include <QDir>
+#include <QTextStream>
 
 Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : lr(langs), target(tar) {
 	changeFile(fi);
@@ -29,7 +30,7 @@ QString Target::rm(const QString& key) {
 	return "";
 }
 
-bool Target::build(const QDir& bd, const QString& target_override, const QString& script) const {
+bool Target::build(const QDir& bd, dg_utils::RunToolAsyncFlags* async, const QString& target_override) const {
 	QStringList args;
 	args.append(file.absoluteFilePath());
 	args.append(bd.absolutePath());
@@ -41,5 +42,6 @@ bool Target::build(const QDir& bd, const QString& target_override, const QString
 	for(auto it : this->vars)
 		vars.append(it.first+'='+it.second+'\n');
 	QByteArray arr = vars.toLocal8Bit(); //Okay, this is getting problematic.
-	return dg_utils::runTool(script,&args,nullptr,&arr);
+	QTextStream istream(arr);
+	return dg_utils::runTool(lr.getBuildSys(buildsys),&args,nullptr,&istream,async);
 }

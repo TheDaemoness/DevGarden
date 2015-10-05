@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QDir>
 
+#include <future>
+
+#include "../utils.h"
+
 class DGProjectLoader;
 class DGProjectInfo;
 
@@ -20,10 +24,16 @@ public:
 	QString getBuildDirName(const DGProjectInfo& info) const;
 	QDir getBuildDir(const DGProjectInfo& info, bool make = true) const;
 
-	void build(DGProjectInfo& info) const;
-	void clean(DGProjectInfo& info) const;
-	void rebuild(DGProjectInfo& info) const;
+	bool build(DGProjectInfo& info);
+	void clean(DGProjectInfo& info);
+	void rebuild(DGProjectInfo& info);
+	void abort() {
+		aflags.stop();
+	}
+
 private:
+	std::thread builder;
+	dg_utils::RunToolAsyncFlags aflags;
 	static bool rmRF(const QDir& dir);
 	DGProjectLoader* pl;
 };
