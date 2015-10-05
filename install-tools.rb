@@ -41,6 +41,6 @@ print "Copying configuration files...\n"
 FileUtils.cp_r "config", _dir_global
 
 print "Copying scripts...\n"
-FileUtils.cp_r "scripts", _dir_global
+FileUtils.cp_r "tools", _dir_global
 
 print "Done!\n"

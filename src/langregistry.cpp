@@ -56,7 +56,7 @@ LangRegistry::LangRegistry() {
 			}
 			langs.insert(std::make_pair(lang,le));
 			ConfigFile::Values* fe;
-			static const QString table[] = {"file-names", "file-exts", ""};
+			const QString table[] = {"file-names", "file-exts", ""};
 			for(size_t n = 0; !table[n].isEmpty(); ++n) {
 				if(!(fe = cf.get(table[n])))
 					continue;
