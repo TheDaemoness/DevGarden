@@ -6,9 +6,17 @@
 #include "../consts.h"
 
 #include "../dgdebug.hpp"
+#include "../dgcontroller.h"
 
-BuildController::BuildController(DGProjectLoader& pl) {
+BuildController::BuildController(DGProjectLoader& pl) : awatcher() {
 	this->pl = &pl;
+}
+
+void BuildController::setStartStopTriggers(std::function<void()> start, std::function<void()> stop) {
+	awatcher.stop();
+	awatcher.insert(&aflags.sigStarted,start);
+	awatcher.insert(&aflags.sigStopped,stop);
+	awatcher.run();
 }
 
 QString BuildController::getBuildDirName(const DGProjectInfo& info) const {
