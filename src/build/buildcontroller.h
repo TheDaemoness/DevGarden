@@ -25,8 +25,8 @@ public:
 	QDir getBuildDir(const DGProjectInfo& info, bool make = true) const;
 
 	bool build(DGProjectInfo& info);
-	void clean(DGProjectInfo& info);
-	void rebuild(DGProjectInfo& info);
+	bool clean(DGProjectInfo& info);
+	bool rebuild(DGProjectInfo& info);
 	void abort() {
 		aflags.stop();
 	}

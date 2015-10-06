@@ -17,34 +17,34 @@ QString BuildController::getBuildDirName(const DGProjectInfo& info) const {
 
 bool BuildController::build(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
-	if(bd.exists() && f.getTarget()) {
-		f.getTarget()->build(bd,"clean");
-		return true;
-	}
+	if(bd.exists() && f.getTarget())
+		return f.getTarget()->build(bd,&aflags);
 	return false;
 }
 
-void BuildController::clean(DGProjectInfo& f) {
+bool BuildController::clean(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,false);
 	if(bd.exists()) {
 		if(f.getTarget())
 			f.getTarget()->build(bd,"clean");
-		BuildController::rmRF(bd);
+		return BuildController::rmRF(bd);
 	}
+	return false;
 }
 
-void BuildController::rebuild(DGProjectInfo& f) {
+bool BuildController::rebuild(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
 	if(bd.exists()) {
 		if(f.getTarget()) {
 			f.getTarget()->build(bd,"clean");
-			f.getTarget()->build(bd);
+			return f.getTarget()->build(bd,&aflags);
 		}
 	} else {
 		QString name = getBuildDirName(f);
 		if(bd.mkdir(name) && bd.cd(name) && f.getTarget())
-			f.getTarget()->build(bd);
+			return f.getTarget()->build(bd,&aflags);
 	}
+	return false;
 }
 
 
