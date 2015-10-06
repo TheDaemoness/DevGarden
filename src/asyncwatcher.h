@@ -15,6 +15,8 @@ class AsyncWatcher {
 	std::vector<std::pair<std::atomic_flag*,std::vector<std::function<void()>>>> triggers;
 	std::thread runner;
 public:
+	AsyncWatcher() {runFlag.test_and_set();}
+	virtual ~AsyncWatcher() {stop();}
 	/**
 	 * @brief insert Adds a handler to be triggered when a certain flag is reset.
 	 * @param flag The flag.
