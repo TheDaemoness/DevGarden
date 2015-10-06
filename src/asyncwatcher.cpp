@@ -48,6 +48,7 @@ size_t AsyncWatcher::count(std::atomic_flag* flag) const {
 
 }
 void AsyncWatcher::run() {
+	runFlag.test_and_set();
 	runner = std::move(std::thread([this]{
 		do {
 			for(auto& elem : triggers) {
