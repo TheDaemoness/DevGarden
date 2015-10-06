@@ -7,8 +7,10 @@ class QApplication;
 
 namespace DGStyle {
 const QColor COLOR_BASE = QColor(16, 32, 40);
+const QColor COLOR_BASE_DISABLED = QColor(32, 8, 16);
 const QColor COLOR_TEXT = Qt::cyan;
 const QColor COLOR_TEXT_BRIGHT = Qt::green;
+const QColor COLOR_TEXT_DISABLED = Qt::darkGray;
 const QColor COLOR_TEXT_EDITOR = Qt::lightGray;
 const QColor COLOR_TEXT_HILIGHTED = Qt::black;
 const QColor COLOR_LOLIGHT = QColor(52, 58, 50);

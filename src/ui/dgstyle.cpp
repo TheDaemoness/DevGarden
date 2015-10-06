@@ -4,8 +4,6 @@
 #include <QStyleFactory>
 #include <QPalette>
 
-#include "../dgdebug.hpp"
-
 void DGStyle::applyStyle(QApplication* app) {
 
 	app->setStyle(QStyleFactory::create("Fusion"));
@@ -23,6 +21,12 @@ void DGStyle::applyStyle(QApplication* app) {
 	darkPalette.setColor(QPalette::ButtonText, DGStyle::COLOR_TEXT);
 	darkPalette.setColor(QPalette::BrightText, DGStyle::COLOR_TEXT_BRIGHT);
 	darkPalette.setColor(QPalette::Link, DGStyle::COLOR_HILIGHT);
+
+	darkPalette.setColor(QPalette::Disabled, QPalette::Base, DGStyle::COLOR_BASE_DISABLED);
+	darkPalette.setColor(QPalette::Disabled, QPalette::Background, DGStyle::COLOR_BASE_DISABLED);
+	darkPalette.setColor(QPalette::Disabled, QPalette::Text, DGStyle::COLOR_TEXT_DISABLED);
+	darkPalette.setColor(QPalette::Disabled, QPalette::Button, DGStyle::COLOR_BASE_DISABLED);
+	darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, DGStyle::COLOR_TEXT_DISABLED);
 
 	darkPalette.setColor(QPalette::Highlight, DGStyle::COLOR_HILIGHT);
 	darkPalette.setColor(QPalette::HighlightedText, DGStyle::COLOR_TEXT_HILIGHTED);
