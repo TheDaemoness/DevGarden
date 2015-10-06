@@ -23,6 +23,7 @@ DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* l
 	this->pl = pl;
 	this->fl = fl;
 	this->lr = lr;
+	this->dgw = nullptr;
 	curr_file.doc = nullptr;
 	connect(this,SIGNAL(sigBuildStarted()),this,SLOT(onBuildStarted()));
 	connect(this,SIGNAL(sigBuildStopped()),this,SLOT(onBuildStopped()));
