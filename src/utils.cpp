@@ -145,6 +145,7 @@ bool runTool(const QString& name, QStringList* args,
 	proc.start();
 	if(!proc.waitForStarted(10000))
 		return false;
+	async->sigStarted.clear();
 	do {
 		if(in && !in->atEnd()) {
 			std::lock_guard<std::mutex> lg_in(async->m_in); //Not unused, genius compiler.
@@ -158,6 +159,7 @@ bool runTool(const QString& name, QStringList* args,
 	if(out && proc.waitForReadyRead(0))
 		*out << proc.readAllStandardOutput();
 	async->stopped = true;
+	async->sigStopped.clear();
 	return true;
 }
 

@@ -5,6 +5,8 @@
 
 #include "dgmenu.h"
 
+#include <mutex>
+
 class DGCentralWidget;
 class DGController;
 
@@ -40,6 +42,7 @@ private slots:
 	void nullSlot();
 
 private:
+	std::mutex ui_lock;
 	DGController* ctrl;
 
 	QMenuBar* bar;

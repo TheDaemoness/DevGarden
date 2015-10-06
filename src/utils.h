@@ -60,7 +60,11 @@ class RunToolAsyncFlags  {
 		run.test_and_set();
 	}
 public:
-	RunToolAsyncFlags() {stopped = true;}
+	std::atomic_flag sigStarted, sigStopped;
+	RunToolAsyncFlags() {stopped = true;
+		sigStarted.test_and_set();
+		sigStopped.test_and_set();
+	}
 	std::mutex m_in, m_out;
 	inline void stop() {run.clear();}
 	inline bool isStopped() {return stopped.load();}

@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 
 	w->configure(f);
 	DGStyle::applyStyle(&a);
-	//bc->setStartStopTriggers([ctrl]{ctrl->sigBuildChanged();},[ctrl]{ctrl->sigBuildChanged();});
+	bc->setStartStopTriggers([ctrl]{ctrl->sigBuildStarted();},[ctrl]{ctrl->sigBuildStopped();});
 
 	std::cout << "Finished loading " << DG_NAME << std::endl;
 	w->show();

@@ -23,6 +23,9 @@ DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* l
 	this->pl = pl;
 	this->fl = fl;
 	this->lr = lr;
+	curr_file.doc = nullptr;
+	connect(this,SIGNAL(sigBuildStarted()),this,SLOT(onBuildStarted()));
+	connect(this,SIGNAL(sigBuildStopped()),this,SLOT(onBuildStopped()));
 }
 
 void DGController::openFolder() {
@@ -277,4 +280,16 @@ void DGController::rebuild() {
 	if(pl->getCurrent())
 		if(pl->getCurrent()->hasBuildSys())
 			bc->rebuild(*pl->getCurrent());
+}
+void DGController::onBuildStarted() {
+	disableBuildButtons(true);
+}
+void DGController::onBuildStopped() {
+	disableBuildButtons(false);
+}
+void DGController::disableBuildButtons(bool disable) {
+	std::lock_guard<std::mutex> l(dgw->ui_lock);
+	dgw->centralWidget->buttonsSide[DGCentralWidget::BUILD]->setDisabled(disable);
+	dgw->centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setDisabled(disable);
+	dgw->centralWidget->buttonsSide[DGCentralWidget::ABORT]->setHidden(!disable);
 }

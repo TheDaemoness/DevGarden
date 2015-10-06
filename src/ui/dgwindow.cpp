@@ -33,6 +33,7 @@ void DGWindow::configure(ConfigFile& f) {
 }
 
 void DGWindow::setControlsBuildEnabled(bool enabled) {
+	std::lock_guard<std::mutex> l(ui_lock);
 	this->centralWidget->buttonsSide[DGCentralWidget::BUILD]->setHidden(!enabled);
 	this->centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setHidden(!enabled);
 	this->menuBuild->getAction("Build")->setEnabled(enabled);
