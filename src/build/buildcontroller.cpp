@@ -5,7 +5,6 @@
 
 #include "../consts.h"
 
-#include "../dgdebug.hpp"
 #include "../dgcontroller.h"
 
 BuildController::BuildController(DGProjectLoader& pl) : awatcher() {

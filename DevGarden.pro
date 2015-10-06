@@ -57,7 +57,6 @@ HEADERS  += \
     src/ui/editor/linenumberarea.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h \
-    src/dgdebug.hpp \
     src/ui/editor/codestyle.h \
     src/ui/dgstyle.h \
     src/configentry.h \
