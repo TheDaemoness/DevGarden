@@ -39,7 +39,6 @@ void DGWindow::setControlsBuildEnabled(bool enabled) {
 	this->menuBuild->getAction("Rebuild")->setEnabled(enabled);
 	this->menuBuild->getAction("Clean")->setEnabled(enabled);
 }
-
 void DGWindow::createMenuActions(const LangRegistry& lr) {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));

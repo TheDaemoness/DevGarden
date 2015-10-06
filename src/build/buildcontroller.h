@@ -30,9 +30,11 @@ public:
 	void abort() {
 		aflags.stop();
 	}
+	bool isRunning() {
+		return !aflags.isStopped();
+	}
 
 private:
-	std::thread builder;
 	dg_utils::RunToolAsyncFlags aflags;
 	static bool rmRF(const QDir& dir);
 	DGProjectLoader* pl;

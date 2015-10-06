@@ -60,6 +60,7 @@ class RunToolAsyncFlags  {
 		run.test_and_set();
 	}
 public:
+	RunToolAsyncFlags() {stopped = true;}
 	std::mutex m_in, m_out;
 	inline void stop() {run.clear();}
 	inline bool isStopped() {return stopped.load();}

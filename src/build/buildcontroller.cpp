@@ -17,7 +17,7 @@ QString BuildController::getBuildDirName(const DGProjectInfo& info) const {
 
 bool BuildController::build(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
-	if(bd.exists() && f.getTarget())
+	if(bd.exists() && f.getTarget() && aflags.isStopped())
 		return f.getTarget()->build(bd,&aflags);
 	return false;
 }
@@ -25,8 +25,8 @@ bool BuildController::build(DGProjectInfo& f) {
 bool BuildController::clean(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,false);
 	if(bd.exists()) {
-		if(f.getTarget())
-			f.getTarget()->build(bd,"clean");
+		if(f.getTarget() && aflags.isStopped())
+			f.getTarget()->build(bd,&aflags,"clean");
 		return BuildController::rmRF(bd);
 	}
 	return false;
@@ -35,13 +35,13 @@ bool BuildController::clean(DGProjectInfo& f) {
 bool BuildController::rebuild(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
 	if(bd.exists()) {
-		if(f.getTarget()) {
+		if(f.getTarget() && aflags.isStopped()) {
 			f.getTarget()->build(bd,"clean");
 			return f.getTarget()->build(bd,&aflags);
 		}
 	} else {
 		QString name = getBuildDirName(f);
-		if(bd.mkdir(name) && bd.cd(name) && f.getTarget())
+		if(bd.mkdir(name) && bd.cd(name) && f.getTarget() && aflags.isStopped())
 			return f.getTarget()->build(bd,&aflags);
 	}
 	return false;

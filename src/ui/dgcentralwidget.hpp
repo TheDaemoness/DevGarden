@@ -37,11 +37,12 @@ public:
 	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
-	const std::array<const char*,10> BUTTON_LOWER_NAMES = {
+	const std::array<const char*,11> BUTTON_LOWER_NAMES = {
 		"Setup",
 		"Update",
 		"Build",
 		"Rebuild",
+		"Abort",
 		"Run",
 		"Run File",
 		"Test",
@@ -54,6 +55,7 @@ public:
 		UPDATE,
 		BUILD,
 		REBUILD,
+		ABORT,
 		RUN,
 		RUNFILE,
 		TEST,
