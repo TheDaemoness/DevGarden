@@ -85,7 +85,7 @@ void DGCentralWidget::createWidgets()
 	// Bottom Bar
 	rightBarLayout = new QVBoxLayout();
 	for(size_t i = 0; i < BUTTON_LOWER_NAMES.size(); ++i) {
-		auto* button = makeButton(BUTTON_LOWER_NAMES[i], 64, 32);
+		auto* button = makeButton(BUTTON_LOWER_NAMES[i], 72, 32);
 		buttonsSide.emplace(static_cast<ButtonIdLower>(i), button);
 		rightBarLayout->addWidget(button);
 		button->setHidden(true);
