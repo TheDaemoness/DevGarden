@@ -12,6 +12,7 @@ size_t AsyncWatcher::insert(std::atomic_flag* flag, std::function<void()> func) 
 	else {
 		retval = triggers.size();
 		triggers.emplace_back(flag,std::vector<decltype(func)>({func}));
+		flag->test_and_set();
 	}
 	if(stahp)
 		run();
@@ -66,7 +67,7 @@ void AsyncWatcher::run() {
 bool AsyncWatcher::stop() {
 	bool retval = runFlag.test_and_set();
 	runFlag.clear();
-	if(retval)
+	if(retval && runner.joinable())
 		runner.join();
 	return retval;
 }
