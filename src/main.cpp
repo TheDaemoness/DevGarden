@@ -45,26 +45,33 @@ int main(int argc, char **argv) {
 	ConfigFile f("config/editor.conf");
 
 	std::cout << "Initializing..." << std::endl;
-	std::unique_ptr<DGFileCache> fl(new DGFileCache);
-	std::unique_ptr<LangRegistry> lr(new LangRegistry);
-	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
-	std::unique_ptr<BuildController> bc(new BuildController(*pl));
+	DGFileCache* fl(new DGFileCache);
+	LangRegistry* lr(new LangRegistry);
+	DGProjectLoader* pl(new DGProjectLoader(*lr));
+	BuildController* bc(new BuildController(*pl));
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
-	DGController ctrl(pl.get(), fl.get(), lr.get(), bc.get());
-	DGWindow w(&ctrl, *lr);
-	ctrl.setView(&w);
+	DGController* ctrl = new DGController(pl, fl, lr, bc);
+	DGWindow* w = new DGWindow(ctrl, *lr);
+	ctrl->setView(w);
 
-	w.configure(f);
-
+	w->configure(f);
 	DGStyle::applyStyle(&a);
+	//bc->setStartStopTriggers([ctrl]{ctrl->sigBuildChanged();},[ctrl]{ctrl->sigBuildChanged();});
 
 	std::cout << "Finished loading " << DG_NAME << std::endl;
-	w.show();
-	return a.exec();
+	w->show();
+	int retval = a.exec();
+	delete w;
+	delete ctrl;
+	delete bc;
+	delete pl;
+	delete lr;
+	delete fl;
+	return retval;
 }
 
 //This comment made by DevGarden! DO NOT REMOVE.
