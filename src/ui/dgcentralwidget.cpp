@@ -20,6 +20,7 @@
 #include <QScrollBar>
 #include <QSplitterHandle>
 #include <QStackedLayout>
+#include <QWindow>
 
 #include "../dgcontroller.h"
 #include "../envmacros.h"
@@ -103,13 +104,13 @@ void DGCentralWidget::createWidgets()
 void DGCentralWidget::createLayout()
 {
 	auxPanePair = new QVBoxLayout;
-	auxPanePair->setSpacing(4);
 	auxPanePair->addWidget(auxComboBox);
 	auxPanePair->addWidget(auxPane);
+	auxPanePair->setContentsMargins(0,0,0,0);
 
 	leftSplitter = new QSplitter(Qt::Vertical);
 	leftSplitter->addWidget(projectDirView);
-	QWidget *temp = new QWidget;
+	QWidget *temp = new QFrame;
 	temp->setLayout(auxPanePair);
 	leftSplitter->addWidget(temp);
 
@@ -132,7 +133,6 @@ void DGCentralWidget::createLayout()
 	centralLayout->addItem(rightBarLayout);
 
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
-	centralLayout->setSpacing(4);
 	rightSideLayout->addLayout(centralLayout);
 	rightSideLayout->addWidget(cmdLine);
 
@@ -144,6 +144,8 @@ void DGCentralWidget::createLayout()
 	temp->setLayout(rightSideLayout);
 	mainSplitter->addWidget(leftBar);
 	mainSplitter->addWidget(temp);
+	mainSplitter->setStretchFactor(0,2);
+	mainSplitter->setStretchFactor(1,5);
 
 	QStackedLayout* stack = new QStackedLayout(this);
 	stack->addWidget(mainSplitter);
@@ -151,6 +153,7 @@ void DGCentralWidget::createLayout()
 }
 
 void DGCentralWidget::setupConnections() {
+	this->connect(parent(),         SIGNAL(widthChanged(int)),                  SLOT(resizeDirView()));
 	this->connect(mainSplitter,	    SIGNAL(splitterMoved(int,int)),             SLOT(resizeDirView()));
 	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),              SLOT(resizeDirView()));
 	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),             SLOT(resizeDirView()));
