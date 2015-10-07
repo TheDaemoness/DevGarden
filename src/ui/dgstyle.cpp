@@ -28,11 +28,14 @@ void DGStyle::applyStyle(QApplication* app) {
 	darkPalette.setColor(QPalette::Disabled, QPalette::Button, DGStyle::COLOR_BASE_DISABLED);
 	darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, DGStyle::COLOR_TEXT_DISABLED);
 
+	darkPalette.setColor(QPalette::ToolTipText, DGStyle::COLOR_TEXT);
+	darkPalette.setColor(QPalette::ToolTipBase, DGStyle::COLOR_BASE_DISABLED);
+	darkPalette.setColor(QPalette::Shadow, DGStyle::COLOR_TEXT_HILIGHTED);
 	darkPalette.setColor(QPalette::Highlight, DGStyle::COLOR_HILIGHT);
 	darkPalette.setColor(QPalette::HighlightedText, DGStyle::COLOR_TEXT_HILIGHTED);
 
 	app->setPalette(darkPalette);
 
-	app->setStyleSheet("QToolTip { color: #00ffff; background-color: #004090; border: 1px solid white; }");
+	app->setStyleSheet("QToolTip { border: 1px solid black; }");
 
 }
