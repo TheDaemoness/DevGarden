@@ -282,15 +282,21 @@ void DGController::rebuild() {
 		if(pl->getCurrent()->hasBuildSys())
 			bc->rebuild(*pl->getCurrent());
 }
+void DGController::abort() {
+	if(bc->isRunning())
+		bc->abort();
+}
+
 void DGController::onBuildStarted() {
-	disableBuildButtons(true);
+	dgw->disableBuildButtons(true);
+	dgw->menuBuild->getAction("Build")->setDisabled(true);
+	dgw->menuBuild->getAction("Rebuild")->setDisabled(true);
+	dgw->menuBuild->getAction("Clean")->setDisabled(true);
 }
 void DGController::onBuildStopped() {
-	disableBuildButtons(false);
-}
-void DGController::disableBuildButtons(bool disable) {
-	std::lock_guard<std::mutex> l(dgw->ui_lock);
-	dgw->centralWidget->buttonsSide[DGCentralWidget::BUILD]->setDisabled(disable);
-	dgw->centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setDisabled(disable);
-	dgw->centralWidget->buttonsSide[DGCentralWidget::ABORT]->setHidden(!disable);
+	dgw->disableBuildButtons(false);
+	bool bs = pl->getCurrent()->hasBuildSys();
+	dgw->menuBuild->getAction("Build")->setDisabled(!bs);
+	dgw->menuBuild->getAction("Rebuild")->setDisabled(!bs);
+	dgw->menuBuild->getAction("Clean")->setDisabled(!bs);
 }

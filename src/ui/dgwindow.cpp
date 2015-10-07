@@ -101,7 +101,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuBuild->addAction("Build", QKeySequence(tr("Ctrl+B")), false);
 	menuBuild->addAction("Rebuild", QKeySequence(tr("Shift+Ctrl+B")), false);
 	menuBuild->addAction("Clean");
-	menuBuild->addAction("Cancel Build", QKeySequence(tr("Alt+B")), false);
+	menuBuild->addAction("Abort Build", QKeySequence(tr("Alt+B")), false);
 	menuBuild->addSeparator();
 	menuBuild->addAction("Make Release");
 	menuBuild->addAction("Install Release");
@@ -175,6 +175,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	connect(menuBuild->getAction("Build"),SIGNAL(triggered()),ctrl,SLOT(build()));
 	connect(menuBuild->getAction("Rebuild"),SIGNAL(triggered()),ctrl,SLOT(rebuild()));
 	connect(menuBuild->getAction("Clean"),SIGNAL(triggered()),ctrl,SLOT(clean()));
+	connect(menuBuild->getAction("Abort Build"),SIGNAL(triggered()),ctrl,SLOT(abort()));
 }
 
 void DGWindow::openProjectPage() {
@@ -191,6 +192,14 @@ void DGWindow::quit() {
 
 void DGWindow::toggleFullscreen() {
 	this->isFullScreen()?this->showNormal():this->showFullScreen();
+}
+
+void DGWindow::disableBuildButtons(bool disable) {
+	std::lock_guard<std::mutex> l(ui_lock);
+	centralWidget->buttonsSide[DGCentralWidget::BUILD]->setDisabled(disable);
+	centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setDisabled(disable);
+	centralWidget->buttonsSide[DGCentralWidget::ABORT]->setHidden(!disable);
+	menuBuild->getAction("Abort Build")->setDisabled(!disable);
 }
 
 void DGWindow::zoomOut()    {this->centralWidget->getEditor()->fontSizeDec();}

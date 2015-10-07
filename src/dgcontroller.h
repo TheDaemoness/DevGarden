@@ -79,6 +79,7 @@ public slots:
 	void build();
 	void clean();
 	void rebuild();
+	void abort();
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.
@@ -94,7 +95,6 @@ private:
 private slots:
 	void onBuildStarted();
 	void onBuildStopped();
-	void disableBuildButtons(bool disable);
 };
 
 #endif // DGCONTROLLER_H

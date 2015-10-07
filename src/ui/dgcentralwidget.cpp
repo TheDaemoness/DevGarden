@@ -144,6 +144,7 @@ void DGCentralWidget::setupConnections() {
 
 	connect(buttonsSide.at(DGCentralWidget::BUILD), SIGNAL(pressed()), ctrl, SLOT(build()));
 	connect(buttonsSide.at(DGCentralWidget::REBUILD), SIGNAL(pressed()), ctrl, SLOT(rebuild()));
+	connect(buttonsSide.at(DGCentralWidget::ABORT), SIGNAL(pressed()), ctrl, SLOT(abort()));
 	connect(buttonsSide.at(DGCentralWidget::RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
 	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
