@@ -102,13 +102,22 @@ void DGCentralWidget::createWidgets()
 
 void DGCentralWidget::createLayout()
 {
+	auxPanePair = new QVBoxLayout;
+	auxPanePair->setSpacing(4);
+	auxPanePair->addWidget(auxComboBox);
+	auxPanePair->addWidget(auxPane);
+
+	leftSplitter = new QSplitter(Qt::Vertical);
+	leftSplitter->addWidget(projectDirView);
+	QWidget *temp = new QWidget;
+	temp->setLayout(auxPanePair);
+	leftSplitter->addWidget(temp);
+
 	// ProjectDir, AuxCombo, AuxPane
 	leftSideLayout = new QVBoxLayout;
 	leftSideLayout->setSpacing(4);
-	leftSideLayout->addWidget(projectComboBox, 1);
-	leftSideLayout->addWidget(projectDirView, 3);
-	leftSideLayout->addWidget(auxComboBox, 1);
-	leftSideLayout->addWidget(auxPane, 3);
+	leftSideLayout->addWidget(projectComboBox);
+	leftSideLayout->addWidget(leftSplitter);
 	leftSideLayout->update();
 
 	editorLayout = new QVBoxLayout();
@@ -130,11 +139,11 @@ void DGCentralWidget::createLayout()
 	// Main Layout (Combination of all child layouts)
 	mainSplitter = new QSplitter(Qt::Horizontal,this);
 	leftBar->setHidden(true);
-	QWidget *right = new QWidget;
+	temp = new QWidget;
 	leftBar->setLayout(leftSideLayout);
-	right->setLayout(rightSideLayout);
+	temp->setLayout(rightSideLayout);
 	mainSplitter->addWidget(leftBar);
-	mainSplitter->addWidget(right);
+	mainSplitter->addWidget(temp);
 
 	QStackedLayout* stack = new QStackedLayout(this);
 	stack->addWidget(mainSplitter);

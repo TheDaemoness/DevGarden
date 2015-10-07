@@ -92,8 +92,8 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QSplitter *mainSplitter;
-	QVBoxLayout *leftSideLayout, *editorLayout, *rightBarLayout;
+	QSplitter *mainSplitter, *leftSplitter;
+	QVBoxLayout *leftSideLayout, *auxPanePair, *editorLayout, *rightBarLayout;
 	QLabel* fileInfo;
 	QLineEdit* cmdLine;
 
