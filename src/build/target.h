@@ -4,8 +4,14 @@
 #include <QFileInfo>
 #include <map>
 
+#include "../consts.h"
+
 class LangRegistry;
 class QDir;
+
+namespace dg_utils {class RunToolAsyncFlags;}
+
+#include "../langregistry.h"
 
 /**
  * @brief This tin has a label that can be read.
@@ -30,8 +36,10 @@ public:
 	inline QString& at(const QString& key) {return vars[key];}
 	QString rm(const QString& key);
 
-	bool build(const QDir& bd) const;
-	bool clean(const QDir& bd) const;
+	bool build(const QDir& bd, dg_utils::RunToolAsyncFlags* async, const QString& target_override = dg_consts::STRING_EMPTY) const;
+	inline bool build(const QDir& bd, const QString& target_override = dg_consts::STRING_EMPTY) const  {
+		return build(bd, nullptr, target_override);
+	}
 };
 
 #endif // TARGET_H

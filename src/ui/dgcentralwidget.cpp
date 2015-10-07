@@ -14,6 +14,7 @@
 #include <QGridLayout>
 #include <QSpacerItem>
 #include <QLabel>
+#include <QLineEdit>
 
 #include <QHeaderView>
 #include <QScrollBar>
@@ -77,28 +78,21 @@ void DGCentralWidget::createWidgets()
 	fileInfo = new QLabel(ctrl->getFormattedFileInfo());
 	fileInfo->setAlignment(Qt::AlignRight);
 
-	// Bottom Push Button
-	bottomButton = makeButton("CMD", 48, 32);
+	//Command box.
+	cmdLine = new QLineEdit();
+	cmdLine->setPlaceholderText("Enter command...");
 
 	// Bottom Bar
-	bottomBar = new QHBoxLayout();
+	rightBarLayout = new QVBoxLayout();
 	for(size_t i = 0; i < BUTTON_LOWER_NAMES.size(); ++i) {
-		auto* button = makeButton(BUTTON_LOWER_NAMES[i], 64, 32);
-		buttonsLower.emplace(static_cast<ButtonIdLower>(i), button);
-		bottomBar->addWidget(button);
+		auto* button = makeButton(BUTTON_LOWER_NAMES[i], 72, 32);
+		buttonsSide.emplace(static_cast<ButtonIdLower>(i), button);
+		rightBarLayout->addWidget(button);
 		button->setHidden(true);
 	}
-	buttonsLower[SETUP]->setHidden(false);
-	bottomBar->setSpacing(4);
-	bottomBar->addStretch();
-	bottomBar->addWidget(bottomButton);
-
-	// Split View Options Pane
-	splitViewPane = new QVBoxLayout();
-	splitViewPane->setSpacing(4);
-	splitViewPane->addWidget(makeButton("Code", 48));
-	splitViewPane->addWidget(makeButton("Docs", 48));
-	splitViewPane->addStretch();
+	buttonsSide[SETUP]->setHidden(false);
+	rightBarLayout->setSpacing(4);
+	rightBarLayout->addStretch();
 }
 
 void DGCentralWidget::createLayout()
@@ -124,12 +118,12 @@ void DGCentralWidget::createLayout()
 	QHBoxLayout* centralLayout = new QHBoxLayout;
 	centralLayout->setSpacing(4);
 	centralLayout->addItem(editorLayout);
-	centralLayout->addLayout(splitViewPane);
+	centralLayout->addItem(rightBarLayout);
 
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
 	centralLayout->setSpacing(4);
 	rightSideLayout->addLayout(centralLayout);
-	rightSideLayout->addLayout(bottomBar);
+	rightSideLayout->addWidget(cmdLine);
 
 	// Main Layout (Combination of all child layouts)
 	mainLayout = new QHBoxLayout(this);
@@ -148,9 +142,10 @@ void DGCentralWidget::setupConnections() {
 	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
 	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
 
-	connect(buttonsLower.at(DGCentralWidget::BUILD), SIGNAL(pressed()), ctrl, SLOT(build()));
-	connect(buttonsLower.at(DGCentralWidget::REBUILD), SIGNAL(pressed()), ctrl, SLOT(rebuild()));
-	connect(buttonsLower.at(DGCentralWidget::RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
+	connect(buttonsSide.at(DGCentralWidget::BUILD), SIGNAL(pressed()), ctrl, SLOT(build()));
+	connect(buttonsSide.at(DGCentralWidget::REBUILD), SIGNAL(pressed()), ctrl, SLOT(rebuild()));
+	connect(buttonsSide.at(DGCentralWidget::ABORT), SIGNAL(pressed()), ctrl, SLOT(abort()));
+	connect(buttonsSide.at(DGCentralWidget::RUNFILE), SIGNAL(pressed()), ctrl, SLOT(runFile()));
 	connect(getEditor(), SIGNAL(textChanged()), ctrl, SLOT(fileEdited()));
 }
 

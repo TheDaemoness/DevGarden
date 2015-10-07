@@ -39,7 +39,6 @@ protected:
 	void catalog(const LangRegistry& lr, const QDir& dir, bool recursive = true);
 	inline void catalog(const LangRegistry& lr, bool recursive = true);
 private:
-	//TODO: Make this shit work.
 	std::pair<const QString*, Target*> target;
 	std::map<QString, Target> targets;
 

@@ -15,9 +15,9 @@ class LangRegistry {
 	static const QRegExp FILEEXT_PATTERN;
 
 	struct LangEntry {
-		LangEntry() {refs = 0; buildsys = false;}
+		LangEntry() {refs = 0; buildsys = "";}
 		size_t refs;
-		bool buildsys;
+		QString buildsys;
 		QString name;
 	};
 	struct FileEntry {
@@ -75,9 +75,14 @@ public:
 	bool isBuildSys(const QString& lang) const;
 
 	/**
+	 * @brief Get the name build system invocation script in %tools/build/<lang>
+	 */
+	const QString& getBuildSys(const QString& lang) const;
+
+	/**
 	 * @brief Gets the set of build systems that LangRegistry recognizes.
 	 */
-	std::set<QString> getBuildSysSet() const;
+	std::set<QString> makeBuildSysSet() const;
 
 	/**
 	 * @brief getInterpreter Get the interpreter for a certain language.

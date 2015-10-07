@@ -45,7 +45,8 @@ SOURCES += \
     src/filesys/fileloader.cpp \
     src/filesys/filedata.cpp \
     src/build/target.cpp \
-    src/build/buildcontroller.cpp
+    src/build/buildcontroller.cpp \
+    src/asyncwatcher.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -56,7 +57,6 @@ HEADERS  += \
     src/ui/editor/linenumberarea.h \
     src/filesys/dgprojectloader.h \
 	src/filesys/dgprojectinfo.h \
-    src/dgdebug.hpp \
     src/ui/editor/codestyle.h \
     src/ui/dgstyle.h \
     src/configentry.h \
@@ -72,7 +72,8 @@ HEADERS  += \
     src/filesys/filedata.h \
     src/build/target.h \
     src/build/buildcontroller.h \
-    src/consts.h
+    src/consts.h \
+    src/asyncwatcher.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

@@ -5,6 +5,8 @@
 
 #include "dgmenu.h"
 
+#include <mutex>
+
 class DGCentralWidget;
 class DGController;
 
@@ -22,6 +24,7 @@ public:
 	explicit DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent = 0);
 	~DGWindow();
 	void configure(ConfigFile& f);
+	void disableBuildButtons(bool flag);
 
 public slots:
 	void setControlsBuildEnabled(bool enabled);
@@ -40,6 +43,7 @@ private slots:
 	void nullSlot();
 
 private:
+	std::mutex ui_lock;
 	DGController* ctrl;
 
 	QMenuBar* bar;

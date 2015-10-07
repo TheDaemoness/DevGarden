@@ -12,6 +12,7 @@ class QLineEdit;
 class QPushButton;
 class QLabel;
 class CodeEditorWidget;
+class QLineEdit;
 
 class QHBoxLayout;
 class QVBoxLayout;
@@ -36,11 +37,12 @@ public:
 	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
-	const std::array<const char*,10> BUTTON_LOWER_NAMES = {
+	const std::array<const char*,11> BUTTON_LOWER_NAMES = {
 		"Setup",
 		"Update",
 		"Build",
 		"Rebuild",
+		"Abort",
 		"Run",
 		"Run File",
 		"Test",
@@ -53,6 +55,7 @@ public:
 		UPDATE,
 		BUILD,
 		REBUILD,
+		ABORT,
 		RUN,
 		RUNFILE,
 		TEST,
@@ -88,14 +91,12 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QHBoxLayout *bottomBar, *mainLayout;
-	QVBoxLayout *splitViewPane, *leftSideLayout, *editorLayout;
-	QPushButton* bottomButton;
+	QHBoxLayout *mainLayout;
+	QVBoxLayout *leftSideLayout, *editorLayout, *rightBarLayout;
 	QLabel* fileInfo;
+	QLineEdit* cmdLine;
 
-	//WARNING: Arrangement of elements in this array is CRITICAL!
-	std::unordered_map<ButtonIdLower,QPushButton*> buttonsLower;
-	std::map<QString,QPushButton*> buttonsSide;
+	std::unordered_map<ButtonIdLower,QPushButton*> buttonsSide;
 
 	//Controller ptr (NO OWNERSHIP)
 	DGController* ctrl;

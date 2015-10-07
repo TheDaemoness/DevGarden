@@ -5,43 +5,53 @@
 
 #include "../consts.h"
 
-#include "../dgdebug.hpp"
+#include "../dgcontroller.h"
 
-BuildController::BuildController(DGProjectLoader& pl) {
+BuildController::BuildController(DGProjectLoader& pl) : awatcher() {
 	this->pl = &pl;
+}
+
+void BuildController::setStartStopTriggers(std::function<void()> start, std::function<void()> stop) {
+	awatcher.stop();
+	awatcher.insert(&aflags.sigStarted,start);
+	awatcher.insert(&aflags.sigStopped,stop);
+	awatcher.run();
 }
 
 QString BuildController::getBuildDirName(const DGProjectInfo& info) const {
 	return info.getName()+"-build"+(info.hasAltTargets()?'-'+info.getTargetName():dg_consts::STRING_EMPTY);
 }
 
-void BuildController::build(DGProjectInfo& f) const {
+bool BuildController::build(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
-	if(bd.exists() && f.getTarget())
-		f.getTarget()->build(bd);
+	if(bd.exists() && f.getTarget() && aflags.isStopped())
+		return f.getTarget()->build(bd,&aflags);
+	return false;
 }
 
-void BuildController::clean(DGProjectInfo& f) const {
+bool BuildController::clean(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,false);
 	if(bd.exists()) {
-		if(f.getTarget())
-			f.getTarget()->clean(bd);
-		BuildController::rmRF(bd);
+		if(f.getTarget() && aflags.isStopped())
+			f.getTarget()->build(bd,&aflags,"clean");
+		return BuildController::rmRF(bd);
 	}
+	return false;
 }
 
-void BuildController::rebuild(DGProjectInfo& f) const {
+bool BuildController::rebuild(DGProjectInfo& f) {
 	QDir bd = getBuildDir(f,true);
 	if(bd.exists()) {
-		if(f.getTarget()) {
-			f.getTarget()->clean(bd);
-			f.getTarget()->build(bd);
+		if(f.getTarget() && aflags.isStopped()) {
+			f.getTarget()->build(bd,"clean");
+			return f.getTarget()->build(bd,&aflags);
 		}
 	} else {
 		QString name = getBuildDirName(f);
-		if(bd.mkdir(name) && bd.cd(name) && f.getTarget())
-			f.getTarget()->build(bd);
+		if(bd.mkdir(name) && bd.cd(name) && f.getTarget() && aflags.isStopped())
+			return f.getTarget()->build(bd,&aflags);
 	}
+	return false;
 }
 
 

@@ -49,6 +49,8 @@ signals:
 	 * @brief sigProjectListClosed() Emitted when the current project has closed.
 	 */
 	void sigProjectClosed();
+	void sigBuildStarted();
+	void sigBuildStopped();
 
 public slots:
 	void getFile(const QString& path);
@@ -77,6 +79,7 @@ public slots:
 	void build();
 	void clean();
 	void rebuild();
+	void abort();
 
 private:
 	//NOTE: This is temporary until DGFileLoader is implemented.
@@ -88,6 +91,10 @@ private:
 	DGProjectLoader* pl;
 	DGFileCache* fl;
 	LangRegistry* lr;
+
+private slots:
+	void onBuildStarted();
+	void onBuildStopped();
 };
 
 #endif // DGCONTROLLER_H

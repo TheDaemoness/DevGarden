@@ -22,10 +22,10 @@ DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
 
-	createMenuActions(lr);
-
 	centralWidget = new DGCentralWidget(dgc, this);
 	setCentralWidget(centralWidget);
+
+	createMenuActions(lr);
 }
 
 void DGWindow::configure(ConfigFile& f) {
@@ -33,13 +33,13 @@ void DGWindow::configure(ConfigFile& f) {
 }
 
 void DGWindow::setControlsBuildEnabled(bool enabled) {
-	this->centralWidget->buttonsLower[DGCentralWidget::BUILD]->setHidden(!enabled);
-	this->centralWidget->buttonsLower[DGCentralWidget::REBUILD]->setHidden(!enabled);
+	std::lock_guard<std::mutex> l(ui_lock);
+	this->centralWidget->buttonsSide[DGCentralWidget::BUILD]->setHidden(!enabled);
+	this->centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setHidden(!enabled);
 	this->menuBuild->getAction("Build")->setEnabled(enabled);
 	this->menuBuild->getAction("Rebuild")->setEnabled(enabled);
 	this->menuBuild->getAction("Clean")->setEnabled(enabled);
 }
-
 void DGWindow::createMenuActions(const LangRegistry& lr) {
 	//TODO: Locale system. This is rather critical, actually.
 	menuFile = menuBar()->addMenu(tr("&File"));
@@ -65,18 +65,15 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuFile->addAction(tr("Close Other Projects"), ctrl, SLOT(closeProjOthers()));
 	menuFile->addAction(tr("Close All Projects"), ctrl, SLOT(closeProjAll()));
 	menuFile->addSeparator();
-	menuFile->addAction(tr("Import..."));
-	menuFile->addAction(tr("Export..."));
-	menuFile->addSeparator();
 	menuFile->addAction(tr("Quit"), this, SLOT(quit()), QKeySequence::Quit);
 
 	menuEdit = menuBar()->addMenu(tr("&Edit"));
-	menuEdit->addAction(tr("Undo"), this, SLOT(nullSlot()), QKeySequence::Undo);
-	menuEdit->addAction(tr("Redo"), this, SLOT(nullSlot()), QKeySequence::Redo);
+	menuEdit->addAction(tr("Undo"), centralWidget->getEditor(), SLOT(undo()), QKeySequence::Undo);
+	menuEdit->addAction(tr("Redo"), centralWidget->getEditor(), SLOT(redo()), QKeySequence::Redo);
 	menuEdit->addSeparator();
-	menuEdit->addAction(tr("Cut"), this, SLOT(nullSlot()), QKeySequence::Cut);
-	menuEdit->addAction(tr("Copy"), this, SLOT(nullSlot()), QKeySequence::Copy);
-	menuEdit->addAction(tr("Paste"), this, SLOT(nullSlot()), QKeySequence::Paste);
+	menuEdit->addAction(tr("Cut"), centralWidget->getEditor(), SLOT(cut()), QKeySequence::Cut);
+	menuEdit->addAction(tr("Copy"), centralWidget->getEditor(), SLOT(copy()), QKeySequence::Copy);
+	menuEdit->addAction(tr("Paste"), centralWidget->getEditor(), SLOT(paste()), QKeySequence::Paste);
 	menuEdit->addAction(tr("Paste from Clipboard History"));
 	menuEdit->addSeparator();
 	menuEdit->addAction(tr("Select All"), this, SLOT(nullSlot()), QKeySequence::SelectAll);
@@ -88,7 +85,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 
 	menuBuild.reset(new DGMenu(menuBar()->addMenu(tr("&Build"))));
 	menuBuildInit.reset(menuBuild->addMenu("Create Build System"));
-	std::set<QString> bses = lr.getBuildSysSet();
+	std::set<QString> bses = lr.makeBuildSysSet();
 	if(!bses.empty()) {
 		for(const QString& bs : bses)
 			menuBuildInit->addAction(bs,lr.getHumanName(bs)+"...");
@@ -104,7 +101,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuBuild->addAction("Build", QKeySequence(tr("Ctrl+B")), false);
 	menuBuild->addAction("Rebuild", QKeySequence(tr("Shift+Ctrl+B")), false);
 	menuBuild->addAction("Clean");
-	menuBuild->addAction("Cancel Build", QKeySequence(tr("Alt+B")), false);
+	menuBuild->addAction("Abort Build", QKeySequence(tr("Alt+B")), false);
 	menuBuild->addSeparator();
 	menuBuild->addAction("Make Release");
 	menuBuild->addAction("Install Release");
@@ -178,6 +175,7 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	connect(menuBuild->getAction("Build"),SIGNAL(triggered()),ctrl,SLOT(build()));
 	connect(menuBuild->getAction("Rebuild"),SIGNAL(triggered()),ctrl,SLOT(rebuild()));
 	connect(menuBuild->getAction("Clean"),SIGNAL(triggered()),ctrl,SLOT(clean()));
+	connect(menuBuild->getAction("Abort Build"),SIGNAL(triggered()),ctrl,SLOT(abort()));
 }
 
 void DGWindow::openProjectPage() {
@@ -194,6 +192,14 @@ void DGWindow::quit() {
 
 void DGWindow::toggleFullscreen() {
 	this->isFullScreen()?this->showNormal():this->showFullScreen();
+}
+
+void DGWindow::disableBuildButtons(bool disable) {
+	std::lock_guard<std::mutex> l(ui_lock);
+	centralWidget->buttonsSide[DGCentralWidget::BUILD]->setDisabled(disable);
+	centralWidget->buttonsSide[DGCentralWidget::REBUILD]->setDisabled(disable);
+	centralWidget->buttonsSide[DGCentralWidget::ABORT]->setHidden(!disable);
+	menuBuild->getAction("Abort Build")->setDisabled(!disable);
 }
 
 void DGWindow::zoomOut()    {this->centralWidget->getEditor()->fontSizeDec();}

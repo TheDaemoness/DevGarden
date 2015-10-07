@@ -4,6 +4,9 @@
 #include "../utils.h"
 
 #include <QDir>
+#include <QTextStream>
+
+#include <thread>
 
 Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : lr(langs), target(tar) {
 	changeFile(fi);
@@ -29,28 +32,27 @@ QString Target::rm(const QString& key) {
 	return "";
 }
 
-bool Target::build(const QDir& bd) const {
-	const QString interpreter = dg_consts::STRING_DIR_BUILD+buildsys+"/run.rb";
-	QStringList args;
-	args.append(file.absoluteFilePath());
-	args.append(bd.absolutePath());
-	args.append(target);
-	QString vars;
-	for(auto it : this->vars)
-		vars.append(it.first+'='+it.second+'\n');
-	QByteArray arr = vars.toLocal8Bit(); //Okay, this is getting problematic.
-	return dg_utils::runTool(interpreter.mid(1),&args,nullptr,&arr);
-}
-
-bool Target::clean(const QDir& bd) const {
-	const QString interpreter = dg_consts::STRING_DIR_BUILD+buildsys+"/clean.rb";
-	QStringList args;
-	args.append(file.absoluteFilePath());
-	args.append(bd.absolutePath());
-	args.append("clean");
-	QString vars;
-	for(auto it : this->vars)
-		vars.append(it.first+'='+it.second+'\n');
-	QByteArray arr = vars.toLocal8Bit(); //Okay, this is getting problematic too.
-	return dg_utils::runTool(interpreter.mid(1),&args,nullptr,&arr);
+bool Target::build(const QDir& bd, dg_utils::RunToolAsyncFlags* async, const QString& target_override) const {
+	auto runner = [=]{
+		const QString script = lr.getBuildSys(buildsys);
+		QString vars;
+		for(auto it : this->vars)
+			vars.append(it.first+'='+it.second+'\n');
+		QStringList args;
+		args.append(file.absoluteFilePath());
+		args.append(bd.absolutePath());
+		if(target_override.isEmpty())
+			args.append(target);
+		else
+			args.append(target_override);
+		QTextStream istream(vars.toLocal8Bit());
+		dg_utils::runTool(script,&args,nullptr,&istream,async);
+	};
+	if(async) {
+		std::thread(runner).detach();
+		return !async->isStopped();
+	} else {
+		runner();
+		return true;
+	}
 }

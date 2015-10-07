@@ -23,6 +23,10 @@ DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* l
 	this->pl = pl;
 	this->fl = fl;
 	this->lr = lr;
+	this->dgw = nullptr;
+	curr_file.doc = nullptr;
+	connect(this,SIGNAL(sigBuildStarted()),this,SLOT(onBuildStarted()));
+	connect(this,SIGNAL(sigBuildStopped()),this,SLOT(onBuildStopped()));
 }
 
 void DGController::openFolder() {
@@ -106,7 +110,7 @@ void DGController::getFile(const QString& path) {
 	const bool isext = fn != ext;
 	curr_file.lang = lr->getLang(ext, isext);
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
-	dgw->centralWidget->buttonsLower.at(DGCentralWidget::RUNFILE)->
+	dgw->centralWidget->buttonsSide.at(DGCentralWidget::RUNFILE)->
 		setHidden(!(curr_file.info.isExecutable() ||
 					(curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext, isext))));
 }
@@ -122,7 +126,7 @@ void DGController::runFile() {
 		sl.append(intrp);
 	}
 	sl.append(curr_file.info.absoluteFilePath());
-	dg_utils::runTool("scripts/terminal.rb",&sl);
+	dg_utils::runTool("tools/terminal.rb",&sl);
 }
 
 void DGController::fileEdited() {
@@ -222,8 +226,8 @@ void DGController::newFile() {
 	QString filetype = "";
 
 	bool ran;
-	if(!(ran = dg_utils::runTool("scripts/defaultfiles/"+exact_name,&args,&data)))
-		ran = dg_utils::runTool("scripts/defaultfiles/"+path_name,&args,&data);
+	if(!(ran = dg_utils::runTool("tools/defaultfiles/"+exact_name,&args,&data)))
+		ran = dg_utils::runTool("tools/defaultfiles/"+path_name,&args,&data);
 	if(ran) {
 		filetext = data;
 		filetype = filetext.section('\n',0);
@@ -277,4 +281,22 @@ void DGController::rebuild() {
 	if(pl->getCurrent())
 		if(pl->getCurrent()->hasBuildSys())
 			bc->rebuild(*pl->getCurrent());
+}
+void DGController::abort() {
+	if(bc->isRunning())
+		bc->abort();
+}
+
+void DGController::onBuildStarted() {
+	dgw->disableBuildButtons(true);
+	dgw->menuBuild->getAction("Build")->setDisabled(true);
+	dgw->menuBuild->getAction("Rebuild")->setDisabled(true);
+	dgw->menuBuild->getAction("Clean")->setDisabled(true);
+}
+void DGController::onBuildStopped() {
+	dgw->disableBuildButtons(false);
+	bool bs = pl->getCurrent()->hasBuildSys();
+	dgw->menuBuild->getAction("Build")->setDisabled(!bs);
+	dgw->menuBuild->getAction("Rebuild")->setDisabled(!bs);
+	dgw->menuBuild->getAction("Clean")->setDisabled(!bs);
 }

@@ -6,6 +6,9 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStringList>
+#include <QTextStream>
+
+#include <mutex>
 
 namespace dg_utils {
 
@@ -111,7 +114,18 @@ ConfigEntry* getConfigEntry(QFile& file) {
 	return retval;
 }
 
-bool runTool(const QString& name, QStringList* args, QByteArray* out, const QByteArray* in) {
+bool runTool(const QString& name, QStringList* args) {
+	return runTool(name,args,static_cast<QTextStream*>(nullptr));
+}
+
+bool runTool(const QString& name, QStringList* args, QByteArray* out, QByteArray* in) {
+	QTextStream input(in), output(out);
+	return runTool(name,args,out?&output:nullptr,in?&input:nullptr);
+}
+
+bool runTool(const QString& name, QStringList* args,
+			 QTextStream* out, QTextStream* in,
+			 RunToolAsyncFlags* async) {
 	QFileInfo* retval = new QFileInfo;
 	retval->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);
 	if(!retval->isExecutable())
@@ -124,15 +138,28 @@ bool runTool(const QString& name, QStringList* args, QByteArray* out, const QByt
 	proc.setProgram(retval->absoluteFilePath());
 	if(args)
 		proc.setArguments(*args);
+	RunToolAsyncFlags f;
+	if(!async)
+		async = &f;
+	async->reset();
 	proc.start();
-	if(!proc.waitForStarted())
+	if(!proc.waitForStarted(10000))
 		return false;
-	if(in)
-		proc.write(*in);
-	if(!proc.waitForFinished())
-		return !out;
-	if(out)
-		*out = proc.readAllStandardOutput();
+	async->sigStarted.clear();
+	do {
+		if(in && !in->atEnd()) {
+			std::lock_guard<std::mutex> lg_in(async->m_in); //Not unused, genius compiler.
+			proc.write(in->string()->toLocal8Bit());
+		}
+		if(out && proc.waitForReadyRead(0)) {
+			std::lock_guard<std::mutex> lg_out(async->m_out);
+			*out << proc.readAllStandardOutput();
+		}
+	} while(!proc.waitForFinished(0) && async->run.test_and_set());
+	if(out && proc.waitForReadyRead(0))
+		*out << proc.readAllStandardOutput();
+	async->stopped = true;
+	async->sigStopped.clear();
 	return true;
 }
 

@@ -36,7 +36,7 @@ LangRegistry::LangRegistry() {
 	std::set<QString> langset = dg_utils::getConfigDirs(LangRegistry::DIR.toStdString().c_str());
 	ConfigEntry* ie;
 	for(const QString& lang : langset) {
-		QFile* f = dg_utils::getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf").toStdString().c_str());
+		QFile* f = dg_utils::getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf"));
 		if(f != nullptr) {
 			ConfigFile cf(*f);
 			LangEntry le;
@@ -44,10 +44,10 @@ LangRegistry::LangRegistry() {
 			if((ie = cf.at("name")))
 				le.name = ie->getData(0)->mid(5);
 			if((ie = cf.at("build-sys"))) {
-				le.buildsys = true;
-				interpreter = dg_consts::STRING_DIR_BUILD+lang+"/run.rb";
+				if(ie->split() >= 2)
+					le.buildsys = (STRING_DIR_BUILD+lang+'/'+*ie->getData(1)).mid(1);
 			}
-			else if((ie = cf.at("interpreter-external"))) {
+			if((ie = cf.at("interpreter-external"))) {
 				if(ie->split() >= 2)
 					interpreter = '@'+*ie->getData(1);
 			}
@@ -57,7 +57,7 @@ LangRegistry::LangRegistry() {
 			}
 			langs.insert(std::make_pair(lang,le));
 			ConfigFile::Values* fe;
-			static const QString table[] = {"file-names", "file-exts", ""};
+			const QString table[] = {"file-names", "file-exts", ""};
 			for(size_t n = 0; !table[n].isEmpty(); ++n) {
 				if(!(fe = cf.get(table[n])))
 					continue;
@@ -82,10 +82,10 @@ LangRegistry::LangRegistry() {
 	}
 }
 
-std::set<QString> LangRegistry::getBuildSysSet() const {
+std::set<QString> LangRegistry::makeBuildSysSet() const {
 	std::set<QString> retval;
 	for(auto& pair : langs) {
-		if(pair.second.buildsys)
+		if(!pair.second.buildsys.isEmpty())
 			retval.insert(pair.first);
 	}
 	return retval;
@@ -103,8 +103,14 @@ const QString& LangRegistry::getHumanName(const QString& lang) const {
 
 bool LangRegistry::isBuildSys(const QString& lang) const {
 	if(knowsLang(lang))
-		return langs.at(lang).buildsys;
+		return !langs.at(lang).buildsys.isEmpty();
 	return false;
+}
+
+const QString& LangRegistry::getBuildSys(const QString& lang) const {
+	if(knowsLang(lang))
+		return langs.at(lang).buildsys;
+	return STRING_EMPTY;
 }
 
 const QString& LangRegistry::getLang(const QString& name, bool isext) const {
