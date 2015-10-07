@@ -23,5 +23,5 @@ DevGarden relies on some ancillary files and scripts to be installed besides the
 Sure, the IDE will run without them, but it won't be a pleasant experience.
 For those files, make install is insufficient.
 
-To install those files, run ./install-tools.rb as with superuser/admin privileges.
+To install those files, run ./install-tools.rb with superuser/admin privileges.
 It will install the scripts and configuration files in config and scripts in the global install location (which is platform specific).

@@ -9,6 +9,8 @@
 /**
  * @brief An asynchronous event dispatcher.
  * Watches a series of std::atomic_flags and calls some functions asynchronously if one of those flags is cleared.
+ * Note that this watcher does not give a flying squirrel about if the same flag is cleared multiple times before watcher can get to it.
+ * This may at times produce unintuitive behavior.
  */
 class AsyncWatcher {
 	std::atomic_flag runFlag;
