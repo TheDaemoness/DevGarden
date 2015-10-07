@@ -16,6 +16,7 @@ class QLineEdit;
 
 class QHBoxLayout;
 class QVBoxLayout;
+class QSplitter;
 
 class DGController;
 
@@ -91,10 +92,12 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QHBoxLayout *mainLayout;
+	QSplitter *mainSplitter;
 	QVBoxLayout *leftSideLayout, *editorLayout, *rightBarLayout;
 	QLabel* fileInfo;
 	QLineEdit* cmdLine;
+
+	QWidget* leftBar;
 
 	std::unordered_map<ButtonIdLower,QPushButton*> buttonsSide;
 

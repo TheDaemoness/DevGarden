@@ -18,6 +18,8 @@
 
 #include <QHeaderView>
 #include <QScrollBar>
+#include <QSplitterHandle>
+#include <QStackedLayout>
 
 #include "../dgcontroller.h"
 #include "../envmacros.h"
@@ -40,12 +42,14 @@ QPushButton* DGCentralWidget::makeButton(const QString& txt, int width, int heig
 
 void DGCentralWidget::createWidgets()
 {
+	leftBar = new QWidget;
+
 	// Project Directory Tree
 	projectDirModel = new QFileSystemModel;
 	projectDirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
 	projectDirModel->setRootPath(QCoreApplication::applicationDirPath());
 
-	projectDirView = new QTreeView;
+	projectDirView = new QTreeView(leftBar);
 	projectDirView->setModel(projectDirModel);
 	projectDirView->setWordWrap(false);
 	projectDirView->setTextElideMode(Qt::ElideNone);
@@ -53,23 +57,24 @@ void DGCentralWidget::createWidgets()
 	projectDirView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 	projectDirView->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	projectDirView->header()->hide();
-	projectDirView->setHidden(true);
+	projectDirView->header()->geometriesChanged();
+	projectDirView->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding));
 
 	// Auxiliary ComboBox
-	auxComboBox = new QComboBox;
+	auxComboBox = new QComboBox(leftBar);
 	auxComboBox->addItem("Aux ComboBox");
-	auxComboBox->hide();
+	auxComboBox->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed));
 
 	// Project
-	projectComboBox = new QComboBox;
+	projectComboBox = new QComboBox(leftBar);
 	projectComboBox->addItem("Projects");
-	projectComboBox->hide();
 	this->connect(this->projectComboBox,SIGNAL(currentIndexChanged(int)),SLOT(changeProject(int)));
+	projectComboBox->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed));
 
 	// Auxiliary Pane
-	auxPane = new QListWidget();
+	auxPane = new QListWidget(leftBar);
 	auxPane->addItem("Auxiliary Pane!");
-	auxPane->hide();
+	auxPane->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding));
 
 	// Text Editor
 	textEditor = new CodeEditorWidget;
@@ -97,9 +102,6 @@ void DGCentralWidget::createWidgets()
 
 void DGCentralWidget::createLayout()
 {
-	// I am using stretch values at the moment for ease of use only.
-	// Later on will be switching to size policies to make the sizing right.
-
 	// ProjectDir, AuxCombo, AuxPane
 	leftSideLayout = new QVBoxLayout;
 	leftSideLayout->setSpacing(4);
@@ -114,7 +116,7 @@ void DGCentralWidget::createLayout()
 	editorLayout->addWidget(fileInfo);
 	editorLayout->addWidget(textEditor);
 
-	// TextEditor, BottomBar
+	// TextEditor, RightBar
 	QHBoxLayout* centralLayout = new QHBoxLayout;
 	centralLayout->setSpacing(4);
 	centralLayout->addItem(editorLayout);
@@ -126,15 +128,21 @@ void DGCentralWidget::createLayout()
 	rightSideLayout->addWidget(cmdLine);
 
 	// Main Layout (Combination of all child layouts)
-	mainLayout = new QHBoxLayout(this);
-	mainLayout->setSpacing(4);
-	mainLayout->addLayout(leftSideLayout);
-	mainLayout->addLayout(rightSideLayout, 20);
+	mainSplitter = new QSplitter(Qt::Horizontal,this);
+	leftBar->setHidden(true);
+	QWidget *right = new QWidget;
+	leftBar->setLayout(leftSideLayout);
+	right->setLayout(rightSideLayout);
+	mainSplitter->addWidget(leftBar);
+	mainSplitter->addWidget(right);
 
-	setLayout(mainLayout);
+	QStackedLayout* stack = new QStackedLayout(this);
+	stack->addWidget(mainSplitter);
+	this->setLayout(stack);
 }
 
 void DGCentralWidget::setupConnections() {
+	this->connect(mainSplitter,	    SIGNAL(splitterMoved(int,int)),             SLOT(resizeDirView()));
 	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),              SLOT(resizeDirView()));
 	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),             SLOT(resizeDirView()));
 	this->connect(projectComboBox,  SIGNAL(currentIndexChanged(int)),           SLOT(changeProject(int)));
@@ -163,10 +171,10 @@ void DGCentralWidget::changeProject(int index) {
 		projectDirView->setColumnHidden(1, true);
 		projectDirView->setColumnHidden(2, true);
 		projectDirView->setColumnHidden(3, true);
-		resizeDirView();
 	} else
 		ctrl->getFile(ctrl->getPath());
 	projectDirView->setHidden(!m);
+	resizeDirView();
 	static_cast<QWidget*>(this->parent())->setWindowTitle(QString(DG_NAME) + " - " + projectComboBox->currentText());
 }
 
@@ -222,6 +230,6 @@ void DGCentralWidget::updateProjectList() {
 }
 
 void DGCentralWidget::setHiddenLeft(bool hide) {
-	mainLayout->setStretch(0,hide?0:5);
+	leftBar->setHidden(hide);
 }
 
