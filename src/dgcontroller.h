@@ -36,6 +36,9 @@ public:
 
 	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
 
+	QString getFileSaveName();
+	QString getFormattedFileInfo();
+
 signals:
 	/**
 	 * @brief sigProjectChanged Emitted when the active project has been switched to another.
@@ -73,8 +76,6 @@ public slots:
 	void newFile();
 	void newTemplateFile();
 	void newTemplateProject();
-
-	QString getFormattedFileInfo();
 
 	void build();
 	void clean();

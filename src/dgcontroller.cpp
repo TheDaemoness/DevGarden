@@ -300,3 +300,7 @@ void DGController::onBuildStopped() {
 	dgw->menuBuild->getAction("Rebuild")->setDisabled(!bs);
 	dgw->menuBuild->getAction("Clean")->setDisabled(!bs);
 }
+
+QString DGController::getFileSaveName() {
+	return QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
+}

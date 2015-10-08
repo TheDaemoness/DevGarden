@@ -13,6 +13,7 @@
 #include "filedata.h"
 
 class DGFileCache;
+class DGController;
 
 /**
  * @brief This is a workaround because <REDACTED> moc.
@@ -42,44 +43,29 @@ private:
 	SlotMachine slotter;
 	QFileSystemWatcher fsw; //No relation to noodles.
 	std::map<QString,FileData> data;
-	std::vector<FileData*> current;
+	std::map<QString,FileData>::iterator current;
+	DGController* ctrl;
 public:
 	DGFileCache();
-	~DGFileCache();
-	void fileEdited(size_t index = 0);
-	void saveCurrentAs(const QString& path);
 
-	size_t addView(const QString& path);
-	inline void clearViews() {current.clear();}
+	inline void bindController(DGController* dgc) {ctrl = ctrl?ctrl:dgc;}
 
-	inline size_t getCountLoaded()    {return data.size();}
+	inline size_t  getCountLoaded() {return data.size();}
+	QTextDocument* getCurrDoc()     {return current->second.getDocument();}
+	const QString& getCurrLang()    {return current->second.getLang();}
 
-	void set(const QString& path, size_t index = 0);
-	QTextDocument* get(size_t index = 0);
+	QTextDocument* set(const QString& path);
 
 	//Triggers FileLoader::save()
-	void saveCurrent(size_t index = 0);
-	void saveVisible();
-	void saveOthers();
-	void saveAll() {saveVisible(); saveOthers();}
+	void saveCurrent();
 
 	//Triggers FileLoader::load()
-	void reloadCurrent(size_t index = 0);
-	void reloadOthers() {closeOthers();}
-	void reloadAll();
-
-	//Closes a NON-REFERENCED SAVED FILE.
-	void closeSingle(const QString& str);
-	void closeOthers();
-	void closeAll();
+	void reloadCurrent();
 
 	//Drops associated file loader, used by save as.
-	void delinkCurrent(size_t index = 0);
-	void delinkOthers();
-	void delinkAll();
+	void delinkCurrent();
 
-	//Uses a specified file loader for one save operation, used by save and copy.
-	void copyCurrent(FileLoader& saver, size_t index = 0);
+	inline void saveAs() {delinkCurrent(); saveCurrent();}
 
 private:
 	friend SlotMachine;
