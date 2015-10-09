@@ -34,7 +34,7 @@ public:
 	QString getPath();
 	QString getDir();
 
-	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
+	void setView(DGWindow* view);
 
 	QString getFileSaveName();
 	QString getFormattedFileInfo();
@@ -83,9 +83,6 @@ public slots:
 	void abort();
 
 private:
-	//NOTE: This is temporary until DGFileLoader is implemented.
-	DGFileCache::FileRef curr_file;
-
 	DGWindow* dgw;
 	BuildController* bc;
 	QFileSystemModel* fsm; //No relation.

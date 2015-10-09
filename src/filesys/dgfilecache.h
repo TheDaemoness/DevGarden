@@ -32,14 +32,6 @@ public slots:
  * @deprecated INCOMPLETE, DO NOT USE!
  */
 class DGFileCache { //TODO: Implement and connect.
-public:
-	struct FileRef { //TODO: Remove.
-		QFileInfo info;
-		QTextDocument* doc;
-		bool saved;
-		QString lang;
-	};
-private:
 	SlotMachine slotter;
 	QFileSystemWatcher fsw; //No relation to noodles.
 	std::map<QString,FileData> data;
@@ -53,6 +45,11 @@ public:
 	inline size_t  getCountLoaded() {return data.size();}
 	QTextDocument* getCurrDoc()     {return current->second.getDocument();}
 	const QString& getCurrLang()    {return current->second.getLang();}
+	const QString& getCurrPath()    {return current->first;}
+
+	bool isCurrSaved() {return current->second.isSaved();}
+
+	void markUnsaved() {current->second.markUnsaved();}
 
 	QTextDocument* set(const QString& path);
 
