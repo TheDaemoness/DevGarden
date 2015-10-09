@@ -53,8 +53,8 @@ public:
 
 	QTextDocument* set(const QString& path);
 
-	//Triggers FileLoader::save()
-	void saveCurrent();
+	//Triggers FileLoader::save(). Returns true if the file save dialog had to open.
+	bool saveCurrent();
 
 	//Triggers FileLoader::load()
 	void reloadCurrent();

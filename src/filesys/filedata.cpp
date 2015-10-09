@@ -6,13 +6,12 @@ bool FileData::shouldAutoClose() {
 
 void FileData::save() {
 	if(fl.get() != nullptr)
-		fl->save(*doc.get());
-	saved = true;
+		saved = fl->save(*doc.get());
 }
 
 void FileData::load() {
 	if(fl.get() != nullptr)
-		fl->load(*doc.get());
+		saved = fl->load(*doc.get());
 }
 
 void FileData::setFileLoader(FileLoader* nu, bool save) {

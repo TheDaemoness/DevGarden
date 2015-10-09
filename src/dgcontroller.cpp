@@ -55,8 +55,11 @@ void DGController::saveFileCopy() {
 }
 
 void DGController::saveFile() {
-	fl->saveCurrent();
+	if(fl->saveCurrent())
+		pl->addFile(fl->getCurrPath());
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+	sigProjectListChanged();
+	sigProjectChanged();
 }
 
 void DGController::setView(DGWindow* view) {

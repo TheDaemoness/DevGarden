@@ -42,18 +42,19 @@ QTextDocument* DGFileCache::set(const QString& path) {
 	return current->second.getDocument();
 }
 
-void DGFileCache::saveCurrent() {
+bool DGFileCache::saveCurrent() {
 	if(current->second.hasLoader())
 		current->second.save();
 	else {
 		QFileInfo f(ctrl->getFileSaveName());
-		FileLoader* load = FileLoader::create(f);
-		current->second.setFileLoader(load);
-		current->second.save();
 		auto old = current;
 		current = data.emplace(f.absoluteFilePath(),FileData(std::move(current->second))).first;
+		current->second.setFileLoader(FileLoader::create(f));
+		current->second.save();
 		data.erase(old);
+		return true;
 	}
+	return !current->second.hasLoader();
 }
 
 void DGFileCache::reloadCurrent() {
