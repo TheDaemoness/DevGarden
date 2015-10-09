@@ -30,6 +30,14 @@ QTextDocument* DGFileCache::set(const QString& path) {
 		++(current->second);
 		if(old->second.shouldAutoClose())
 			data.erase(old);
+	} else {
+		QFileInfo fi(path);
+		if(fi.exists()) {
+			current = data.emplace(fi.absoluteFilePath(),FileData()).first;
+			current->second.setFileLoader(FileLoader::create(path));
+			current->second.load();
+		} else
+			current = data.emplace("",FileData()).first;
 	}
 	return current->second.getDocument();
 }
@@ -39,16 +47,12 @@ void DGFileCache::saveCurrent() {
 		current->second.save();
 	else {
 		QFileInfo f(ctrl->getFileSaveName());
-		if(f.exists()) {
-			FileLoader* load = FileLoader::create(f);
-			current->second.setFileLoader(load);
-			current->second.save();
-			auto old = current;
-			current = data.emplace(f.absoluteFilePath(),FileData(std::move(current->second))).first;
-			data.erase(old);
-		} else {
-			/*Report issue*/
-		}
+		FileLoader* load = FileLoader::create(f);
+		current->second.setFileLoader(load);
+		current->second.save();
+		auto old = current;
+		current = data.emplace(f.absoluteFilePath(),FileData(std::move(current->second))).first;
+		data.erase(old);
 	}
 }
 

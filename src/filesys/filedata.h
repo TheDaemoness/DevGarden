@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <QTextDocument>
+#include <QPlainTextDocumentLayout>
 
 class FileData {
 	std::unique_ptr<FileLoader> fl;
@@ -15,8 +16,10 @@ class FileData {
 
 	QString lang;
 public:
-	FileData() : doc(new QTextDocument) {
+	FileData() : doc(new QTextDocument), saved(false) {
 		ref_count = 1;
+		doc->setDocumentLayout(new QPlainTextDocumentLayout(doc.get()));
+		autoclose = true;
 	}
 	FileData(FileData&& fd) {
 		fl.reset(fd.fl.get());
