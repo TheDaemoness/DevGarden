@@ -41,8 +41,3 @@ bool FileLoaderDeferred::load(QTextDocument& buffer) {
 bool FileLoaderDeferred::save(const QTextDocument& buffer) {
 
 }
-
-bool FileLoaderDeferred::do_reopen(const QFileInfo& file) {
-	this->file.setFileName(file.absoluteFilePath());
-	return true;
-}

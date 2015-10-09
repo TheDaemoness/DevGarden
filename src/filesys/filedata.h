@@ -16,13 +16,13 @@ class FileData {
 
 	QString lang;
 public:
-	FileData() : doc(new QTextDocument), saved(false) {
+	FileData() : doc(new QTextDocument), saved(false), fl() {
 		ref_count = 1;
 		doc->setDocumentLayout(new QPlainTextDocumentLayout(doc.get()));
 		autoclose = true;
 	}
 	FileData(FileData&& fd) {
-		fl.reset(fd.fl.get());
+		fl.reset(fd.fl.release());
 		autoclose = fd.autoclose;
 		doc.reset(fd.doc.release());
 		ref_count = 1;
@@ -31,8 +31,6 @@ public:
 
 	size_t operator++() {++ref_count; return ref_count;}
 	size_t operator--() {ref_count?--ref_count:0; return ref_count;}
-
-	virtual ~FileData() {};
 
 	bool shouldAutoClose();
 
