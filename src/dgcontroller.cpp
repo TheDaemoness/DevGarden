@@ -62,6 +62,7 @@ void DGController::saveFile() {
 void DGController::setView(DGWindow* view) {
 	dgw = (dgw?dgw:view);
 	dgw->centralWidget->getEditor()->setDocument(fl->getCurrDoc());
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::getFile(const QString& path) {
@@ -194,6 +195,7 @@ void DGController::newFile() {
 
 void DGController::reloadFile() {
 	fl->reloadCurrent();
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 QString DGController::getFormattedFileInfo() {
@@ -249,5 +251,5 @@ void DGController::onBuildStopped() {
 }
 
 QString DGController::getFileSaveName() {
-	return QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
+	return QFileDialog::getSaveFileName(nullptr,tr("Save As..."),"~");
 }

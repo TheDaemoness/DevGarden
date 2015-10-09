@@ -81,7 +81,7 @@ void DGCentralWidget::createWidgets()
 	textEditor = new CodeEditorWidget;
 
 	//File Info Label
-	fileInfo = new QLabel(ctrl->getFormattedFileInfo());
+	fileInfo = new QLabel;
 	fileInfo->setAlignment(Qt::AlignRight);
 
 	//Command box.

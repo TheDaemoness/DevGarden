@@ -15,7 +15,9 @@ class FileData {
 
 	QString lang;
 public:
-	FileData() {ref_count = 1;}
+	FileData() : doc(new QTextDocument) {
+		ref_count = 1;
+	}
 	FileData(FileData&& fd) {
 		fl.reset(fd.fl.get());
 		autoclose = fd.autoclose;
