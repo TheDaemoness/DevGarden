@@ -153,7 +153,6 @@ void DGCentralWidget::createLayout()
 }
 
 void DGCentralWidget::setupConnections() {
-	this->connect(parent(),         SIGNAL(widthChanged(int)),                  SLOT(resizeDirView()));
 	this->connect(mainSplitter,	    SIGNAL(splitterMoved(int,int)),             SLOT(resizeDirView()));
 	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),              SLOT(resizeDirView()));
 	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),             SLOT(resizeDirView()));

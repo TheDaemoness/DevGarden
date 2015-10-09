@@ -19,7 +19,6 @@ public:
 	FileData() : doc(new QTextDocument), saved(false), fl() {
 		ref_count = 1;
 		doc->setDocumentLayout(new QPlainTextDocumentLayout(doc.get()));
-		autoclose = true;
 	}
 	FileData(FileData&& fd) {
 		fl.reset(fd.fl.release());

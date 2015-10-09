@@ -8,7 +8,7 @@
 #define SEAR
 
 DGFileCache::DGFileCache() : slotter(*this) {
-	data.emplace("",std::move(FileData()));
+	data.emplace("",FileData());
 	current = data.begin();
 	ctrl = nullptr;
 }
@@ -28,8 +28,6 @@ QTextDocument* DGFileCache::set(const QString& path) {
 	if(it != data.end()) {
 		current = it;
 		++(current->second);
-		if(old->second.shouldAutoClose())
-			data.erase(old);
 	} else {
 		QFileInfo fi(path);
 		if(fi.exists()) {
@@ -37,8 +35,10 @@ QTextDocument* DGFileCache::set(const QString& path) {
 			current->second.setFileLoader(FileLoader::create(path));
 			current->second.load();
 		} else
-			current = data.emplace("",FileData()).first;
+			current = data.emplace("",std::move(FileData())).first;
 	}
+	if(old->second.shouldAutoClose())
+		data.erase(old);
 	return current->second.getDocument();
 }
 

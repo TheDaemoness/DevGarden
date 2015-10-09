@@ -71,7 +71,10 @@ void DGController::setView(DGWindow* view) {
 void DGController::getFile(const QString& path) {
 	auto ptr = fl->set(path);
 	//TODO: Null check.
+	dgw->centralWidget->getEditor()->blockSignals(true);
 	dgw->centralWidget->getEditor()->setDocument(ptr);
+	dgw->centralWidget->getEditor()->blockSignals(false);
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::runFile() {
@@ -206,12 +209,12 @@ QString DGController::getFormattedFileInfo() {
 	auto ptr = pl->getCurrent();
 	QString filename;
 	if(!ptr)
-		filename = "No File";
+		filename = "";
 	else if(ptr->isSingleFile())
 		filename = fl->getCurrPath();
 	else
-		filename = fl->getCurrPath().isEmpty()?"No File":ptr->getDir()->relativeFilePath(fl->getCurrPath());
-	return filename + (!fl->getCurrLang().isEmpty()?" - "+fl->getCurrLang():"") + " - " +
+		filename = ptr->getDir()->relativeFilePath(fl->getCurrPath());
+	return (filename.isEmpty()?"":(filename+" - ")) + (!fl->getCurrLang().isEmpty()?(fl->getCurrLang()+" - "):"") +
 						QString::number(lines) + (lines==1?" line":" lines")
 						+ (!fl->isCurrSaved()?" - Unsaved":"") + ' ';
 }
