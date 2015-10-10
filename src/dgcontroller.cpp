@@ -64,15 +64,16 @@ void DGController::saveFile() {
 
 void DGController::setView(DGWindow* view) {
 	dgw = (dgw?dgw:view);
-	dgw->centralWidget->getEditor()->setDocument(fl->getCurrDoc());
+	dgw->centralWidget->getEditor()->setContents(fl->getCurrDoc());
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::getFile(const QString& path) {
-	auto ptr = fl->set(path);
-	//TODO: Null check.
+	QFileInfo fi(path);
+	if(fi.isDir() || !fi.exists() || !fi.isReadable())
+		return;
 	dgw->centralWidget->getEditor()->blockSignals(true);
-	dgw->centralWidget->getEditor()->setDocument(ptr);
+	dgw->centralWidget->getEditor()->setContents(fl->set(fi));
 	dgw->centralWidget->getEditor()->blockSignals(false);
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }

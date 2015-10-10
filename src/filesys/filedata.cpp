@@ -15,11 +15,9 @@ void FileData::load() {
 		saved |= fl->load(*doc.get());
 }
 
-void FileData::setFileLoader(FileLoader* nu, const LangRegistry& lr, bool save) {
+void FileData::setFileLoader(FileLoader* nu, bool save) {
 	if(save && !saved)
 		this->save();
 	fl.reset(nu);
-	QFileInfo fi(nu->getAddress());
-	lang = lr.getLang(fi);
 }
 

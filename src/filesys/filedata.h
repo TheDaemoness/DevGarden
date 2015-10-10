@@ -15,7 +15,6 @@ class FileData {
 	bool autoclose;
 	size_t ref_count;
 	bool saved;
-
 	QString lang;
 public:
 	FileData() : doc(new QTextDocument), saved(false), fl() {
@@ -35,13 +34,15 @@ public:
 
 	bool shouldAutoClose();
 
-	void setFileLoader(FileLoader* nu, const LangRegistry& lr, bool save = true);
+	void setFileLoader(FileLoader* nu, bool save = true);
 	inline void closeLoader() {fl.reset();}
 	inline bool hasLoader() {return fl.get() != nullptr;}
 
 	void load();
 	void save();
 	inline bool isSaved() {return saved;}
+
+	inline void setLang(const QString& lname) {lang = lname;}
 
 	inline QTextDocument* getDocument() {return doc.get();} //Don't you dare free this.
 	inline const QString& getLang() {return lang;}

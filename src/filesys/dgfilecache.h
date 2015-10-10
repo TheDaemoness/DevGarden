@@ -52,7 +52,7 @@ public:
 
 	void markUnsaved() {current->second.markUnsaved();}
 
-	QTextDocument* set(const QString& path);
+	QTextDocument* set(const QFileInfo& path);
 
 	//Triggers FileLoader::save(). Returns true if the file save dialog had to open.
 	bool saveCurrent();
