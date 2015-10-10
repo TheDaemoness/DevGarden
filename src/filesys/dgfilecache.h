@@ -37,8 +37,9 @@ class DGFileCache { //TODO: Implement and connect.
 	std::map<QString,FileData> data;
 	std::map<QString,FileData>::iterator current;
 	DGController* ctrl;
+	const LangRegistry& lr;
 public:
-	DGFileCache();
+	DGFileCache(const LangRegistry& langs);
 
 	inline void bindController(DGController* dgc) {ctrl = ctrl?ctrl:dgc;}
 

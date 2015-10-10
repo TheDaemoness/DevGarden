@@ -45,8 +45,8 @@ int main(int argc, char **argv) {
 	ConfigFile f("config/editor.conf");
 
 	std::cout << "Initializing..." << std::endl;
-	std::unique_ptr<DGFileCache> fl(new DGFileCache);
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
+	std::unique_ptr<DGFileCache> fl(new DGFileCache(*lr.get()));
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
 	std::unique_ptr<BuildController> bc(new BuildController(*pl));
 

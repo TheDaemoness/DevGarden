@@ -30,7 +30,7 @@ public:
 	virtual bool load(QTextDocument& buffer) = 0;
 	virtual bool save(const QTextDocument& buffer) = 0;
 	virtual bool defaultAutoclose() {return true;}
-	virtual QString name() {return path.absoluteFilePath();}
+	virtual QString getAddress() {return path.absoluteFilePath();}
 	virtual QString getLoaderName() const = 0;
 };
 class FileLoaderFS : public FileLoader {

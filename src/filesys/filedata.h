@@ -7,6 +7,8 @@
 #include <QTextDocument>
 #include <QPlainTextDocumentLayout>
 
+class LangRegistry;
+
 class FileData {
 	std::unique_ptr<FileLoader> fl;
 	std::unique_ptr<QTextDocument> doc;
@@ -33,7 +35,7 @@ public:
 
 	bool shouldAutoClose();
 
-	void setFileLoader(FileLoader* nu, bool save = true);
+	void setFileLoader(FileLoader* nu, const LangRegistry& lr, bool save = true);
 	inline void closeLoader() {fl.reset();}
 	inline bool hasLoader() {return fl.get() != nullptr;}
 
