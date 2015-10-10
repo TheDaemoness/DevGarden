@@ -211,9 +211,7 @@ QString DGController::getFormattedFileInfo() {
 	QString filename;
 	if(!ptr)
 		filename = "";
-	else if(ptr->isSingleFile())
-		filename = fl->getCurrPath();
-	else
+	else if(!ptr->isSingleFile())
 		filename = ptr->getDir()->relativeFilePath(fl->getCurrPath());
 	return (filename.isEmpty()?"":(filename+" - ")) + (!fl->getCurrLang().isEmpty()?(fl->getCurrLang()+" - "):"") +
 						QString::number(lines) + (lines==1?" line":" lines")

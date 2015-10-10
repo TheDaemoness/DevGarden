@@ -37,6 +37,7 @@ class DGFileCache { //TODO: Implement and connect.
 	std::map<QString,FileData> data;
 	std::map<QString,FileData>::iterator current;
 	DGController* ctrl;
+	std::vector<std::unique_ptr<QTextDocument>> trash;
 	const LangRegistry& lr;
 public:
 	DGFileCache(const LangRegistry& langs);
@@ -49,10 +50,10 @@ public:
 	const QString& getCurrPath()    {return current->first;}
 
 	bool isCurrSaved() {return current->second.isSaved();}
-
 	void markUnsaved() {current->second.markUnsaved();}
 
 	QTextDocument* set(const QFileInfo& path);
+	void clean() {trash.clear(); trash.reserve(1);}
 
 	//Triggers FileLoader::save(). Returns true if the file save dialog had to open.
 	bool saveCurrent();

@@ -20,8 +20,12 @@
 #include "langregistry.h"
 #include "dgcontroller.h"
 
-int main(int argc, char **argv) {
+namespace dg_consts {
+	const QString STRING_EMPTY = "";
+	const QString STRING_DIR_BUILD = "%tools/build/";
+}
 
+int main(int argc, char **argv) {
 	QApplication a(argc, argv);
 	a.setApplicationName(DG_NAME);
 

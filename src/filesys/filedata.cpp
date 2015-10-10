@@ -19,5 +19,6 @@ void FileData::setFileLoader(FileLoader* nu, bool save) {
 	if(save && !saved)
 		this->save();
 	fl.reset(nu);
+	autoclose = nu->defaultAutoclose();
 }
 

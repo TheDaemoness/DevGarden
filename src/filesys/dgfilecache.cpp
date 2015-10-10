@@ -9,6 +9,7 @@ DGFileCache::DGFileCache(const LangRegistry& langs) : lr(langs), slotter(*this) 
 	data.emplace("",FileData());
 	current = data.begin();
 	ctrl = nullptr;
+	trash.reserve(1);
 }
 void DGFileCache::onLostFile(const QString& name) {
 	QFileInfo fi(name);
@@ -31,13 +32,15 @@ QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 		if(fi.exists()) {
 			current = data.emplace(fi.absoluteFilePath(),FileData()).first;
 			current->second.setFileLoader(FileLoader::create(fi.absoluteFilePath()));
-			current->second.setLang(lr.getLang(fi));
+			current->second.setLang(&lr.getLang(fi));
 			current->second.load();
 		} else
-			current = data.emplace("",std::move(FileData())).first;
+			current = data.emplace("",FileData()).first;
 	}
-	if(old->second.shouldAutoClose())
+	if(old->second.shouldAutoClose()) {
+		trash.emplace_back(old->second.releaseDocument());
 		data.erase(old);
+	}
 	return current->second.getDocument();
 }
 
@@ -49,9 +52,12 @@ bool DGFileCache::saveCurrent() {
 		auto old = current;
 		current = data.emplace(f.absoluteFilePath(),FileData(std::move(current->second))).first;
 		current->second.setFileLoader(FileLoader::create(f));
-		current->second.setLang(lr.getLang(f));
+		current->second.setLang(&lr.getLang(f));
 		current->second.save();
-		data.erase(old);
+		if(old->second.shouldAutoClose()) {
+			trash.emplace_back(old->second.releaseDocument());
+			data.erase(old);
+		}
 		return true;
 	}
 	return !current->second.hasLoader();
