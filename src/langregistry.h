@@ -62,7 +62,8 @@ public:
 	/**
 	 * @brief Check if an interpreter exists for a given language.
 	 */
-	bool hasInterpreter(const QString& name, bool isext = true) const {return !getBindMapConst(isext).at(name).interpreter.isEmpty();}
+	bool hasInterpreter(const QString& name, bool isext = true) const;
+	bool hasInterpreter(const QFileInfo& fi) const;
 
 	/**
 	 * @brief Test if the registry has loaded a language for a certain file type.
@@ -89,6 +90,7 @@ public:
 	 * @return A name or path to an executable that can interpret the file, or an empty string if none is known.
 	 */
 	QString getInterpreter(const QString& name, bool isext = true) const;
+	QString getInterpreter(const QFileInfo& fi) const;
 
 	//Reference counting, to be incremented per PROJECT, not PER FILE!
 	bool add(const QStringList& langs);

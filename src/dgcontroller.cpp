@@ -76,14 +76,15 @@ void DGController::getFile(const QString& path) {
 	dgw->centralWidget->getEditor()->setContents(fl->set(fi));
 	dgw->centralWidget->getEditor()->blockSignals(false);
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+	dgw->centralWidget->buttonsSide.at(DGCentralWidget::RUNFILE)->
+		setHidden(!(fi.isExecutable() || lr->hasInterpreter(fi)));
 }
 
 void DGController::runFile() {
 	QStringList sl;
-	if(lr->hasInterpreter(fl->getCurrLang())) {
-		const QString fn = fl->getCurrPath();
-		const QString ext = LangRegistry::getFileExt(fn);
-		const QString& intrp = lr->getInterpreter(ext, fn != ext);
+	QFileInfo fi(fl->getCurrPath());
+	if(lr->hasInterpreter(fi)) {
+		const QString& intrp = lr->getInterpreter(fi);
 		if(intrp.isEmpty())
 			return;
 		sl.append(intrp);
