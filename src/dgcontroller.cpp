@@ -214,6 +214,14 @@ void DGController::reloadFile() {
 	fc->reloadCurrent();
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
+void DGController::reloadFileOthers() {
+	fc->reloadOthers();
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+}
+void DGController::reloadFileAll() {
+	fc->reloadOthers();
+	reloadFile();
+}
 
 QString DGController::getFormattedFileInfo() {
 	size_t lines = fc->getCurrDoc()->lineCount();

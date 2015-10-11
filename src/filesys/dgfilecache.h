@@ -61,6 +61,7 @@ public:
 
 	//Triggers FileLoader::load()
 	void reloadCurrent();
+	void reloadOthers();
 
 	//Drops associated file loader, used by save as.
 	void delinkCurrent();

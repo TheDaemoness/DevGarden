@@ -71,6 +71,15 @@ bool DGFileCache::saveOthers() {
 void DGFileCache::reloadCurrent() {
 	current->second.load();
 }
+void DGFileCache::reloadOthers() {
+	bool saved_all = true;
+	for(auto it = data.begin(), e = data.end(); it!=e; ++it) {
+		if(it != current) {
+			saved_all &= it->second.load();
+			tryClose(it);
+		}
+	}
+}
 
 void DGFileCache::delinkCurrent() {
 	current->second.closeLoader();

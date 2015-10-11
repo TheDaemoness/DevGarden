@@ -63,10 +63,13 @@ public slots:
 	void openFiles();
 
 	void reloadFile();
-	void saveFileCopy();
+	void reloadFileOthers();
+	void reloadFileAll();
+
+	void saveFile();
 	void saveFileOthers();
 	void saveFileAll();
-	void saveFile();
+	void saveFileCopy();
 
 	void closeFile();
 	void closeProjCurrent();
