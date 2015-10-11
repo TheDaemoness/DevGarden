@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 
 	std::cout << "Initializing..." << std::endl;
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
-	std::unique_ptr<DGFileCache> fl(new DGFileCache(*lr));
+	std::unique_ptr<DGFileCache> fc(new DGFileCache(*lr));
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
 	std::unique_ptr<BuildController> bc(new BuildController(*pl));
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
-	DGController* ctrl = new DGController(pl.get(), fl.get(), lr.get(), bc.get());
+	DGController* ctrl = new DGController(pl.get(), fc.get(), lr.get(), bc.get());
 	std::unique_ptr<DGWindow>w (new DGWindow(ctrl, *lr));
 	ctrl->setView(w.get());
 

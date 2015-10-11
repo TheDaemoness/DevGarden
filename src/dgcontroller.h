@@ -22,7 +22,7 @@ class LangRegistry;
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, BuildController* bc, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileCache* fc, LangRegistry* lr, BuildController* bc, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -64,6 +64,8 @@ public slots:
 
 	void reloadFile();
 	void saveFileCopy();
+	void saveFileOthers();
+	void saveFileAll();
 	void saveFile();
 
 	void closeFile();
@@ -87,7 +89,7 @@ private:
 	BuildController* bc;
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* pl;
-	DGFileCache* fl;
+	DGFileCache* fc;
 	LangRegistry* lr;
 
 private slots:

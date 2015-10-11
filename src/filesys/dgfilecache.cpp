@@ -5,6 +5,10 @@
 #include <QString>
 #include <QFileDialog>
 
+void SlotMachine::onLostFile(const QString& path) {
+	fc.onLostFile(path);
+};
+
 DGFileCache::DGFileCache(const LangRegistry& langs) : lr(langs), slotter(*this) {
 	data.emplace("",FileData());
 	current = data.begin();
@@ -17,9 +21,6 @@ void DGFileCache::onLostFile(const QString& name) {
 	if(i != data.end())
 		i->second.closeLoader();
 }
-void SlotMachine::onLostFile(const QString& path) {
-	fc.onLostFile(path);
-};
 
 QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 	auto it = data.find(fi.absoluteFilePath());
@@ -29,7 +30,7 @@ QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 		current = it;
 		++(current->second);
 	} else {
-		if(fi.exists()) {
+		if(fi.exists() && fi.isReadable()) {
 			current = data.emplace(fi.absoluteFilePath(),FileData()).first;
 			current->second.setFileLoader(FileLoader::create(fi.absoluteFilePath()));
 			current->second.setLang(&lr.getLang(fi));
@@ -37,10 +38,7 @@ QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 		} else
 			current = data.emplace("",FileData()).first;
 	}
-	if(old->second.shouldAutoClose()) {
-		trash.emplace_back(old->second.releaseDocument());
-		data.erase(old);
-	}
+	tryClose(old);
 	return current->second.getDocument();
 }
 
@@ -54,20 +52,32 @@ bool DGFileCache::saveCurrent() {
 		current->second.setFileLoader(FileLoader::create(f));
 		current->second.setLang(&lr.getLang(f));
 		current->second.save();
-		if(old->second.shouldAutoClose()) {
-			trash.emplace_back(old->second.releaseDocument());
-			data.erase(old);
-		}
+		tryClose(old);
 		return true;
 	}
 	return !current->second.hasLoader();
 }
+bool DGFileCache::saveOthers() {
+	bool saved_all = true;
+	for(auto it = data.begin(), e = data.end(); it!=e; ++it) {
+		if(it != current) {
+			saved_all &= it->second.save();
+			tryClose(it);
+		}
+	}
+	return saved_all;
+}
 
 void DGFileCache::reloadCurrent() {
-	if(current->second.hasLoader())
-		current->second.load();
+	current->second.load();
 }
 
 void DGFileCache::delinkCurrent() {
 	current->second.closeLoader();
+}
+bool DGFileCache::tryClose(const decltype(current)& it) {
+	if(it->second.shouldAutoClose()) {
+		trash.emplace_back(it->second.releaseDocument());
+		data.erase(it);
+	}
 }

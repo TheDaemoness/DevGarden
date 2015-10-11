@@ -57,6 +57,7 @@ public:
 
 	//Triggers FileLoader::save(). Returns true if the file save dialog had to open.
 	bool saveCurrent();
+	bool saveOthers();
 
 	//Triggers FileLoader::load()
 	void reloadCurrent();
@@ -67,6 +68,7 @@ public:
 	inline void saveAs() {delinkCurrent(); saveCurrent();}
 
 private:
+	bool tryClose(const decltype(current)& it);
 	friend SlotMachine;
 	void onLostFile(const QString& name);
 

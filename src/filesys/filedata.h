@@ -43,8 +43,8 @@ public:
 	inline void closeLoader() {fl.reset();}
 	inline bool hasLoader() {return fl.get() != nullptr;}
 
-	void load();
-	void save();
+	bool load();
+	bool save();
 	inline bool isSaved() {return saved;}
 
 	inline void setLang(const QString* lname) {lang = lname;}

@@ -5,14 +5,16 @@ bool FileData::shouldAutoClose() {
 	return !ref_count && ((autoclose && fl.get()  && saved) || !doc.get());
 }
 
-void FileData::save() {
+bool FileData::save() {
 	if(fl.get())
 		saved |= fl->save(*doc.get());
+	return saved;
 }
 
-void FileData::load() {
+bool FileData::load() {
 	if(fl.get())
 		saved |= fl->load(*doc.get());
+	return saved;
 }
 
 void FileData::setFileLoader(FileLoader* nu, bool save) {

@@ -21,7 +21,7 @@ DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* l
 	fsm = nullptr;
 	this->bc = bc;
 	this->pl = pl;
-	this->fl = fl;
+	this->fc = fl;
 	this->lr = lr;
 	this->dgw = nullptr;
 	connect(this,SIGNAL(sigBuildStarted()),this,SLOT(onBuildStarted()));
@@ -55,16 +55,25 @@ void DGController::saveFileCopy() {
 }
 
 void DGController::saveFile() {
-	if(fl->saveCurrent())
-		pl->addFile(fl->getCurrPath());
+	if(fc->saveCurrent()) {
+		pl->addFile(fc->getCurrPath());
+		sigProjectListChanged();
+		sigProjectChanged();
+	}
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
-	sigProjectListChanged();
-	sigProjectChanged();
+}
+void DGController::saveFileOthers() {
+	fc->saveOthers();
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+}
+void DGController::saveFileAll() {
+	fc->saveOthers();
+	saveFile();
 }
 
 void DGController::setView(DGWindow* view) {
 	dgw = (dgw?dgw:view);
-	dgw->centralWidget->getEditor()->setContents(fl->getCurrDoc());
+	dgw->centralWidget->getEditor()->setContents(fc->getCurrDoc());
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
@@ -73,7 +82,7 @@ void DGController::getFile(const QString& path) {
 	if(fi.isDir() || !fi.exists() || !fi.isReadable())
 		return;
 	dgw->centralWidget->getEditor()->blockSignals(true);
-	dgw->centralWidget->getEditor()->setContents(fl->set(fi));
+	dgw->centralWidget->getEditor()->setContents(fc->set(fi));
 	dgw->centralWidget->getEditor()->blockSignals(false);
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 	dgw->centralWidget->buttonsSide.at(DGCentralWidget::RUNFILE)->
@@ -82,19 +91,19 @@ void DGController::getFile(const QString& path) {
 
 void DGController::runFile() {
 	QStringList sl;
-	QFileInfo fi(fl->getCurrPath());
+	QFileInfo fi(fc->getCurrPath());
 	if(lr->hasInterpreter(fi)) {
 		const QString& intrp = lr->getInterpreter(fi);
 		if(intrp.isEmpty())
 			return;
 		sl.append(intrp);
 	}
-	sl.append(fl->getCurrPath());
+	sl.append(fc->getCurrPath());
 	dg_utils::runTool("tools/terminal.rb",&sl);
 }
 
 void DGController::fileEdited() {
-	fl->markUnsaved();
+	fc->markUnsaved();
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
@@ -202,21 +211,21 @@ void DGController::newFile() {
 }
 
 void DGController::reloadFile() {
-	fl->reloadCurrent();
+	fc->reloadCurrent();
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 QString DGController::getFormattedFileInfo() {
-	size_t lines = fl->getCurrDoc()->lineCount();
+	size_t lines = fc->getCurrDoc()->lineCount();
 	auto ptr = pl->getCurrent();
 	QString filename;
 	if(!ptr)
 		filename = "";
 	else if(!ptr->isSingleFile())
-		filename = ptr->getDir()->relativeFilePath(fl->getCurrPath());
-	return (filename.isEmpty()?"":(filename+" - ")) + (!fl->getCurrLang().isEmpty()?(fl->getCurrLang()+" - "):"") +
+		filename = ptr->getDir()->relativeFilePath(fc->getCurrPath());
+	return (filename.isEmpty()?"":(filename+" - ")) + (!fc->getCurrLang().isEmpty()?(fc->getCurrLang()+" - "):"") +
 						QString::number(lines) + (lines==1?" line":" lines")
-						+ (!fl->isCurrSaved()?" - Unsaved":"") + ' ';
+						+ (!fc->isCurrSaved()?" - Unsaved":"") + ' ';
 }
 
 void DGController::newTemplateFile() {}

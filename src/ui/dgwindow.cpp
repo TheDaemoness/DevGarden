@@ -53,8 +53,9 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuFile->addAction(tr("Open Remote Files..."));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
-	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
-	menuFile->addAction(tr("Save All"));
+	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()),tr("Ctrl+Alt+S"));
+	menuFile->addAction(tr("Save Cached"), ctrl, SLOT(saveFileOthers()),tr("Ctrl+Shift+S"));
+	menuFile->addAction(tr("Save All"), ctrl, SLOT(saveFileAll()));
 	menuFile->addAction(tr("Reload"), ctrl, SLOT(reloadFile()), QKeySequence::Refresh);
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Close File"));
