@@ -87,6 +87,8 @@ public slots:
 	void rebuild();
 	void abort();
 
+	void onFileCacheUpdate();
+
 private:
 	DGWindow* dgw;
 	BuildController* bc;

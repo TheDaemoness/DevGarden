@@ -231,9 +231,16 @@ QString DGController::getFormattedFileInfo() {
 		filename = "";
 	else if(!ptr->isSingleFile())
 		filename = ptr->getDir()->relativeFilePath(fc->getCurrPath());
+	QString filestat = fc->getCurrStatus();
+	if(!fc->isCurrSaveable())
+		filestat = " - No Loader";
+	else if(!filestat.isEmpty())
+		filestat = filestat.prepend(" - ");
+	else if(!fc->isCurrSaved())
+		filestat = " - Unsaved";
 	return (filename.isEmpty()?"":(filename+" - ")) + (!fc->getCurrLang().isEmpty()?(fc->getCurrLang()+" - "):"") +
 						QString::number(lines) + (lines==1?" line":" lines")
-						+ (!fc->isCurrSaved()?" - Unsaved":"") + ' ';
+						+ filestat + ' ';
 }
 
 void DGController::newTemplateFile() {}
@@ -275,4 +282,7 @@ void DGController::onBuildStopped() {
 
 QString DGController::getFileSaveName() {
 	return QFileDialog::getSaveFileName(nullptr,tr("Save As..."),"~");
+}
+void DGController::onFileCacheUpdate() {
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }

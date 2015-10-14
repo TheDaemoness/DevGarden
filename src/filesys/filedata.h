@@ -41,7 +41,7 @@ public:
 
 	void setFileLoader(FileLoader* nu, bool save = true);
 	inline void closeLoader() {fl.reset();}
-	inline bool hasLoader() {return fl.get() != nullptr;}
+	inline const FileLoader* getLoader() {return fl.get();}
 
 	bool load();
 	bool save();

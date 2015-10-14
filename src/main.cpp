@@ -49,6 +49,8 @@ int main(int argc, char **argv) {
 	ConfigFile f("config/editor.conf");
 
 	std::cout << "Initializing..." << std::endl;
+	QFileSystemWatcher fsw;
+	FileLoaderFS::setFileSystemWatcher(&fsw);
 	std::unique_ptr<LangRegistry> lr(new LangRegistry);
 	std::unique_ptr<DGFileCache> fc(new DGFileCache(*lr));
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
@@ -61,6 +63,7 @@ int main(int argc, char **argv) {
 	DGController* ctrl = new DGController(pl.get(), fc.get(), lr.get(), bc.get());
 	std::unique_ptr<DGWindow>w (new DGWindow(ctrl, *lr));
 	ctrl->setView(w.get());
+	fc->bindController(ctrl);
 
 	w->configure(f);
 	DGStyle::applyStyle(&a);

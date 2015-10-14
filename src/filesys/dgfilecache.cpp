@@ -5,21 +5,15 @@
 #include <QString>
 #include <QFileDialog>
 
-void SlotMachine::onLostFile(const QString& path) {
-	fc.onLostFile(path);
-};
-
-DGFileCache::DGFileCache(const LangRegistry& langs) : lr(langs), slotter(*this) {
+DGFileCache::DGFileCache(const LangRegistry& langs) : lr(langs) {
 	data.emplace("",FileData());
 	current = data.begin();
 	ctrl = nullptr;
 	trash.reserve(1);
 }
-void DGFileCache::onLostFile(const QString& name) {
-	QFileInfo fi(name);
-	const auto i = data.find(fi.absoluteFilePath());
-	if(i != data.end())
-		i->second.closeLoader();
+
+bool DGFileCache::isCurrSaveable() {
+	return current->second.getLoader() && !current->second.getLoader()->isInvalid();
 }
 
 QTextDocument* DGFileCache::set(const QFileInfo& fi) {
@@ -32,7 +26,11 @@ QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 	} else {
 		if(fi.exists() && fi.isReadable()) {
 			current = data.emplace(fi.absoluteFilePath(),FileData()).first;
-			current->second.setFileLoader(FileLoader::create(fi.absoluteFilePath()));
+
+			auto fl = FileLoader::create(fi.absoluteFilePath());
+			fl->setStateUpdateCallback(std::bind(&DGFileCache::onLoaderUpdate,this,current));
+			current->second.setFileLoader(fl);
+
 			current->second.setLang(&lr.getLang(fi));
 			current->second.load();
 		} else
@@ -43,19 +41,23 @@ QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 }
 
 bool DGFileCache::saveCurrent() {
-	if(current->second.hasLoader())
+	if(current->second.getLoader())
 		current->second.save();
 	else {
 		QFileInfo f(ctrl->getFileSaveName());
 		auto old = current;
 		current = data.emplace(f.absoluteFilePath(),FileData(std::move(current->second))).first;
-		current->second.setFileLoader(FileLoader::create(f));
+
+		auto fl = FileLoader::create(f);
+		fl->setStateUpdateCallback(std::bind(&DGFileCache::onLoaderUpdate,this,current));
+		current->second.setFileLoader(fl);
+
 		current->second.setLang(&lr.getLang(f));
 		current->second.save();
 		tryClose(old);
 		return true;
 	}
-	return !current->second.hasLoader();
+	return !current->second.getLoader();
 }
 bool DGFileCache::saveOthers() {
 	bool saved_all = true;
@@ -80,7 +82,6 @@ void DGFileCache::reloadOthers() {
 		}
 	}
 }
-
 void DGFileCache::delinkCurrent() {
 	current->second.closeLoader();
 }
@@ -88,5 +89,21 @@ bool DGFileCache::tryClose(const decltype(current)& it) {
 	if(it->second.shouldAutoClose()) {
 		trash.emplace_back(it->second.releaseDocument());
 		data.erase(it);
+		return true;
+	}
+	return false;
+}
+
+QString DGFileCache::getCurrStatus() {
+	if(current->second.getLoader())
+		return current->second.getLoader()->getStatusString();
+	return "";
+}
+
+void DGFileCache::onLoaderUpdate(std::map<QString,FileData>::iterator it) {
+	if(it->second.getLoader()) {
+		if(it->second.getLoader()->isInvalid())
+			it->second.closeLoader();
+		ctrl->onFileCacheUpdate();
 	}
 }
