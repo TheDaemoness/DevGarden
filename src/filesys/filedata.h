@@ -40,7 +40,7 @@ public:
 	bool shouldAutoClose();
 
 	void setFileLoader(FileLoader* nu, bool save = true);
-	inline void closeLoader() {fl.reset();}
+	void closeLoader() {fl.reset();}
 	inline const FileLoader* getLoader() {return fl.get();}
 
 	bool load();

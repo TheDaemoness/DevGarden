@@ -20,7 +20,7 @@ class FileLoader {
 	std::atomic_bool invalid;
 protected:
 	QFileInfo path;
-	inline bool invalidate() {cbStateUpdate(); return !invalid.exchange(true);}
+	inline void invalidate() {invalid.store(true); cbStateUpdate();}
 	std::function<void()> cbStateUpdate;
 public:
 	enum FileLoaderType {

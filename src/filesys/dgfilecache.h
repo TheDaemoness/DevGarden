@@ -56,6 +56,7 @@ public:
 private:
 	bool tryClose(const decltype(current)& it);
 	void onLoaderUpdate(std::map<QString,FileData>::iterator it);
+	DGFileCache(const DGFileCache&) = delete;
 
 };
 

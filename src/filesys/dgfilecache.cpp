@@ -104,6 +104,6 @@ void DGFileCache::onLoaderUpdate(std::map<QString,FileData>::iterator it) {
 	if(it->second.getLoader()) {
 		if(it->second.getLoader()->isInvalid())
 			it->second.closeLoader();
-		ctrl->onFileCacheUpdate();
 	}
+	ctrl->onFileCacheUpdate();
 }
