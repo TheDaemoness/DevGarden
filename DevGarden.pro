@@ -44,9 +44,13 @@ SOURCES += \
     src/filesys/dgfilecache.cpp \
     src/filesys/fileloader.cpp \
     src/filesys/filedata.cpp \
-    src/build/target.cpp \
-    src/build/buildcontroller.cpp \
-    src/asyncwatcher.cpp
+	src/async/buildcontroller.cpp \
+    src/ui/dgstatusbar.cpp \
+    src/ui/auxpanehandler.cpp \
+    src/async/asyncwatcher.cpp \
+    src/target.cpp \
+    src/async/executor.cpp \
+    src/async/taskchain.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -70,10 +74,14 @@ HEADERS  += \
     src/filesys/dgfilecache.h \
     src/filesys/fileloader.h \
     src/filesys/filedata.h \
-    src/build/target.h \
-    src/build/buildcontroller.h \
+	src/async/buildcontroller.h \
     src/consts.h \
-    src/asyncwatcher.h
+    src/ui/dgstatusbar.h \
+    src/ui/auxpanehandler.h \
+    src/async/asyncwatcher.h \
+    src/target.h \
+    src/async/executor.h \
+    src/async/taskchain.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

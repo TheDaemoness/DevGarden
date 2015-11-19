@@ -6,7 +6,7 @@
 #include <map>
 
 #include "../langregistry.h"
-#include "../build/target.h"
+#include "../async/target.h"
 
 #include "../consts.h"
 

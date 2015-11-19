@@ -5,7 +5,7 @@
 #include <QRegExp>
 
 #include "filesys/dgfilecache.h"
-#include "build/buildcontroller.h"
+#include "async/buildcontroller.h"
 
 class QFileSystemModel;
 class QString;

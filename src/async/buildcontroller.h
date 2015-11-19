@@ -7,7 +7,7 @@
 #include <future>
 
 #include "../utils.h"
-#include "../asyncwatcher.h"
+#include "asyncwatcher.h"
 
 class DGProjectLoader;
 class DGProjectInfo;

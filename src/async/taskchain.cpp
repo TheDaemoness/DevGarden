@@ -1,7 +1,12 @@
-#include "asynctask.h"
+#include "taskchain.h"
 
-AsyncTask::AsyncTask()
-{
+TaskChain::Callback TaskChain::wrap(std::function<void()> call) {
+	return [=]()->bool{call(); return true;};
+}
 
+bool TaskChain::run() const {
+	const bool winrar = task_();
+	TaskChain* next = winrar?pass_.get():fail_.get();
+	return next?next->run():winrar;
 }
 

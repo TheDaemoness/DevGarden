@@ -14,7 +14,7 @@
 
 #include "configfile.h"
 #include "utils.h"
-#include "build/buildcontroller.h"
+#include "async/buildcontroller.h"
 
 #include "envmacros.h"
 #include "langregistry.h"
