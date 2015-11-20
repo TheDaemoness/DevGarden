@@ -1,7 +1,5 @@
 #include "target.h"
-#include "../langregistry.h"
-#include "../consts.h"
-#include "../utils.h"
+#include "utils.h"
 
 #include <QDir>
 #include <QTextStream>

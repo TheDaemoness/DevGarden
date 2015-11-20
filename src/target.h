@@ -4,14 +4,13 @@
 #include <QFileInfo>
 #include <map>
 
-#include "../consts.h"
+#include "consts.h"
+#include "langregistry.h"
 
 class LangRegistry;
 class QDir;
 
 namespace dg_utils {class RunToolAsyncFlags;}
-
-#include "../langregistry.h"
 
 /**
  * @brief This tin has a label that can be read.
