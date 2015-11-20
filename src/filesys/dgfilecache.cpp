@@ -44,7 +44,10 @@ bool DGFileCache::saveCurrent() {
 	if(current->second.getLoader())
 		current->second.save();
 	else {
-		QFileInfo f(ctrl->getFileSaveName());
+		QString fn = ctrl->getFileSaveName();
+		if(fn.isEmpty())
+			return false;
+		QFileInfo f(fn);
 		auto old = current;
 		current = data.emplace(f.absoluteFilePath(),FileData(std::move(current->second))).first;
 
