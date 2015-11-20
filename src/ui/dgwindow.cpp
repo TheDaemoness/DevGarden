@@ -1,5 +1,6 @@
 #include "dgwindow.h"
 #include "dgcentralwidget.hpp"
+#include "dgtaskstatuslabel.h"
 #include "editor/codeeditorwidget.h"
 
 #include <QDesktopServices>
@@ -23,6 +24,7 @@ DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
 	this->setMenuBar(bar);
 
 	centralWidget = new DGCentralWidget(dgc, this);
+
 	setCentralWidget(centralWidget);
 
 	createMenuActions(lr);

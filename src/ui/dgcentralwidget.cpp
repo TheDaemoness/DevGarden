@@ -1,6 +1,8 @@
 #include "dgcentralwidget.hpp"
 #include "editor/codeeditorwidget.h"
 
+#include "dgtaskstatuslabel.h"
+
 #include <QFileSystemModel>
 #include <QCoreApplication>
 #include <QTreeView>
@@ -88,6 +90,8 @@ void DGCentralWidget::createWidgets()
 	cmdLine = new QLineEdit();
 	cmdLine->setPlaceholderText("Enter command...");
 
+	taskStatusLabel = new DGTaskStatusLabel();
+
 	// Bottom Bar
 	rightBarLayout = new QVBoxLayout();
 	for(size_t i = 0; i < BUTTON_LOWER_NAMES.size(); ++i) {
@@ -132,9 +136,13 @@ void DGCentralWidget::createLayout()
 	centralLayout->addItem(editorLayout);
 	centralLayout->addItem(rightBarLayout);
 
+	QHBoxLayout* bottomBarLayout = new QHBoxLayout;
+	bottomBarLayout->addWidget(cmdLine);
+	bottomBarLayout->addWidget(taskStatusLabel);
+
 	QVBoxLayout* rightSideLayout = new QVBoxLayout;
 	rightSideLayout->addLayout(centralLayout);
-	rightSideLayout->addWidget(cmdLine);
+	rightSideLayout->addLayout(bottomBarLayout);
 
 	// Main Layout (Combination of all child layouts)
 	mainSplitter = new QSplitter(Qt::Horizontal,this);

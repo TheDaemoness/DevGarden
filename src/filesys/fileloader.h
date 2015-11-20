@@ -31,7 +31,7 @@ public:
 	};
 	static FileLoader* create(const QFileInfo& path, FileLoaderType type = TYPE_DEFAULT);
 
-	explicit FileLoader(const QFileInfo& file) : path(file), invalid(false) {}
+	explicit FileLoader(const QFileInfo& file) : invalid(false), path(file) {}
 	virtual ~FileLoader() {};
 	inline bool isInvalid() const {return invalid.load();}
 	inline const QFileInfo& info() const {return this->path;}

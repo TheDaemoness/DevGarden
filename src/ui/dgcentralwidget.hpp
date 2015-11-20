@@ -19,6 +19,7 @@ class QVBoxLayout;
 class QSplitter;
 
 class DGController;
+class DGTaskStatusLabel;
 
 #include <map>
 #include <unordered_map>
@@ -93,9 +94,11 @@ private:
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
 	QSplitter *mainSplitter, *leftSplitter;
-	QVBoxLayout *leftSideLayout, *auxPanePair, *editorLayout, *rightBarLayout;
 	QLabel* fileInfo;
 	QLineEdit* cmdLine;
+	DGTaskStatusLabel* taskStatusLabel;
+
+	QVBoxLayout *leftSideLayout, *auxPanePair, *editorLayout, *rightBarLayout;
 
 	QWidget* leftBar;
 
