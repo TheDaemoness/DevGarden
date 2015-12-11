@@ -1,34 +1,36 @@
 #include "DGTaskStatusLabel.h"
 
-DGTaskStatusLabel::DGTaskStatusLabel()
+DGTaskStatusLabel::DGTaskStatusLabel(Executor* exe) : exe_(exe)
 {
 	this->setText("Ready");
 	this->setEnabled(false);
 }
-void DGTaskStatusLabel::onStartTasks(int count) {
+void DGTaskStatusLabel::onStartTasks() {
 	this->setEnabled(true);
-	working_ = 0;
-	total_ = count;
-	this->setText(QString::number(working_)+'/'+QString::number(total_));
+	std::pair<size_t,size_t> status;
+	QString taskname = exe_->getTaskProgress(status);
+	this->setText(QString::number(status.first)+'/'+
+		QString::number(status.second)+
+		" - "+tr(taskname.toLocal8Bit()));
 }
 
-void DGTaskStatusLabel::onTaskPlanB(int len, const QString& name) {
-	total_ = working_+(len-1);
-	this->setText(QString::number(working_)+'/'+QString::number(total_)+" - "+tr(name.toLocal8Bit()));
-}
-
-void DGTaskStatusLabel::onNextTask(const QString& name) {
-	++working_;
-	this->setText(QString::number(working_)+'/'+QString::number(total_)+" - "+tr(name.toLocal8Bit()));
+void DGTaskStatusLabel::onNextTask() {
+	if(!this->isEnabled())
+		return;
+	std::pair<size_t,size_t> status;
+	QString taskname = exe_->getTaskProgress(status);
+	this->setText(QString::number(status.first)+'/'+
+		QString::number(status.second)+
+		" - "+tr(taskname.toLocal8Bit()));
 }
 
 void DGTaskStatusLabel::onTasksDone(bool passed) {
-	this->setText(passed?tr("Done"):tr("Failed"));
 	this->setEnabled(false);
+	this->setText(passed?tr("Done"):tr("Failed"));
 }
 
 void DGTaskStatusLabel::onTasksStop() {
-	this->setText("Aborted");
 	this->setEnabled(false);
+	this->setText("Aborted");
 }
 

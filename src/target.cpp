@@ -6,7 +6,7 @@
 
 #include <thread>
 
-Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : lr(langs), target(tar) {
+Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : target(tar), lr(langs) {
 	changeFile(fi);
 }
 

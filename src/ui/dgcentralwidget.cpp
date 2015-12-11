@@ -27,10 +27,10 @@
 #include "../dgcontroller.h"
 #include "../envmacros.h"
 
-DGCentralWidget::DGCentralWidget(DGController* ctrl, QWidget *parent) :
+DGCentralWidget::DGCentralWidget(DGController* ctrl, Executor* exe, QWidget *parent) :
 	QWidget(parent), ctrl(ctrl)
 {
-	createWidgets();
+	createWidgets(exe);
 	createLayout();
 	setupConnections();
 }
@@ -43,7 +43,7 @@ QPushButton* DGCentralWidget::makeButton(const QString& txt, int width, int heig
 	return retval;
 }
 
-void DGCentralWidget::createWidgets()
+void DGCentralWidget::createWidgets(Executor* exe)
 {
 	leftBar = new QWidget;
 
@@ -90,7 +90,7 @@ void DGCentralWidget::createWidgets()
 	cmdLine = new QLineEdit();
 	cmdLine->setPlaceholderText("Enter command...");
 
-	taskStatusLabel = new DGTaskStatusLabel();
+	taskStatusLabel = new DGTaskStatusLabel(exe);
 
 	// Bottom Bar
 	rightBarLayout = new QVBoxLayout();

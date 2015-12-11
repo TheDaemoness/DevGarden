@@ -4,32 +4,31 @@
 #include <memory>
 #include <functional>
 
+#include <QString>
+
 class TaskChain {
 public:
-	using Callback = std::function<bool()>;
+	using Callback = std::function<bool(const std::atomic_bool&)>;
 	static Callback wrap(std::function<void()> call);
+	static Callback wrap(std::function<bool()> call);
 private:
 	std::unique_ptr<TaskChain> pass_, fail_;
-	std::atomic_flag stop_;
+	QString name_;
 protected:
 	Callback task_;
-	bool shouldStop() {
-		bool stahp = stop_.test_and_set(std::memory_order_consume);
-		stop_.clear(std::memory_order_acquire);
-		return stahp;
-	}
-
 public:
-	TaskChain(Callback task) :
-		task_(task), pass_(nullptr), fail_(nullptr) {};
-	TaskChain(Callback task, Callback pass, Callback fail) :
-		task_(task), pass_(new TaskChain(pass)), fail_(new TaskChain(fail)) {};
-	TaskChain(Callback task, Callback next, bool onPass = true) : task_(task) {
-		(onPass?pass_:fail_).reset(new TaskChain(next));
+	TaskChain(const QString& name, Callback task) :
+		task_(task), pass_(nullptr), fail_(nullptr), name_(name) {};
+	TaskChain(const QString& name, Callback task, TaskChain* pass, TaskChain* fail) :
+		task_(task), pass_(pass), fail_(fail), name_(name) {};
+	TaskChain(const QString& name, Callback task, TaskChain* next, bool onPass = true) : task_(task), name_(name) {
+		(onPass?pass_:fail_).reset(next);
 	}
+	bool run(const std::atomic_bool& stop);
+	size_t length() const;
 
-	bool run();
-	void abort() {stop_.test_and_set(std::memory_order_acquire);}
+	TaskChain* next(bool flag) const {return (flag?pass_:fail_).get();}
+	QString getName() const {return name_;}
 };
 
 #endif // TASKCHAIN_H

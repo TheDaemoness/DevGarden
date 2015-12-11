@@ -5,16 +5,19 @@
 #include <QLabel>
 #include <QLineEdit>
 
+#include "../async/executor.h"
+
 class DGTaskStatusLabel : public QLabel {
 	Q_OBJECT
+	Executor* exe_;
 	int working_, total_;
 public:
-	void onStartTasks(int count);
-	void onTaskPlanB(int len, const QString& name);
-	void onNextTask(const QString& name);
+	explicit DGTaskStatusLabel(Executor* exe);
+public slots:
+	void onStartTasks();
+	void onNextTask();
 	void onTasksDone(bool passed = true);
 	void onTasksStop();
-	DGTaskStatusLabel();
 };
 
 #endif // DGTASKSTATUSLABEL_H

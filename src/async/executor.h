@@ -12,22 +12,20 @@
  * Includes atomic flags to indicate general state.
  */
 class Executor {
+private:
 	std::unique_ptr<TaskChain> curr_;
-	std::atomic_flag pass_, fail_, started_, stopped_;
+	std::atomic_flag pass_, fail_, started_, stopped_, next_;
 	std::thread runner_;
-	std::atomic_bool running_;
-	void end() {
-		running_.store(false,std::memory_order_acquire);
-		stopped_.clear();
-	}
+	std::atomic_bool running_, stop_;
+
+	std::mutex m_;
+	size_t progress_, total_;
 
 public:
-	void operator()();
-	Executor* operator()(TaskChain*);
-	bool run();
-	bool stop();
-
+	TaskChain* run(TaskChain*);
+	void stop();
 	bool isRunning() {return running_.load(std::memory_order_consume);}
+	QString getTaskProgress(std::pair<size_t,size_t>& prog);
 };
 
 #endif // EXECUTOR_H

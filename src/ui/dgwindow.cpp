@@ -12,19 +12,19 @@
 #include "../dgcontroller.h"
 #include "../langregistry.h"
 
-DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
+DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, Executor* exe, QWidget *parent) :
 	QMainWindow(parent)
 {
 	this->setWindowTitle(DG_NAME);
 	this->resize(1080,640);
 	this->setMinimumSize(560,240);
 	ctrl = dgc;
+	this->exe = exe;
 
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
 
-	centralWidget = new DGCentralWidget(dgc, this);
-
+	centralWidget = new DGCentralWidget(dgc, exe, this);
 	setCentralWidget(centralWidget);
 
 	createMenuActions(lr);

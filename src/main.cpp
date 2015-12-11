@@ -55,13 +55,14 @@ int main(int argc, char **argv) {
 	std::unique_ptr<DGFileCache> fc(new DGFileCache(*lr));
 	std::unique_ptr<DGProjectLoader> pl(new DGProjectLoader(*lr));
 	std::unique_ptr<BuildController> bc(new BuildController(*pl));
+	std::unique_ptr<Executor> exe(new Executor());
 
 	//Would normally assure correct pluralization here, but these are console status messages.
 	std::cout << "Loaded " << lr->countLanguages() << " languages" << std::endl;
 	std::cout << "Loaded " << lr->countBindings() << " file associations" << std::endl;
 
 	DGController* ctrl = new DGController(pl.get(), fc.get(), lr.get(), bc.get());
-	std::unique_ptr<DGWindow>w (new DGWindow(ctrl, *lr));
+	std::unique_ptr<DGWindow>w (new DGWindow(ctrl, *lr, exe.get()));
 	ctrl->setView(w.get());
 	fc->bindController(ctrl);
 

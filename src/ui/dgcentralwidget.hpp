@@ -25,6 +25,8 @@ class DGTaskStatusLabel;
 #include <unordered_map>
 #include <array>
 
+#include "../async/executor.h"
+
 /**
  * @brief The actual widgets of the main window.
  * @warning Does not free any of the memory it allocates itself. DO NOT FREE OR ALLOCATE MULTIPLE INSTANCES!
@@ -36,7 +38,7 @@ class DGCentralWidget : public QWidget
 	friend class DGController;
 	friend class DGWindow;
 public:
-	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
+	DGCentralWidget(DGController* ctrl, Executor* exe, QWidget* parent = 0);
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
 	const std::array<const char*,11> BUTTON_LOWER_NAMES = {
@@ -71,7 +73,7 @@ public slots:
 	void shrinkProjectList();
 
 private:
-	void createWidgets();
+	void createWidgets(Executor* exe);
 	void createLayout();
 	void setupConnections();
 

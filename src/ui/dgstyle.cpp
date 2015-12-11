@@ -25,6 +25,7 @@ void DGStyle::applyStyle(QApplication* app) {
 	darkPalette.setColor(QPalette::Disabled, QPalette::Base, DGStyle::COLOR_BASE_DISABLED);
 	darkPalette.setColor(QPalette::Disabled, QPalette::Background, DGStyle::COLOR_BASE_DISABLED);
 	darkPalette.setColor(QPalette::Disabled, QPalette::Text, DGStyle::COLOR_TEXT_DISABLED);
+	darkPalette.setColor(QPalette::Disabled, QPalette::Foreground, DGStyle::COLOR_TEXT_DISABLED);
 	darkPalette.setColor(QPalette::Disabled, QPalette::Button, DGStyle::COLOR_BASE_DISABLED);
 	darkPalette.setColor(QPalette::Disabled, QPalette::ButtonText, DGStyle::COLOR_TEXT_DISABLED);
 
