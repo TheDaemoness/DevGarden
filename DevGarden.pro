@@ -44,7 +44,6 @@ SOURCES += \
     src/filesys/dgfilecache.cpp \
     src/filesys/fileloader.cpp \
     src/filesys/filedata.cpp \
-	src/async/buildcontroller.cpp \
     src/ui/auxpanehandler.cpp \
     src/async/asyncwatcher.cpp \
     src/target.cpp \
@@ -74,7 +73,6 @@ HEADERS  += \
     src/filesys/dgfilecache.h \
     src/filesys/fileloader.h \
     src/filesys/filedata.h \
-	src/async/buildcontroller.h \
     src/consts.h \
     src/ui/auxpanehandler.h \
     src/async/asyncwatcher.h \
