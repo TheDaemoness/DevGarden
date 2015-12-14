@@ -7,6 +7,8 @@
 #include "ui/dgcentralwidget.hpp"
 #include "ui/editor/codeeditorwidget.h"
 
+#include "async/executor.h"
+
 #include "utils.h"
 #include "langregistry.h"
 
@@ -16,12 +18,13 @@
 #include <QPushButton>
 #include <QLabel>
 
-DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, Executor* exe, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
 	this->pl = pl;
 	this->fc = fl;
 	this->lr = lr;
+	this->exe = exe;
 	this->dgw = nullptr;
 	connect(this,SIGNAL(sigBuildStarted()),this,SLOT(onBuildStarted()));
 	connect(this,SIGNAL(sigBuildStopped()),this,SLOT(onBuildStopped()));

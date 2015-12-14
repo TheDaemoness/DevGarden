@@ -11,7 +11,9 @@ class QString;
 class QTextDocument;
 class DGProjectLoader;
 class DGWindow;
+
 class LangRegistry;
+class Executor;
 
 /**
  * @brief A file loader QObject interface.
@@ -21,7 +23,7 @@ class LangRegistry;
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileCache* fc, LangRegistry* lr, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileCache* fc, LangRegistry* lr, Executor* exe, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -94,6 +96,7 @@ private:
 	DGProjectLoader* pl;
 	DGFileCache* fc;
 	LangRegistry* lr;
+	Executor* exe;
 
 private slots:
 	void onBuildStarted();

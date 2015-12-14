@@ -21,14 +21,19 @@ public:
 		task_(task), pass_(nullptr), fail_(nullptr), name_(name) {};
 	TaskChain(const QString& name, Callback task, TaskChain* pass, TaskChain* fail) :
 		task_(task), pass_(pass), fail_(fail), name_(name) {};
-	TaskChain(const QString& name, Callback task, TaskChain* next, bool onPass = true) : task_(task), name_(name) {
-		(onPass?pass_:fail_).reset(next);
-	}
+	TaskChain(const QString& name, Callback task, TaskChain* next, bool onPass = true) :
+		task_(task), name_(name)
+		{(onPass?pass_:fail_).reset(next);}
+
 	bool run(const std::atomic_bool& stop);
 	size_t length() const;
 
-	TaskChain* next(bool flag) const {return (flag?pass_:fail_).get();}
-	QString getName() const {return name_;}
+	void setNext(TaskChain* next, bool pass = true)
+		{(pass?pass_:fail_).reset(next);}
+	TaskChain* next(bool flag) const
+		{return (flag?pass_:fail_).get();}
+	QString getName() const
+		{return name_;}
 };
 
 #endif // TASKCHAIN_H
