@@ -5,6 +5,8 @@ addons:
   apt:
     packages: ['clang-3.6', 'qt5-qmake', 'qt5-default', 'qtbase5-dev']
 
-script: qmake -makefile -o Makefile "CPP14_FLAGS=-std=c++1y" DevGarden.pro && make -j2
+script:
+    qmake -makefile -o Makefile QMAKE_CXX=$CXX "CPP14_FLAGS=-std=c++1y" DevGarden.pro
+    make -j2
 
 after_success: ./install-tools.rb
