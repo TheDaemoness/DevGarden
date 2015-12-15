@@ -1,16 +1,14 @@
 language: cpp
+compiler: clang
 
 addons:
   apt:
-    packages:
-    - clang-3.6
-    - qt5-qmake
-    - qt5-default
-    - qtbase5-dev
+    sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
+    packages: ['clang-3.6', 'qt5-qmake', 'qt5-default', 'qtbase5-dev']
 
 env:
-    - COMPILER=clang++-3.6
+    - CPP=clang++-3.6
 
-script: qmake -makefile -o Makefile QMAKE_CXX=$COMPILER DevGarden.pro && make
+script: qmake -makefile -o Makefile QMAKE_CXX=$CPP DevGarden.pro && make -j2
 
 after_success: ./install-tools.rb
