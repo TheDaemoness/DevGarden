@@ -1,5 +1,7 @@
 language: cpp
 compiler: clang
+dist: trusty
+sudo: required
 
 addons:
   apt:
