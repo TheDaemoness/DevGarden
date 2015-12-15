@@ -1,0 +1,9 @@
+before_install:
+    sudo apt-get install qt5-qmake qt5-default qtbase5-dev
+
+script:
+    qmake -makefile -o Makefile DevGarden.pro
+    make
+
+after_success:
+    ./install-tools.rb
