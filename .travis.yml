@@ -10,6 +10,6 @@ addons:
     - qt5-default
     - qtbase5-dev
 
-script: qmake -makefile -o Makefile DevGarden.pro && make
+script: qmake -makefile -o Makefile QMAKE_CXX=$CXX DevGarden.pro && make
 
 after_success: ./install-tools.rb
