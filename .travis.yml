@@ -1,13 +1,15 @@
 language: cpp
-
 compiler: clang
+env:
+- DISTRO=ubuntu-trusty
 
-before_install:
-    sudo apt-get install qt5-qmake qt5-default qtbase5-dev
+addons:
+  apt:
+    packages:
+    - qt5-qmake
+    - qt5-default
+    - qtbase5-dev
 
-script:
-    qmake -makefile -o Makefile DevGarden.pro
-    make
+script: qmake -makefile -o Makefile DevGarden.pro && make
 
-after_success:
-    ./install-tools.rb
+after_success: ./install-tools.rb
