@@ -1,7 +1,7 @@
 language: cpp
 compiler: clang
 env:
-- DISTRO=ubuntu-trusty
+- DISTRO=ubuntu-vivid
 
 addons:
   apt:
