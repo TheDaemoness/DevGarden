@@ -1,15 +1,16 @@
 language: cpp
-compiler: clang
-env:
-- DISTRO=ubuntu-vivid
 
 addons:
   apt:
     packages:
+    - clang-3.6
     - qt5-qmake
     - qt5-default
     - qtbase5-dev
 
-script: qmake -makefile -o Makefile QMAKE_CXX=$CXX DevGarden.pro && make
+env:
+    - COMPILER=clang++-3.6
+
+script: qmake -makefile -o Makefile QMAKE_CXX=$COMPILER DevGarden.pro && make
 
 after_success: ./install-tools.rb
