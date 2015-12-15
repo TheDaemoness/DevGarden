@@ -1,4 +1,4 @@
-#include "DGTaskStatusLabel.h"
+#include "dgtaskstatuslabel.h"
 
 DGTaskStatusLabel::DGTaskStatusLabel(Executor* exe) : exe_(exe)
 {
