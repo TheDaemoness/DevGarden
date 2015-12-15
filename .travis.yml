@@ -5,6 +5,8 @@ addons:
   apt:
     packages: ['clang-3.6', 'qt5-qmake', 'qt5-default', 'qtbase5-dev']
 
+env: QT_SELECT=5
+
 script:
     qmake -makefile -o Makefile QMAKE_CXX=$CXX "QMAKE_CXXFLAGS+=-std=c++1y" DevGarden.pro && make -j2
 

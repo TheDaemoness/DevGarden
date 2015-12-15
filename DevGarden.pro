@@ -14,9 +14,8 @@ macx {
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
 }
 
-QT += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+lessThan(QT_MAJOR_VERSION, 5): error("DevGarden depends on Qt 5")
+QT += core gui widgets
 
 TARGET = DevGarden
 TEMPLATE = app
