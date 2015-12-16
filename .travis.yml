@@ -10,6 +10,10 @@ addons:
 env: QT_SELECT=5
 
 script:
-    qmake -makefile -o Makefile QMAKE_CXX=$CXX "QMAKE_CXXFLAGS += -std=c++1y -stdlib=libc++" "QMAKE_LFLAGS += -lc++" DevGarden.pro && make -j2
+    qmake -makefile -o Makefile
+    QMAKE_CXX=$CXX QMAKE_LINK=$CXX
+    "QMAKE_CXXFLAGS += -std=c++1y -stdlib=libc++"
+    "QMAKE_LFLAGS += -stdlib=libc++ -lc++abi"
+    DevGarden.pro && make -j2
 
 after_success: ./install-tools.rb
