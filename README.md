@@ -15,13 +15,17 @@ It also features a number of usability features that I have not generally seen i
 * cmake 3.1 or later.
 * ruby 2.0 or later.
 
-##Building
-Building is more or less the standard qmake && make.
+## Building
+Building is theoretically the standard `qmake && make`. In practice, DevGarden's source depends on C++14 features, which are generally not enabled by default on most C++ compilers (yet).
 
-##Installation
+If your compiler (or wrapper or alias to one) does not have them enabled by default, then the options to do so must be added to `QMAKE_CXXFLAGS` during the qmake step of building.
+
+This can be done by adding `"QMAKE_CXXFLAGS += -std=c++14"` (in quotes) to the command line variables to qmake. In the case of older compilers, this may instead be `"QMAKE_CXXFLAGS += -std=c++1y"`.
+
+## Installation
 DevGarden relies on some ancillary files and scripts to be installed besides the provided executable.
 Sure, the IDE will run without them, but it won't be a pleasant experience.
 For those files, make install is insufficient.
 
-To install those files, run ./install-tools.rb with superuser/admin privileges.
-It will install the scripts and configuration files in config and scripts in the global install location (which is platform specific).
+To install those files, run `./install-tools.rb`.
+It will install the scripts and configuration files in config and scripts in the global install location (which is platform specific) if given admin/superuser privileges. Otherwise, it will install them in the per-user application support install location, also platform-specific.

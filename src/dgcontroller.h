@@ -5,14 +5,15 @@
 #include <QRegExp>
 
 #include "filesys/dgfilecache.h"
-#include "build/buildcontroller.h"
 
 class QFileSystemModel;
 class QString;
 class QTextDocument;
 class DGProjectLoader;
 class DGWindow;
+
 class LangRegistry;
+class Executor;
 
 /**
  * @brief A file loader QObject interface.
@@ -22,7 +23,7 @@ class LangRegistry;
 class DGController : public QObject {
 	Q_OBJECT
 public:
-	explicit DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, BuildController* bc, QObject *parent = 0);
+	explicit DGController(DGProjectLoader* pl, DGFileCache* fc, LangRegistry* lr, Executor* exe, QObject *parent = 0);
 
 	/**
 	 * @brief getActiveProjectModel Returns the active project's directory model for use in the file system browser.
@@ -34,7 +35,10 @@ public:
 	QString getPath();
 	QString getDir();
 
-	inline void setView(DGWindow* view) {dgw = (dgw?dgw:view);}
+	void setView(DGWindow* view);
+
+	QString getFileSaveName();
+	QString getFormattedFileInfo();
 
 signals:
 	/**
@@ -60,8 +64,13 @@ public slots:
 	void openFiles();
 
 	void reloadFile();
-	void saveFileCopy();
+	void reloadFileOthers();
+	void reloadFileAll();
+
 	void saveFile();
+	void saveFileOthers();
+	void saveFileAll();
+	void saveFileCopy();
 
 	void closeFile();
 	void closeProjCurrent();
@@ -74,23 +83,20 @@ public slots:
 	void newTemplateFile();
 	void newTemplateProject();
 
-	QString getFormattedFileInfo();
-
 	void build();
 	void clean();
 	void rebuild();
 	void abort();
 
-private:
-	//NOTE: This is temporary until DGFileLoader is implemented.
-	DGFileCache::FileRef curr_file;
+	void onFileCacheUpdate();
 
+private:
 	DGWindow* dgw;
-	BuildController* bc;
 	QFileSystemModel* fsm; //No relation.
 	DGProjectLoader* pl;
-	DGFileCache* fl;
+	DGFileCache* fc;
 	LangRegistry* lr;
+	Executor* exe;
 
 private slots:
 	void onBuildStarted();

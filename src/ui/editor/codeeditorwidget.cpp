@@ -37,17 +37,18 @@ CodeEditorWidget::CodeEditorWidget(QWidget* parent) :
 
 	//this->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont)); //Requires Qt 5.2
 
-	// Syntax highlighting. If you wish to turn off syntax highlighting
-	// at the moment only way to do so is to not initialize the member.
-	// Will work on getting up more control over this in future updates.
-	//syntaxHighlighter = new OldSyntaxHighlighter(document());
-
 	createConnections();
 	updateLineNumberAreaWidth();
 }
 
 void CodeEditorWidget::setContents(const QString & text) {
-	setPlainText(text);
+	document()->setPlainText(text); //Do not trust Qt.
+	updateLineNumberAreaWidth();
+}
+
+void CodeEditorWidget::setContents(QTextDocument* doc) {
+	setDocument(doc);
+	doc->setDefaultFont(textFont);
 	updateLineNumberAreaWidth();
 }
 

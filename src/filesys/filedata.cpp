@@ -1,13 +1,26 @@
 #include "filedata.h"
+#include "../langregistry.h"
 
 bool FileData::shouldAutoClose() {
-	return autoclose && ((fl.get() != nullptr && !lost) || doc.isEmpty());
+	return !ref_count && ((autoclose && fl.get()  && saved) || !doc.get());
+}
+
+bool FileData::save() {
+	if(fl.get())
+		saved |= fl->save(*doc.get());
+	return saved;
+}
+
+bool FileData::load() {
+	if(fl.get())
+		saved |= fl->load(*doc.get());
+	return saved;
 }
 
 void FileData::setFileLoader(FileLoader* nu, bool save) {
-	if(fl.get() && save && !saved && !doc.isEmpty())
-		fl->save(this->doc);
+	if(save && !saved)
+		this->save();
 	fl.reset(nu);
-	lost = false;
+	autoclose = nu->defaultAutoclose();
 }
 

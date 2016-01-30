@@ -153,7 +153,7 @@ bool LangRegistry::rem(const QStringList& langs) {
 
 QString LangRegistry::getInterpreter(const QString& name, bool isext) const {
 	if(!hasInterpreter(name,isext))
-		return STRING_EMPTY;
+		return "";
 	LangRegistry::FileEntry extinfo = getBindMapConst(isext).at(name);
 	if(extinfo.interpreter.at(0) == '@')
 		return extinfo.interpreter.mid(1);
@@ -164,5 +164,27 @@ QString LangRegistry::getInterpreter(const QString& name, bool isext) const {
 				return f->absoluteFilePath();
 		}
 	}
-	return STRING_EMPTY;
+	return "";
+}
+
+QString LangRegistry::getInterpreter(const QFileInfo& fi) const {
+	QString exact  = getInterpreter(fi.fileName(),false);
+	QString suffix = getInterpreter(fi.suffix(),true);
+	if(!exact.isEmpty())
+		return exact;
+	if(!suffix.isEmpty())
+		return suffix;
+	return "";
+}
+
+bool LangRegistry::hasInterpreter(const QString& name, bool isext) const {
+	try {
+		return !getBindMapConst(isext).at(name).interpreter.isEmpty();
+	} catch(...) {
+		return false;
+	}
+}
+
+bool LangRegistry::hasInterpreter(const QFileInfo& fi) const {
+	return hasInterpreter(fi.suffix(),true) || hasInterpreter(fi.fileName(),false);
 }

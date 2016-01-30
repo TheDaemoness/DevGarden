@@ -1,14 +1,12 @@
 #include "target.h"
-#include "../langregistry.h"
-#include "../consts.h"
-#include "../utils.h"
+#include "utils.h"
 
 #include <QDir>
 #include <QTextStream>
 
 #include <thread>
 
-Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : lr(langs), target(tar) {
+Target::Target(const LangRegistry& langs, const QFileInfo& fi, const QString& tar) : target(tar), lr(langs) {
 	changeFile(fi);
 }
 

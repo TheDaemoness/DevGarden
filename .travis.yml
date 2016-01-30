@@ -1,0 +1,19 @@
+language: cpp
+compiler: clang
+dist: trusty
+sudo: required
+
+addons:
+  apt:
+    packages: ['libc++-dev', 'qt5-qmake', 'qt5-default', 'qtbase5-dev']
+
+env: QT_SELECT=5
+
+script:
+    qmake -makefile -o Makefile
+    QMAKE_CXX=$CXX QMAKE_LINK=$CXX
+    "QMAKE_CXXFLAGS += -std=c++1y -stdlib=libc++"
+    "QMAKE_LFLAGS += -stdlib=libc++ -lc++"
+    DevGarden.pro && make -j2
+
+after_success: ./install-tools.rb

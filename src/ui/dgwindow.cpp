@@ -1,5 +1,6 @@
 #include "dgwindow.h"
 #include "dgcentralwidget.hpp"
+#include "dgtaskstatuslabel.h"
 #include "editor/codeeditorwidget.h"
 
 #include <QDesktopServices>
@@ -11,18 +12,19 @@
 #include "../dgcontroller.h"
 #include "../langregistry.h"
 
-DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent) :
+DGWindow::DGWindow(DGController* dgc, const LangRegistry& lr, Executor* exe, QWidget *parent) :
 	QMainWindow(parent)
 {
 	this->setWindowTitle(DG_NAME);
 	this->resize(1080,640);
 	this->setMinimumSize(560,240);
 	ctrl = dgc;
+	this->exe = exe;
 
 	QMenuBar* bar = new QMenuBar(nullptr);
 	this->setMenuBar(bar);
 
-	centralWidget = new DGCentralWidget(dgc, this);
+	centralWidget = new DGCentralWidget(dgc, exe, this);
 	setCentralWidget(centralWidget);
 
 	createMenuActions(lr);
@@ -53,9 +55,13 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 	menuFile->addAction(tr("Open Remote Files..."));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Save"), ctrl, SLOT(saveFile()), QKeySequence::Save);
-	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()), QKeySequence::SaveAs);
-	menuFile->addAction(tr("Save All"));
+	menuFile->addAction(tr("Save Copy..."), ctrl, SLOT(saveFileCopy()),tr("Ctrl+Alt+S"));
+	menuFile->addAction(tr("Save Cached"), ctrl, SLOT(saveFileOthers()),tr("Ctrl+Shift+S"));
+	menuFile->addAction(tr("Save All"), ctrl, SLOT(saveFileAll()));
+	menuFile->addSeparator();
 	menuFile->addAction(tr("Reload"), ctrl, SLOT(reloadFile()), QKeySequence::Refresh);
+	menuFile->addAction(tr("Reload Cached"), ctrl, SLOT(reloadFileOthers()), tr("Ctrl+Shift+R"));
+	menuFile->addAction(tr("Reload All"), ctrl, SLOT(reloadFileAll()));
 	menuFile->addSeparator();
 	menuFile->addAction(tr("Close File"));
 	menuFile->addAction(tr("Close Other Files"));

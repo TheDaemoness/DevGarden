@@ -7,83 +7,56 @@
 #include <QObject>
 #include <QString>
 #include <QTextDocument>
-#include <QFileSystemWatcher>
 
 #include "dgprojectloader.h"
 #include "filedata.h"
 
 class DGFileCache;
-
-/**
- * @brief This is a workaround because <REDACTED> moc.
- */
-class SlotMachine : public QObject {
-	Q_OBJECT
-public:
-	SlotMachine(DGFileCache& that) : QObject(nullptr), fc(that) {}
-	DGFileCache& fc;
-public slots:
-	void onLostFile(const QString& path);
-};
+class DGController;
 
 /**
  * @brief Prototype reference-counting file loader.
  * @deprecated INCOMPLETE, DO NOT USE!
  */
 class DGFileCache { //TODO: Implement and connect.
-public:
-	struct FileRef { //TODO: Remove.
-		QFileInfo info;
-		QTextDocument* doc;
-		bool saved;
-		QString lang;
-	};
-private:
-	SlotMachine slotter;
-	QFileSystemWatcher fsw; //No relation to noodles.
 	std::map<QString,FileData> data;
-	std::vector<FileData*> current;
+	std::map<QString,FileData>::iterator current;
+	DGController* ctrl;
+	std::vector<std::unique_ptr<QTextDocument>> trash;
+	const LangRegistry& lr;
 public:
-	DGFileCache();
-	~DGFileCache();
-	void fileEdited(size_t index = 0);
-	void saveCurrentAs(const QString& path);
+	DGFileCache(const LangRegistry& langs);
 
-	size_t addView(const QString& path);
-	inline void clearViews() {current.clear();}
+	inline void bindController(DGController* dgc) {ctrl = ctrl?ctrl:dgc;}
 
-	inline size_t getCountLoaded()    {return data.size();}
+	inline size_t  getCountLoaded() {return data.size();}
+	inline QTextDocument* getCurrDoc()     {return current->second.getDocument();}
+	inline const QString& getCurrLang()    {return current->second.getLang();}
+	inline const QString& getCurrPath()    {return current->first;}
+	QString getCurrStatus();
 
-	void set(const QString& path, size_t index = 0);
-	QTextDocument* get(size_t index = 0);
+	inline bool isCurrSaved()   {return current->second.isSaved();}
+	bool isCurrSaveable();
 
-	//Triggers FileLoader::save()
-	void saveCurrent(size_t index = 0);
-	void saveVisible();
-	void saveOthers();
-	void saveAll() {saveVisible(); saveOthers();}
+	inline void markUnsaved()   {current->second.markUnsaved();}
+	inline void clean() {trash.clear(); trash.reserve(1);}
+
+	QTextDocument* set(const QFileInfo& path);
+
+	//Triggers FileLoader::save(). Returns true if the file save dialog had to open.
+	bool saveCurrent();
+	bool saveOthers();
 
 	//Triggers FileLoader::load()
-	void reloadCurrent(size_t index = 0);
-	void reloadOthers() {closeOthers();}
-	void reloadAll();
-
-	//Closes a NON-REFERENCED SAVED FILE.
-	void closeSingle(const QString& str);
-	void closeOthers();
-	void closeAll();
+	void reloadCurrent();
+	void reloadOthers();
 
 	//Drops associated file loader, used by save as.
-	void delinkCurrent(size_t index = 0);
-	void delinkOthers();
-	void delinkAll();
-
-	//Uses a specified file loader for one save operation, used by save and copy.
-	void copyCurrent(FileLoader& saver, size_t index = 0);
-
+	void delinkCurrent();
 private:
-	friend SlotMachine;
-	void onLostFile(const QString& name);
+	bool tryClose(const decltype(current)& it);
+	void onLoaderUpdate(std::map<QString,FileData>::iterator it);
+	DGFileCache(const DGFileCache&) = delete;
 
 };
 

@@ -6,7 +6,7 @@
 
 cache()
 
-QMAKE_CXXFLAGS += -pedantic -std=c++14
+QMAKE_CXXFLAGS += -pedantic
 
 macx {
 	QMAKE_CXXFLAGS += -stdlib=libc++
@@ -14,9 +14,8 @@ macx {
 	QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.8
 }
 
-QT += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+lessThan(QT_MAJOR_VERSION, 5): error("DevGarden depends on Qt 5")
+QT += core gui widgets
 
 TARGET = DevGarden
 TEMPLATE = app
@@ -44,9 +43,12 @@ SOURCES += \
     src/filesys/dgfilecache.cpp \
     src/filesys/fileloader.cpp \
     src/filesys/filedata.cpp \
-    src/build/target.cpp \
-    src/build/buildcontroller.cpp \
-    src/asyncwatcher.cpp
+    src/ui/auxpanehandler.cpp \
+    src/async/asyncwatcher.cpp \
+    src/target.cpp \
+    src/async/executor.cpp \
+    src/async/taskchain.cpp \
+    src/ui/dgtaskstatuslabel.cpp
 
 HEADERS  += \
     src/ui/dgwindow.h \
@@ -70,10 +72,13 @@ HEADERS  += \
     src/filesys/dgfilecache.h \
     src/filesys/fileloader.h \
     src/filesys/filedata.h \
-    src/build/target.h \
-    src/build/buildcontroller.h \
     src/consts.h \
-    src/asyncwatcher.h
+    src/ui/auxpanehandler.h \
+    src/async/asyncwatcher.h \
+    src/target.h \
+    src/async/executor.h \
+    src/async/taskchain.h \
+    src/ui/dgtaskstatuslabel.h
 
 TRANSLATIONS = DevGarden_fr.ts
 

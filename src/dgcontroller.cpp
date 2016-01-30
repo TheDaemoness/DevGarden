@@ -7,6 +7,8 @@
 #include "ui/dgcentralwidget.hpp"
 #include "ui/editor/codeeditorwidget.h"
 
+#include "async/executor.h"
+
 #include "utils.h"
 #include "langregistry.h"
 
@@ -16,15 +18,14 @@
 #include <QPushButton>
 #include <QLabel>
 
-DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, BuildController* bc, QObject *parent) :
+DGController::DGController(DGProjectLoader* pl, DGFileCache* fl, LangRegistry* lr, Executor* exe, QObject *parent) :
 	QObject(parent) {
 	fsm = nullptr;
-	this->bc = bc;
 	this->pl = pl;
-	this->fl = fl;
+	this->fc = fl;
 	this->lr = lr;
+	this->exe = exe;
 	this->dgw = nullptr;
-	curr_file.doc = nullptr;
 	connect(this,SIGNAL(sigBuildStarted()),this,SLOT(onBuildStarted()));
 	connect(this,SIGNAL(sigBuildStopped()),this,SLOT(onBuildStopped()));
 }
@@ -52,97 +53,64 @@ void DGController::openFiles() {
 	}
 }
 void DGController::saveFileCopy() {
-	QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
-	QFile f(name);
-	if(!f.open(QFile::WriteOnly))
-		return;
-	if(curr_file.doc)
-		f.write(curr_file.doc->toPlainText().toLocal8Bit());
-	else
-		f.write(dgw->centralWidget->getEditor()->document()->toPlainText().toLocal8Bit());
-	f.close();
-	curr_file.saved = true;
-	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+	//TODO: Implement.
 }
 
 void DGController::saveFile() {
-	if(pl->empty()) {
-		QString name = QFileDialog::getSaveFileName(0,tr("Save As..."),"~","",0,0);
-		QFile f(name);
-		if(!f.open(QFile::WriteOnly))
-			return;
-		f.write(dgw->centralWidget->getEditor()->document()->toPlainText().toLocal8Bit());
-		curr_file.saved = true;
-		f.close();
-		if(pl->addFile(name)) {
-			emit sigProjectListChanged();
-			emit sigProjectChanged();
-		}
-		return;
+	if(fc->saveCurrent()) {
+		pl->addFile(fc->getCurrPath());
+		sigProjectListChanged();
+		sigProjectChanged();
 	}
-	if(curr_file.saved)
-		return;
-	QFile f(curr_file.info.absoluteFilePath());
-	if(!f.open(QFile::WriteOnly))
-		return;
-	f.write(curr_file.doc->toPlainText().toLocal8Bit());
-	f.close();
-	curr_file.saved = true;
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+}
+void DGController::saveFileOthers() {
+	fc->saveOthers();
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+}
+void DGController::saveFileAll() {
+	fc->saveOthers();
+	saveFile();
+}
+
+void DGController::setView(DGWindow* view) {
+	dgw = (dgw?dgw:view);
+	dgw->centralWidget->getEditor()->setContents(fc->getCurrDoc());
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::getFile(const QString& path) {
-	QFile f(path);
-	if(!f.open(QFile::ReadOnly))
+	QFileInfo fi(path);
+	if(fi.isDir() || !fi.exists() || !fi.isReadable())
 		return;
-	if(curr_file.doc)
-		closeFile();
-	curr_file.info = QFileInfo(path);
-	CodeEditorWidget* w = dgw->centralWidget->getEditor();
-	w->blockSignals(true);
-	w->setContents(f.readAll());
-	w->blockSignals(false);
-	f.close();
-	curr_file.doc = w->document();
-	curr_file.saved = true;
-	const QString fn = curr_file.info.fileName();
-	const QString ext = LangRegistry::getFileExt(fn);
-	const bool isext = fn != ext;
-	curr_file.lang = lr->getLang(ext, isext);
+	dgw->centralWidget->getEditor()->blockSignals(true);
+	dgw->centralWidget->getEditor()->setContents(fc->set(fi));
+	dgw->centralWidget->getEditor()->blockSignals(false);
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 	dgw->centralWidget->buttonsSide.at(DGCentralWidget::RUNFILE)->
-		setHidden(!(curr_file.info.isExecutable() ||
-					(curr_file.lang.isEmpty()?false:lr->hasInterpreter(ext, isext))));
+		setHidden(!(fi.isExecutable() || lr->hasInterpreter(fi)));
 }
 
 void DGController::runFile() {
 	QStringList sl;
-	if(!curr_file.info.isExecutable()) {
-		const QString fn = curr_file.info.fileName();
-		const QString ext = LangRegistry::getFileExt(fn);
-		const QString& intrp = lr->getInterpreter(ext, fn != ext);
+	QFileInfo fi(fc->getCurrPath());
+	if(lr->hasInterpreter(fi)) {
+		const QString& intrp = lr->getInterpreter(fi);
 		if(intrp.isEmpty())
 			return;
 		sl.append(intrp);
 	}
-	sl.append(curr_file.info.absoluteFilePath());
+	sl.append(fc->getCurrPath());
 	dg_utils::runTool("tools/terminal.rb",&sl);
 }
 
 void DGController::fileEdited() {
-	if(!curr_file.doc)
-		curr_file.doc = dgw->centralWidget->getEditor()->document();
-	curr_file.saved = false;
+	fc->markUnsaved();
 	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }
 
 void DGController::closeFile() {
-	saveFile();
-	dgw->centralWidget->getEditor()->clear();
-	if(curr_file.doc) {
-		//delete current.doc;
-		curr_file.doc = nullptr;
-	}
+	//TODO: Implement.
 }
 
 void DGController::closeProjCurrent() {
@@ -245,23 +213,36 @@ void DGController::newFile() {
 }
 
 void DGController::reloadFile() {
-	this->curr_file.saved = true;
-	this->getFile(this->curr_file.info.absoluteFilePath());
+	fc->reloadCurrent();
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+}
+void DGController::reloadFileOthers() {
+	fc->reloadOthers();
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
+}
+void DGController::reloadFileAll() {
+	fc->reloadOthers();
+	reloadFile();
 }
 
 QString DGController::getFormattedFileInfo() {
-	size_t lines = curr_file.doc?curr_file.doc->lineCount():1;
+	size_t lines = fc->getCurrDoc()->lineCount();
 	auto ptr = pl->getCurrent();
 	QString filename;
 	if(!ptr)
-		filename = "No File";
-	else if(ptr->isSingleFile())
-		filename = curr_file.info.exists()?curr_file.info.absoluteFilePath():"No File";
-	else
-		filename = curr_file.info.exists()?ptr->getDir()->relativeFilePath(curr_file.info.filePath()):"No File";
-	return filename + (!curr_file.lang.isEmpty()?" - "+curr_file.lang:"") + " - " +
+		filename = "";
+	else if(!ptr->isSingleFile())
+		filename = ptr->getDir()->relativeFilePath(fc->getCurrPath());
+	QString filestat = fc->getCurrStatus();
+	if(!fc->isCurrSaveable())
+		filestat = " - No Loader";
+	else if(!filestat.isEmpty())
+		filestat = filestat.prepend(" - ");
+	else if(!fc->isCurrSaved())
+		filestat = " - Unsaved";
+	return (filename.isEmpty()?"":(filename+" - ")) + (!fc->getCurrLang().isEmpty()?(fc->getCurrLang()+" - "):"") +
 						QString::number(lines) + (lines==1?" line":" lines")
-						+ (!curr_file.saved?" - Unsaved":"") + ' ';
+						+ filestat + ' ';
 }
 
 void DGController::newTemplateFile() {}
@@ -270,21 +251,20 @@ void DGController::newTemplateProject() {}
 void DGController::build() {
 	if(pl->getCurrent())
 		if(pl->getCurrent()->hasBuildSys())
-			bc->build(*pl->getCurrent());
+			;
 }
 void DGController::clean() {
 	if(pl->getCurrent())
 		if(pl->getCurrent()->hasBuildSys())
-			bc->clean(*pl->getCurrent());
+			;
 }
 void DGController::rebuild() {
 	if(pl->getCurrent())
 		if(pl->getCurrent()->hasBuildSys())
-			bc->rebuild(*pl->getCurrent());
+			;
 }
 void DGController::abort() {
-	if(bc->isRunning())
-		bc->abort();
+	;
 }
 
 void DGController::onBuildStarted() {
@@ -299,4 +279,11 @@ void DGController::onBuildStopped() {
 	dgw->menuBuild->getAction("Build")->setDisabled(!bs);
 	dgw->menuBuild->getAction("Rebuild")->setDisabled(!bs);
 	dgw->menuBuild->getAction("Clean")->setDisabled(!bs);
+}
+
+QString DGController::getFileSaveName() {
+	return QFileDialog::getSaveFileName(nullptr,tr("Save As..."),"~");
+}
+void DGController::onFileCacheUpdate() {
+	dgw->centralWidget->fileInfo->setText(getFormattedFileInfo());
 }

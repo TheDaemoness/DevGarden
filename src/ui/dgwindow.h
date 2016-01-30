@@ -5,6 +5,8 @@
 
 #include "dgmenu.h"
 
+#include "../async/executor.h"
+
 #include <mutex>
 
 class DGCentralWidget;
@@ -21,7 +23,7 @@ class DGWindow : public QMainWindow {
 
 	friend class DGController;
 public:
-	explicit DGWindow(DGController* dgc, const LangRegistry& lr, QWidget *parent = 0);
+	DGWindow(DGController* dgc, const LangRegistry& lr, Executor* exe, QWidget *parent = 0);
 	~DGWindow();
 	void configure(ConfigFile& f);
 	void disableBuildButtons(bool flag);
@@ -45,6 +47,7 @@ private slots:
 private:
 	std::mutex ui_lock;
 	DGController* ctrl;
+	Executor* exe;
 
 	QMenuBar* bar;
 	QMenu *menuFile, *menuEdit, *menuVersion, *menuWindow, *menuHelp;

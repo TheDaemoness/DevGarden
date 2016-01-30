@@ -28,24 +28,31 @@
 * Platform-specific code must always be wrapped in an #ifdef block using macros in envmacro.h. No exceptions.
 
 ## C++ Features
-* No `using` constructs are to be used, unless they are in a class declaration, or are used for type aliasing, i.e. `using StringMap = QHash<QString,QString>`
-* No exception throwing or exception handling.
-* Classes should be declared using class rather than struct.
+* No `using` constructs are to be used, unless they are in a class declaration, or are used for type aliasing, i.e. `using StringMap = std::map<QString,QString>`
+* No exception throwing.
+* No exception handling except in the same scope.
+* Classes should be declared using class rather than struct. Struct should be preferred for POD.
 * Prefer const variables over macro constants.
 * Prefer std::unique_ptr for the ownership of objects over raw pointers.
 * Prefer the range-based for loop over the C-style for loop for iteration over a structure.
 
 ## C++ Standard Library
-* Use `<c*>` headers over `<*.h>` standard headers.
-* Prefer Qt features over standard C++ features where possible, with a few exceptions (see Qt).
+* Use `<c*>` headers over `<*.h>` standard headers for C features.
+* Use C++ features over C featuers where possible, i.e. `<chrono>` over `<ctime>`, `<random>` over `srand+rand`.
+* Prefer standard C++ features over Qt features where reasonable, with a few exceptions (see Qt).
 * Avoid deprecated features of the C++ standard library where possible.
-* Shared pointers, such as std::shared_ptr, sont interdites. Don't use them.
 * Prefer the pre-coded algorithms in `<algorithm>` over handwritten or Qt's equivalents.
 
 ## Qt
-* Prefer QString over std::string (listed here for emphasis).
-* Prefer Qt's signals/slots over callbacks, except where moc is a POS.
-* Do not use the QTL (QMap, QVector, etc) except where necessary. Prefer the C++ STL.
+* Prefer QString over std::string.
+* Limit use of Qt's signal/slot mechanism, except in QObject-derived classes or for cross-thread messaging.
+* On that note, prefer not to inherit from QObject.
+* Do not use the QTL (QMap, QVector, etc) except where necessary (i.e. a Qt method expects a QStringList).
+* Do not use Qt's concurrent programming features, in particular their atomics.
+
+## Memory Management
+* Shared ownership is a dirty concept. Prefer not to use it or any smart pointers that support it.
+* Generally avoid allowing a raw pointer to own an object. Prefer std::unique_ptr instead.
 
 ## Git
 * Never ever push to master.

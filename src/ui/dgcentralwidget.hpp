@@ -16,12 +16,16 @@ class QLineEdit;
 
 class QHBoxLayout;
 class QVBoxLayout;
+class QSplitter;
 
 class DGController;
+class DGTaskStatusLabel;
 
 #include <map>
 #include <unordered_map>
 #include <array>
+
+#include "../async/executor.h"
 
 /**
  * @brief The actual widgets of the main window.
@@ -34,7 +38,7 @@ class DGCentralWidget : public QWidget
 	friend class DGController;
 	friend class DGWindow;
 public:
-	explicit DGCentralWidget(DGController* ctrl, QWidget* parent = 0);
+	DGCentralWidget(DGController* ctrl, Executor* exe, QWidget* parent = 0);
 
 	inline CodeEditorWidget* getEditor() {return textEditor;}
 	const std::array<const char*,11> BUTTON_LOWER_NAMES = {
@@ -69,7 +73,7 @@ public slots:
 	void shrinkProjectList();
 
 private:
-	void createWidgets();
+	void createWidgets(Executor* exe);
 	void createLayout();
 	void setupConnections();
 
@@ -91,10 +95,14 @@ private:
 	CodeEditorWidget* textEditor;
 	QComboBox* projectComboBox;
 	QListWidget* auxPane; // Just a placeholder till custom widget is created.
-	QHBoxLayout *mainLayout;
-	QVBoxLayout *leftSideLayout, *editorLayout, *rightBarLayout;
+	QSplitter *mainSplitter, *leftSplitter;
 	QLabel* fileInfo;
 	QLineEdit* cmdLine;
+	DGTaskStatusLabel* taskStatusLabel;
+
+	QVBoxLayout *leftSideLayout, *auxPanePair, *editorLayout, *rightBarLayout;
+
+	QWidget* leftBar;
 
 	std::unordered_map<ButtonIdLower,QPushButton*> buttonsSide;
 
