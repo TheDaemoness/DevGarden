@@ -8,6 +8,7 @@
 #include <QFileInfo>
 
 #include <iostream>
+#include <memory>
 
 const QString LangRegistry::DIR = "config/lang";
 
@@ -34,9 +35,13 @@ const QString& LangRegistry::getLang(const QFileInfo& file) const {
 
 LangRegistry::LangRegistry() {
 	std::set<QString> langset = dg_utils::getConfigDirs(LangRegistry::DIR.toStdString().c_str());
+	if(langset.empty()) {
+		std::cerr << "Failed to find language directories!" << std::endl;
+		return;
+	}
 	ConfigEntry* ie;
 	for(const QString& lang : langset) {
-		QFile* f = dg_utils::getUtilityFileRead((LangRegistry::DIR+'/'+lang+"/properties.conf"));
+		std::unique_ptr<QFile> f{dg_utils::getUtilityFileRead(LangRegistry::DIR+'/'+lang+"/properties.conf")};
 		if(f != nullptr) {
 			ConfigFile cf(*f);
 			LangEntry le;
@@ -77,8 +82,8 @@ LangRegistry::LangRegistry() {
 					}
 				}
 			}
-			delete f;
-		}
+		} else
+			std::cerr << "Failed to find properties.conf for language " << lang.toStdString() << '.' << std::endl;
 	}
 }
 

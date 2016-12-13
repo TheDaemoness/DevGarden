@@ -14,9 +14,13 @@
 	#define DG_CONFIG_PREFIX_GLOBAL "ProgramData/"
 	#define DG_CONFIG_PREFIX_LOCAL  "AppData/Roaming/"
 #elif defined(DG_ENV_UNIX)
-	#define DG_CONFIG_PREFIX_GLOBAL "usr/share/"
-	#define DG_CONFIG_PREFIX_LOCAL  "."
-	#define DG_CONFIG_PREFIX_LOCAL_NOCD
+    #define DG_CONFIG_PREFIX_GLOBAL "/usr/share/"
+#if defined(DG_ENV_LINUX)
+    #define DG_CONFIG_PREFIX_LOCAL  ".local/share/"
+#else
+    #define DG_CONFIG_PREFIX_LOCAL  "."
+    #define DG_CONFIG_PREFIX_LOCAL_NOCD
+#endif
 #else
 	#define DG_CONFIG_PREFIX_GLOBAL "/"
 	#define DG_CONFIG_PREFIX_LOCAL  ""

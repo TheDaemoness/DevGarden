@@ -14,7 +14,7 @@ else
 end
 
 _dir_global = "/usr/share/DevGarden/"
-_dir_local =  ".DevGarden/"
+_dir_local =  ".local/share/DevGarden/"
 
 _dir_curr = Dir.pwd;
 Dir.chdir
