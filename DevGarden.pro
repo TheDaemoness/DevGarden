@@ -6,7 +6,7 @@
 
 cache()
 
-QMAKE_CXXFLAGS += -pedantic
+QMAKE_CXXFLAGS += -pedantic-errors
 
 macx {
 	QMAKE_CXXFLAGS += -stdlib=libc++
