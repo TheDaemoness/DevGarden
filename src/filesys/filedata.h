@@ -8,8 +8,7 @@
 #include <QPlainTextDocumentLayout>
 
 #include "../consts.h"
-
-class LangRegistry;
+#include "../langregistry.h"
 
 class FileData {
 	std::unique_ptr<FileLoader> fl;
@@ -17,12 +16,10 @@ class FileData {
 	bool autoclose;
 	size_t ref_count;
 	bool saved;
-	const QString* lang;
+	LangRegistry::LangID lang;
 public:
-	FileData() : doc(new QTextDocument), saved(false) {
-		ref_count = 1;
+    FileData() : doc{new QTextDocument}, ref_count{1}, saved{false}, lang{LangRegistry::ID_UNKNOWN} {
 		doc->setDocumentLayout(new QPlainTextDocumentLayout(doc.get()));
-		lang = &dg_consts::STRING_EMPTY;
 	}
 	FileData(FileData&& fd) {
 		fl.reset(fd.fl.release());
@@ -47,11 +44,11 @@ public:
 	bool save();
 	inline bool isSaved() {return saved;}
 
-	inline void setLang(const QString* lname) {lang = lname;}
+	inline void setLang(LangRegistry::LangID lid) {lang = lid;}
 
 	inline QTextDocument* getDocument() {return doc.get();} //Don't you dare free this.
 	inline QTextDocument* releaseDocument() {return doc.release();} //Don't you dare free this.
-	inline const QString& getLang() {return *lang;}
+	inline LangRegistry::LangID getLang() {return lang;}
 	bool operator<(const QString& d);
 	bool operator<(const FileData& d);
 	void markUnsaved() {saved = false;}

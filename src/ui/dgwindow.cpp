@@ -91,10 +91,10 @@ void DGWindow::createMenuActions(const LangRegistry& lr) {
 
 	menuBuild.reset(new DGMenu(menuBar()->addMenu(tr("&Build"))));
 	menuBuildInit.reset(menuBuild->addMenu("Create Build System"));
-	std::set<QString> bses = lr.makeBuildSysSet();
+	auto bses = lr.makeBuildSysSet();
 	if(!bses.empty()) {
-		for(const QString& bs : bses)
-			menuBuildInit->addAction(bs,lr.getHumanName(bs)+"...");
+		for(const auto& bs : bses)
+            menuBuildInit->addAction(QString("buildsys-")+bs,lr.getHumanName(bs)+"...");
 	} else
 		menuBuildInit->getMenu().setDisabled(true);
 
@@ -208,8 +208,8 @@ void DGWindow::disableBuildButtons(bool disable) {
 	menuBuild->getAction("Abort Build")->setDisabled(!disable);
 }
 
-void DGWindow::zoomOut()    {this->centralWidget->getEditor()->fontSizeDec();}
-void DGWindow::zoomIn()     {this->centralWidget->getEditor()->fontSizeInc();}
+void DGWindow::zoomOut()	{this->centralWidget->getEditor()->fontSizeDec();}
+void DGWindow::zoomIn()	 {this->centralWidget->getEditor()->fontSizeInc();}
 void DGWindow::zoomReset()  {this->centralWidget->getEditor()->fontSizeRes();}
 
 void DGWindow::nullSlot() {}

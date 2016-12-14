@@ -7,26 +7,6 @@
 #include <vector>
 #include <mutex>
 
-#if defined(DG_ENV_MACOS)
-	#define DG_CONFIG_PREFIX_GLOBAL "/Library/Application Support/"
-	#define DG_CONFIG_PREFIX_LOCAL  "Library/Application Support/"
-#elif defined(DG_ENV_WINDOZE)
-	#define DG_CONFIG_PREFIX_GLOBAL "ProgramData/"
-	#define DG_CONFIG_PREFIX_LOCAL  "AppData/Roaming/"
-#elif defined(DG_ENV_UNIX)
-    #define DG_CONFIG_PREFIX_GLOBAL "/usr/share/"
-#if defined(DG_ENV_LINUX)
-    #define DG_CONFIG_PREFIX_LOCAL  ".local/share/"
-#else
-    #define DG_CONFIG_PREFIX_LOCAL  "."
-    #define DG_CONFIG_PREFIX_LOCAL_NOCD
-#endif
-#else
-	#define DG_CONFIG_PREFIX_GLOBAL "/"
-	#define DG_CONFIG_PREFIX_LOCAL  ""
-	#define DG_CONFIG_PREFIX_LOCAL_NOCD
-#endif
-
 class QFile;
 class QFileInfo;
 class QDir;
@@ -36,6 +16,15 @@ class QTextStream;
 #include <atomic>
 
 namespace dg_utils {
+
+std::string qsExtract(const QString& in);
+
+class GlobalFlags {
+	static bool self_test;
+public:
+	static bool isTesting()  {return self_test;}
+	static bool setTesting(bool newValue = true) {bool old = newValue; std::swap(old, self_test); return old;}
+};
 
 class RunToolAsyncFlags;
 
@@ -75,5 +64,7 @@ public:
 };
 
 }
+
+#define DG_EC_SELFTEST_ECHO(OUTPUT) if(dg_utils::GlobalFlags::isTesting()) {std::cerr << "SELF-TEST: " << OUTPUT << std::endl;}
 
 #endif // CONFIGLOADER_H

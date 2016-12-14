@@ -240,7 +240,8 @@ QString DGController::getFormattedFileInfo() {
 		filestat = filestat.prepend(" - ");
 	else if(!fc->isCurrSaved())
 		filestat = " - Unsaved";
-	return (filename.isEmpty()?"":(filename+" - ")) + (!fc->getCurrLang().isEmpty()?(fc->getCurrLang()+" - "):"") +
+    const auto langname = lr->getHumanName(fc->getCurrLang());
+	return (filename.isEmpty()?"":(filename+" - ")) + (!langname.isEmpty()?(langname+" - "):"") +
 						QString::number(lines) + (lines==1?" line":" lines")
 						+ filestat + ' ';
 }

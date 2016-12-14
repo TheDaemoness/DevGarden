@@ -8,19 +8,21 @@
 
 class TaskChain {
 public:
+	using Ref = std::unique_ptr<TaskChain>;
 	using Callback = std::function<bool(const std::atomic_bool&)>;
 	static Callback wrap(std::function<void()> call);
 	static Callback wrap(std::function<bool()> call);
 private:
-	std::unique_ptr<TaskChain> pass_, fail_;
+	Ref pass_, fail_;
 	QString name_;
 protected:
 	Callback task_;
 public:
+
 	TaskChain(const QString& name, Callback task) :
-		task_(task), pass_(nullptr), fail_(nullptr), name_(name) {};
+		task_(task), pass_(nullptr), fail_(nullptr), name_(name) {}
 	TaskChain(const QString& name, Callback task, TaskChain* pass, TaskChain* fail) :
-		task_(task), pass_(pass), fail_(fail), name_(name) {};
+		task_(task), pass_(pass), fail_(fail), name_(name) {}
 	TaskChain(const QString& name, Callback task, TaskChain* next, bool onPass = true) :
 		task_(task), name_(name)
 		{(onPass?pass_:fail_).reset(next);}

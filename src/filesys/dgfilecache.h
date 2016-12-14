@@ -30,9 +30,9 @@ public:
 	inline void bindController(DGController* dgc) {ctrl = ctrl?ctrl:dgc;}
 
 	inline size_t  getCountLoaded() {return data.size();}
-	inline QTextDocument* getCurrDoc()     {return current->second.getDocument();}
-	inline const QString& getCurrLang()    {return current->second.getLang();}
-	inline const QString& getCurrPath()    {return current->first;}
+	inline QTextDocument* getCurrDoc()        {return current->second.getDocument();}
+	inline LangRegistry::LangID getCurrLang() {return current->second.getLang();}
+	inline const QString& getCurrPath()       {return current->first;}
 	QString getCurrStatus();
 
 	inline bool isCurrSaved()   {return current->second.isSaved();}

@@ -7,7 +7,6 @@
 #include "consts.h"
 #include "langregistry.h"
 
-class LangRegistry;
 class QDir;
 
 namespace dg_utils {class RunToolAsyncFlags;}
@@ -17,8 +16,9 @@ namespace dg_utils {class RunToolAsyncFlags;}
  */
 class Target {
 	QFileInfo file;
-	QString target, buildsys; //NOTE: target here is not this target's name necessarily.
+	QString target; //NOTE: target here is not this target's name necessarily.
 	const LangRegistry& lr;
+    LangRegistry::LangID buildsys;
 	std::map<QString,QString> vars;
 public:
 	/**
