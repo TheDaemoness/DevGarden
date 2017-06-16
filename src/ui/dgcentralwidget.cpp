@@ -37,9 +37,9 @@ DGCentralWidget::DGCentralWidget(DGController* ctrl, Executor* exe, QWidget *par
 
 QPushButton* DGCentralWidget::makeButton(const QString& txt, int width, int height) {
 	auto* retval = new QPushButton(tr(txt.toLocal8Bit()));
-	retval->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	retval->setMinimumSize(width, height);
-	retval->setMaximumSize(width, height);
+	//retval->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	//retval->setMinimumSize(width, height);
+	//retval->setMaximumSize(width, height);
 	return retval;
 }
 
@@ -48,7 +48,7 @@ void DGCentralWidget::createWidgets(Executor* exe)
 	leftBar = new QWidget;
 
 	// Project Directory Tree
-	projectDirModel = new QFileSystemModel;
+	projectDirModel = new QFileSystemModel(this);
 	projectDirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
 	projectDirModel->setRootPath(QCoreApplication::applicationDirPath());
 
@@ -87,13 +87,13 @@ void DGCentralWidget::createWidgets(Executor* exe)
 	fileInfo->setAlignment(Qt::AlignRight);
 
 	//Command box.
-	cmdLine = new QLineEdit();
+	cmdLine = new QLineEdit;
 	cmdLine->setPlaceholderText("Enter command...");
 
 	taskStatusLabel = new DGTaskStatusLabel(exe);
 
 	// Bottom Bar
-	rightBarLayout = new QVBoxLayout();
+	rightBarLayout = new QVBoxLayout;
 	for(size_t i = 0; i < BUTTON_LOWER_NAMES.size(); ++i) {
 		auto* button = makeButton(BUTTON_LOWER_NAMES[i], 72, 32);
 		buttonsSide.emplace(static_cast<ButtonIdLower>(i), button);
@@ -125,7 +125,7 @@ void DGCentralWidget::createLayout()
 	leftSideLayout->addWidget(leftSplitter);
 	leftSideLayout->update();
 
-	editorLayout = new QVBoxLayout();
+	editorLayout = new QVBoxLayout;
 	editorLayout->setSpacing(4);
 	editorLayout->addWidget(fileInfo);
 	editorLayout->addWidget(textEditor);
@@ -145,7 +145,7 @@ void DGCentralWidget::createLayout()
 	rightSideLayout->addLayout(bottomBarLayout);
 
 	// Main Layout (Combination of all child layouts)
-	mainSplitter = new QSplitter(Qt::Horizontal,this);
+	mainSplitter = new QSplitter(Qt::Horizontal);
 	leftBar->setHidden(true);
 	temp = new QWidget;
 	leftBar->setLayout(leftSideLayout);
@@ -161,13 +161,13 @@ void DGCentralWidget::createLayout()
 }
 
 void DGCentralWidget::setupConnections() {
-	this->connect(mainSplitter,	    SIGNAL(splitterMoved(int,int)),             SLOT(resizeDirView()));
-	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),              SLOT(resizeDirView()));
-	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),             SLOT(resizeDirView()));
-	this->connect(projectComboBox,  SIGNAL(currentIndexChanged(int)),           SLOT(changeProject(int)));
-	this->connect(ctrl,             SIGNAL(sigProjectListChanged()),            SLOT(updateProjectList()));
-	this->connect(ctrl,             SIGNAL(sigProjectClosed()),                 SLOT(shrinkProjectList()));
-	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),        SLOT(changeFile(const QModelIndex&)));
+	this->connect(mainSplitter,		SIGNAL(splitterMoved(int,int)),			 SLOT(resizeDirView()));
+	this->connect(projectDirView,   SIGNAL(expanded(QModelIndex)),			  SLOT(resizeDirView()));
+	this->connect(projectDirView,   SIGNAL(collapsed(QModelIndex)),			 SLOT(resizeDirView()));
+	this->connect(projectComboBox,  SIGNAL(currentIndexChanged(int)),		   SLOT(changeProject(int)));
+	this->connect(ctrl,			 SIGNAL(sigProjectListChanged()),			SLOT(updateProjectList()));
+	this->connect(ctrl,			 SIGNAL(sigProjectClosed()),				 SLOT(shrinkProjectList()));
+	this->connect(projectDirView,   SIGNAL(clicked(const QModelIndex&)),		SLOT(changeFile(const QModelIndex&)));
 
 	connect(buttonsSide.at(DGCentralWidget::BUILD), SIGNAL(pressed()), ctrl, SLOT(build()));
 	connect(buttonsSide.at(DGCentralWidget::REBUILD), SIGNAL(pressed()), ctrl, SLOT(rebuild()));

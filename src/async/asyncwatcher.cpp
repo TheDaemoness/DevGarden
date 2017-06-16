@@ -1,5 +1,7 @@
 #include "asyncwatcher.h"
 
+#include <algorithm>
+
 size_t AsyncWatcher::insert(std::atomic_flag* flag, std::function<void()> func) {
 	bool stahp = stop();
 	auto it = std::find_if(triggers.begin(),triggers.end(),

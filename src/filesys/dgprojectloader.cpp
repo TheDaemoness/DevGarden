@@ -13,7 +13,7 @@ bool DGProjectLoader::changeCurrent(size_t index) {
 bool DGProjectLoader::closeCurrent() {
 	if(projs.empty())
 		return false;
-	delete *current;
+	current->reset();
 	current = projs.erase(current);
 	return true;
 }
@@ -21,12 +21,9 @@ bool DGProjectLoader::closeCurrent() {
 bool DGProjectLoader::closeOthers() {
 	if(projs.size() <= 1)
 		return false;
-	DGProjectInfo* temp = *current;
-	projs.erase(current);
-	for(auto e : projs)
-		delete e;
-	projs.resize(1);
-	projs.at(0) = temp;
+    std::unique_ptr<DGProjectInfo> temp{std::move(*current)};
+	projs.clear();
+    projs.emplace_back(std::move(temp));
 	current = projs.begin();
 	return true;
 }
@@ -34,14 +31,12 @@ bool DGProjectLoader::closeOthers() {
 bool DGProjectLoader::closeAll() {
 	if(projs.empty())
 		return false;
-	for(auto e : projs)
-		delete e;
 	projs.clear();
 	return true;
 }
 
 DGProjectInfo* DGProjectLoader::getCurrent() const {
-	return (projs.empty()?nullptr:*current);
+	return (projs.empty()?nullptr:current->get());
 }
 
 bool DGProjectLoader::addFile(const QString& path) {
@@ -50,7 +45,7 @@ bool DGProjectLoader::addFile(const QString& path) {
 		delete f;
 		return false;
 	}
-	projs.push_back(new DGProjectInfo(f));
+	projs.emplace_back(new DGProjectInfo(f));
 	current = projs.end()-1;
 	return true;
 }
@@ -61,7 +56,7 @@ bool DGProjectLoader::addFolder(const QString& path) {
 		delete f;
 		return false;
 	}
-	projs.push_back(new DGProjectInfo(f, langreg));
+	projs.emplace_back(new DGProjectInfo(f, langreg));
 	current = projs.end()-1;
 	return true;
 }
@@ -69,7 +64,7 @@ bool DGProjectLoader::addFolder(const QString& path) {
 QStringList DGProjectLoader::getProjectNames() const {
 	QStringList l;
 	l.reserve(projs.size());
-	for(const DGProjectInfo* proj : projs)
+	for(const std::unique_ptr<DGProjectInfo>& proj : projs)
 		l.append(proj->getName());
 	return l;
 }

@@ -31,7 +31,7 @@ QTextDocument* DGFileCache::set(const QFileInfo& fi) {
 			fl->setStateUpdateCallback(std::bind(&DGFileCache::onLoaderUpdate,this,current));
 			current->second.setFileLoader(fl);
 
-			current->second.setLang(&lr.getLang(fi));
+			current->second.setLang(lr.getLang(fi));
 			current->second.load();
 		} else
 			current = data.emplace("",FileData()).first;
@@ -55,7 +55,7 @@ bool DGFileCache::saveCurrent() {
 		fl->setStateUpdateCallback(std::bind(&DGFileCache::onLoaderUpdate,this,current));
 		current->second.setFileLoader(fl);
 
-		current->second.setLang(&lr.getLang(f));
+		current->second.setLang(lr.getLang(f));
 		current->second.save();
 		tryClose(old);
 		return true;

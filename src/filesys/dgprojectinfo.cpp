@@ -55,9 +55,9 @@ void DGProjectInfo::catalog(const LangRegistry& lr, const QDir& dir, bool recurs
 			catalog(lr,entry.absoluteDir(),true);
 		else {
 			if(!recursive) {
-				const QString& lang = lr.getLang(entry);
-				if(!lang.isEmpty() && lr.isBuildSys(lang))
-					targets.emplace("default-"+lang, Target(lr, entry));
+				LangRegistry::LangID lang = lr.getLang(entry);
+				if(lr.isBuildSys(lang))
+					targets.emplace("default-"+lr.getHumanName(lang), Target(lr, entry));
 				//May do other searching of the root directory.
 			}
 		}

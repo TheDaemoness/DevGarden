@@ -12,6 +12,12 @@
 
 namespace dg_utils {
 
+std::string qsExtract(const QString& in) {
+    return std::string{in.toUtf8().constData()};
+}
+
+bool GlobalFlags::self_test = false;
+
 QFileInfo* getUtilityFile(const QString& name) {
 	QFileInfo* f = new QFileInfo();
 	f->setFile(QDir::home().path()+'/'+DG_CONFIG_PREFIX_LOCAL+DG_NAME+'/'+name);

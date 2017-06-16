@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 #include <QFileInfo>
 
@@ -15,7 +16,7 @@ class QStringList;
  * @brief Loads, stores, and manages all projects' metadata.
  */
 class DGProjectLoader {
-public: using ProjectListType = std::vector<DGProjectInfo*>;
+public: using ProjectListType = std::vector<std::unique_ptr<DGProjectInfo>>;
 private:
 	ProjectListType projs;
 	ProjectListType::iterator current;
