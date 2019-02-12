@@ -1,7 +1,8 @@
 # DevGarden
 
+*WARNING: This project has been abandoned. It will likely not be receiving updates.*
+
 A versatile and modern IDE for versatile and modern people.
-[![Developer Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TheRabbitologist/DevGarden?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Developed with support from the members of the community at #cplusplus.com on Freenode.
 
